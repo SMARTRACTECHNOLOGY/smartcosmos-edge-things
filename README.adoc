@@ -1,0 +1,292 @@
+= REST Implementations for Things RDAO
+SMARTRAC Technology Fletcher Inc <api@smartrac-group.com>
+:version: 3.0.0-SNAPSHOT
+ifdef::env-github[:USER: SMARTRACTECHNOLOGY]
+ifdef::env-github[:REPO: smartcosmos-ext-things-detail]
+ifdef::env-github[:BRANCH: master]
+
+Microservice which provides extended Things logic, like "Create a thing with metadata with one API call
+
+== License
+This is a private licensed repository, and as such, should not be shared publicly.
+
+== REST API
+
+*Available methods*
+
+* <<create1, Create - `POST /{type}`>>
+* <<update1, Update - `PUT /{type}/{urn}`>>
+* <<read1, Read - `GET /{type}?page={pageNumber}&size={pageSize}`>>
+* <<read2, Read - `GET /{type}/{urn}`>>
+* <<read3, Read - `POST /findByUrns`>>
+* <<read4, Read - `GET /findAll?page={pageNumber}&size={pageSize}`>>
+* <<delete1, Delete - `DELETE /{type}/{urn}`>>
+
+=== JSON Fields
+[width="100%",options="header"]
+|====================
+| Field | Format | Default | Required | Description
+| `urn` | String representation of a thing identifier in a common scheme, e.g. `urn:thing:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated if not provided
+| `type` | String | | yes |
+| `active` | boolean |  true | no |
+| `tenantUrn` | String representation of the tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>` |  generated | generated | only in returned JSON Objects
+| [JSON metadata] | JSON |  | false | Metadata for the thing, e.g. `name`, `description`, ..
+|====================
+
+.**URN Scheme**
+Note that the illustrated scheme for URNs is only for documentation purposes. There must not be any assumptions or expectations on the scheme in the REST layer. All URNs or identifiers are just `String` values in the scope of REST modules!
+
+=== URL parameters
+[width="100%",options="header"]
+|====================
+| Parameter | Format | Default | Description
+| `page` | String representation long  |  query parameter, defaults to 0 | page number of multi-element returns, starting at 0
+| `size` | String representation of Integer  |  query parameter, defaults 20 | number of elements per page in multi-element returns |
+|====================
+
+
+=== API Endpoints
+
+[[create1]]
+==== Create - `POST /{type}`
+
+----
+POST /Building
+----
+
+The fields `name`, `description` and `fun` will be added as metadata for this thing.
+
+*Example 1*
+[source,json]
+----
+{
+    "urn": "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+    "active": true,
+    "name": "My home",
+    "description": "My home in US",
+    "large": true
+}
+----
+
+.Response
+----
+201 CREATED
+----
+[source,json]
+----
+{
+    "urn": "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+    "type": "Building",
+    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
+    "active": true
+}
+----
+
+*Example 2*
+[source,json]
+----
+{
+}
+----
+
+.Response
+----
+201 CREATED
+----
+[source,json]
+----
+{
+    "urn": "urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d",
+    "type": "Building",
+    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
+    "active": true
+}
+----
+
+[[update1]]
+==== Update - `PUT /{type}/{urn}`
+
+----
+PUT /Building/urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
+----
+[source,json]
+----
+{
+    "active": false
+}
+----
+.Response
+----
+204 NO CONTENT
+----
+
+
+[[read1]]
+==== Read - `GET /{type}?page={pageNumber}&size={pageSize}`
+
+----
+GET /Building?page=0&size=100
+----
+.Response
+----
+200 OK
+----
+[source,json]
+----
+{
+    "data": [
+        {
+            "urn": "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+            "type": "Building",
+            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
+            "active": true,
+            "name": "My home",
+            "description": "My home in US",
+            "large": true
+        },
+        {
+            "urn": "urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d",
+            "type": "Building",
+            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
+            "active": true,
+            "name": "My school",
+            "description": "My school in US"
+        }
+    ],
+    "page" : {
+        "size" : 100,
+        "totalElements" : 2,
+        "totalPages" : 1,
+        "number" : 0
+    }
+}
+----
+
+
+[[read2]]
+==== Read - `GET /{type}/{urn}`
+
+----
+GET /Building/urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
+----
+.Response
+----
+200 OK
+----
+[source,json]
+----
+{
+    "urn": "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+    "type": "Building",
+    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
+    "active": true,
+    "name": "My home",
+    "description": "My home in US",
+    "large": true
+}
+----
+
+
+[[read3]]
+==== Find by URNs - `POST /findByUrns`
+
+----
+POST /findByUrns
+----
+[source,json]
+----
+{
+    "urns": [
+        "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+        "urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d",
+        "urn:thing:uuid:62a8d3a2-6aca-49b9-825a-147a8ee3773d"
+    ]
+}
+----
+
+.Response
+----
+200 OK
+----
+[source,json]
+----
+{
+    "data": [
+        {
+            "urn": "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+            "type": "Building",
+            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
+            "active": true,
+            "name": "My home",
+            "description": "My home in US",
+            "large": true
+        },
+        {
+            "urn": "urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d",
+            "type": "Building",
+            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
+            "active": true,
+            "name": "My school",
+            "description": "My school in US"
+        }
+    ],
+    "notFound": [
+        "urn:thing:uuid:62a8d3a2-6aca-49b9-825a-147a8ee3773d"
+    ]
+}
+----
+
+
+
+[[read4]]
+==== Find all - `GET /findAll?page={pageNumber}&size={pageSize}`
+
+----
+GET /findAll?page=0&size=100
+----
+.Response
+----
+200 OK
+----
+[source,json]
+----
+{
+    "data": [
+        {
+            "urn": "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+            "type": "Building",
+            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
+            "active": true,
+            "name": "My home",
+            "description": "My home in US",
+            "large": true
+        },
+        {
+            "urn": "urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d",
+            "type": "Building",
+            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
+            "active": true,
+            "name": "My school",
+            "description": "My school in US"
+        }
+    ],
+    "page" : {
+        "size" : 100,
+        "totalElements" : 2,
+        "totalPages" : 1,
+        "number" : 0
+    }
+}
+----
+
+
+[[delete1]]
+==== Delete - `DELETE /{type}/{urn}`
+
+----
+DELETE /urn/Building/urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d
+----
+.Response
+----
+204 NO CONTENT
+----
