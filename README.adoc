@@ -1,4 +1,4 @@
-= REST Implementations for Things RDAO
+= REST Implementations for Things Edge Microservice
 SMARTRAC Technology Fletcher Inc <api@smartrac-group.com>
 :version: 3.0.0-SNAPSHOT
 ifdef::env-github[:USER: SMARTRACTECHNOLOGY]
