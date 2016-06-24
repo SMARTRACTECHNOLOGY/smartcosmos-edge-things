@@ -54,7 +54,7 @@ Note that the illustrated scheme for URNs is only for documentation purposes. Th
 POST /Building
 ----
 
-The fields `name`, `description` and `fun` will be added as metadata for this thing.
+The fields `name`, `description` and `large` will be added as metadata for this thing.
 
 *Example 1*
 [source,json]
