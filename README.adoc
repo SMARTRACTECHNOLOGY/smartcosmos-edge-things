@@ -18,8 +18,8 @@ This is a private licensed repository, and as such, should not be shared publicl
 * <<update1, Update - `PUT /{type}/{urn}`>>
 * <<read1, Read - `GET /{type}?page={pageNumber}&size={pageSize}`>>
 * <<read2, Read - `GET /{type}/{urn}`>>
-* <<read3, Read - `POST /findByUrns`>>
-* <<read4, Read - `GET /findAll?page={pageNumber}&size={pageSize}`>>
+* <<read3, Read - `POST /`>>
+* <<read4, Read - `GET /?page={pageNumber}&size={pageSize}`>>
 * <<delete1, Delete - `DELETE /{type}/{urn}`>>
 
 === JSON Fields
@@ -188,10 +188,10 @@ GET /Building/urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 
 
 [[read3]]
-==== Find by URNs - `POST /findByUrns`
+==== Find by URNs - `POST /`
 
 ----
-POST /findByUrns
+POST /
 ----
 [source,json]
 ----
@@ -239,10 +239,10 @@ POST /findByUrns
 
 
 [[read4]]
-==== Find all - `GET /findAll?page={pageNumber}&size={pageSize}`
+==== Find all - `GET /?page={pageNumber}&size={pageSize}`
 
 ----
-GET /findAll?page=0&size=100
+GET /?page=0&size=100
 ----
 .Response
 ----
