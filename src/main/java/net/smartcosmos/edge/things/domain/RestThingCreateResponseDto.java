@@ -1,42 +1,38 @@
 package net.smartcosmos.edge.things.domain;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.beans.ConstructorProperties;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Setter;
 
 /**
- * The information returned when a Thing with embedded metadata is created.
+ * The create response DTO from the Thing REST service.
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "version" })
 public class RestThingCreateResponseDto {
-    private static final int VERSION_1 = 1;
-
-    private final int version = VERSION_1;
-
-    private final String ownerType;
-
-    private final String ownerUrn;
-
-    @JsonInclude(JsonInclude.Include.ALWAYS)
-    private final Map<String, Object> metadata;
-
+    public static final int VERSION_1 = 1;
+    @Setter(AccessLevel.NONE)
+    private int version = VERSION_1;
+    private final String urn;
+    private final String type;
     private final String tenantUrn;
+    private final Boolean active;
 
     @Builder
-    @java.beans.ConstructorProperties({ "ownerType", "ownerUrn", "metadata", "tenantUrn" })
-    public RestThingCreateResponseDto(String ownerType, String ownerUrn, Map<String, Object> metadata, String tenantUrn) {
-        this.ownerType = ownerType;
-        this.ownerUrn = ownerUrn;
+    @ConstructorProperties({ "urn", "type", "tenantUrn", "active" })
+    public RestThingCreateResponseDto(String urn, String type, String tenantUrn, Boolean active) {
+        this.urn = urn;
+        this.type = type;
+        this.active = active;
         this.tenantUrn = tenantUrn;
 
-        this.metadata = new HashMap<>();
-        if (metadata != null) {
-            this.metadata.putAll(metadata);
-        }
+        this.version = VERSION_1;
     }
+
 }

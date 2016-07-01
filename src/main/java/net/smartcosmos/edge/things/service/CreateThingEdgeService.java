@@ -10,15 +10,17 @@ import net.smartcosmos.security.user.SmartCosmosUser;
 /**
  * Methods for creating things with embeded metadata.
  */
-public interface CreateThingService {
+public interface CreateThingEdgeService {
     /**
      * Create the Thing with metadata.
      *
      * @param response the {@Link DeferredResponse} response that should be asynchronous
      * @param type the programmer/user define type of the thing to create/update
+     * @param urn the requested URN for the thing
      * @param metadataMap a Map of the metadata to save for the thing
      * @param force are we acting as upsert (true)
      * @param user the Spring embedded {@Link SmartCosmosUser}
      */
-    void create(DeferredResult<ResponseEntity> response, String type, Map<String, Object> metadataMap, Boolean force, SmartCosmosUser user);
+    void create(
+        DeferredResult<ResponseEntity> response, String type, String urn, Map<String, Object> metadataMap, Boolean force, SmartCosmosUser user);
 }

@@ -63,8 +63,8 @@ public class SpringfoxDocumentationConfig {
             .enableUrlTemplating(true)
             .alternateTypeRules(
                 newRule(typeResolver.resolve(DeferredResult.class,
-                                                                typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
-                                           typeResolver.resolve(WildcardType.class)));
+                                             typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
+                        typeResolver.resolve(WildcardType.class)));
             // @formatter:on
     }
 

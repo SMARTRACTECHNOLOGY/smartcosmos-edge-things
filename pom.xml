@@ -15,12 +15,12 @@
     <description>Things Edge REST Endpoints</description>
 
     <properties>
-        <start-class>net.smartcosmos.edge.things.ThingEdgeRdao</start-class>
         <jackson-datatype-joda.version>2.1.5</jackson-datatype-joda.version>
         <jackson.version>2.4.2</jackson.version>
         <jersey.version>1.18</jersey.version>
         <jodatime.version>2.3</jodatime.version>
         <springfox.version>2.4.0</springfox.version>
+        <start-class>net.smartcosmos.edge.things.ThingEdgeRdao</start-class>
         <swagger-api-docs-asciidoc-directory>${swagger-api-docs-base-directory}/asciidoc
         </swagger-api-docs-asciidoc-directory>
         <swagger-api-docs-base-directory>${swagger-base-directory}/api-docs</swagger-api-docs-base-directory>
@@ -107,8 +107,43 @@
             <version>${springfox.version}</version>
             <scope>test</scope>
         </dependency>
-    </dependencies>
+        <?SORTPOM IGNORE?>
+        <!-- Added so the generated clients will compile.  When the code-gen works these can probably be removed.-->
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey.contribs</groupId>
+            <artifactId>jersey-multipart</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-joda</artifactId>
+            <version>2.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${jodatime.version}</version>
+        </dependency>
 
+        <!-- Base64 encoding that works in both JVM and Android -->
+        <dependency>
+            <groupId>com.brsanthu</groupId>
+            <artifactId>migbase64</artifactId>
+            <version>2.2</version>
+        </dependency>
+
+        <?SORTPOM RESUME?>
+    </dependencies>
 
     <build>
         <plugins>

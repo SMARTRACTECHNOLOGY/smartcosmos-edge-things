@@ -4,6 +4,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.validation.Valid;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -19,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import net.smartcosmos.edge.things.domain.RestThingCreateResponseDto;
-import net.smartcosmos.edge.things.service.CreateThingService;
+import net.smartcosmos.edge.things.domain.RestEdgeThingCreateResponseDto;
+import net.smartcosmos.edge.things.service.CreateThingEdgeService;
 import net.smartcosmos.security.EndpointMethodControl;
 import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.spring.SmartCosmosRdao;
@@ -35,12 +36,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 @SmartCosmosRdao
 @Slf4j
 @ConditionalOnProperty(prefix = "smtendpoints.things", name = "enabled", matchIfMissing = true)
+@Api
 public class CreateThingsResource {
 
-    CreateThingService createThingService;
+    CreateThingEdgeService createThingService;
 
     @Inject
-    public CreateThingsResource(CreateThingService createThingService) {
+    public CreateThingsResource(CreateThingEdgeService createThingService) {
         this.createThingService = createThingService;
     }
 
@@ -57,7 +59,7 @@ public class CreateThingsResource {
                           + "ONLY when used without the force URL parameter, or when ?force=false. When the URL parameter ?force=true is set, this "
                           + "method behaves as an upsert, creating new thing and metadata or updating an existing thing and its metadata as "
                           + "appropriate, and with no idempotency guarantees.",
-                  response = RestThingCreateResponseDto.class)
+                  response = RestEdgeThingCreateResponseDto.class)
     @ApiResponses(value = {
         @ApiResponse(code = HTTP_CONFLICT, message = "A Thing with the given urn already exists. No data is merged; existing record is left as-is."),
         @ApiResponse(code = HTTP_CREATED, message = "A new Thing was added successfully.")
@@ -76,7 +78,7 @@ public class CreateThingsResource {
         SmartCosmosUser user) {
 
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
-        createThingService.create(response, type, metadataMap, force, user);
+        createThingService.create(response, type, "", metadataMap, force, user);
         return response;
     }
 
