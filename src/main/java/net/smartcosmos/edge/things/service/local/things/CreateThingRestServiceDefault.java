@@ -5,44 +5,43 @@ import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.core.convert.ConversionService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
-import net.smartcosmos.edge.things.client.things.ApiException;
-import net.smartcosmos.edge.things.client.things.api.CreatethingresourceApi;
-import net.smartcosmos.edge.things.client.things.model.RestThingCreate;
-import net.smartcosmos.security.user.SmartCosmosUser;
+import net.smartcosmos.edge.things.domain.local.things.RestThingCreate;
+import net.smartcosmos.edge.things.rest.template.thing.ThingRestTemplate;
 
 /**
- * The default implementation to call the REST things endpoitn to create a thing.
+ * The default implementation to call the REST things endpoint to create a thing.
  */
 @Slf4j
 @Service
 public class CreateThingRestServiceDefault implements CreateThingRestService {
     private final ConversionService conversionService;
+    private final ThingRestTemplate restTemplate;
 
     @Inject
-    public CreateThingRestServiceDefault(ConversionService conversionService) {
+    public CreateThingRestServiceDefault(ConversionService conversionService, ThingRestTemplate restTemplate) {
         this.conversionService = conversionService;
+        this.restTemplate = restTemplate;
     }
 
     @Override
-    public ResponseEntity<?> create(String type, String urn, SmartCosmosUser user) {
+    public ResponseEntity<?> create(String type, net.smartcosmos.edge.things.domain.local.things.RestThingCreate thingCreate) {
         try {
-            RestThingCreate createDto = new RestThingCreate().urn(urn);
-            return conversionService.convert(getCreateThingClient(user).createObjectUsingPOST(createDto, type), ResponseEntity.class);
-
-        } catch (ApiException e) {
-            String msg = String.format("Exception creating thing, type: '%s', urn: '%s', cause: '%s'.",
-                                       type, urn, e.toString());
-            log.error(msg);
-            log.debug(msg, e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(msg);
+            return restTemplate.create(type, thingCreate);
+        } catch (HttpClientErrorException e) {
+            // if something goes wrong, forward the response
+            return ResponseEntity
+                .status(e.getStatusCode())
+                .headers(e.getResponseHeaders())
+                .body(e.getResponseBodyAsString());
         }
     }
 
-    private CreatethingresourceApi getCreateThingClient(SmartCosmosUser user) {
-        return new CreatethingresourceApi();
+    @Override
+    public ResponseEntity<?> create(String type) {
+        return create(type, new RestThingCreate());
     }
 }
