@@ -78,7 +78,7 @@ public class CreateThingsResource {
         SmartCosmosUser user) {
 
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
-        createThingService.create(response, type, "", metadataMap, force, user);
+        createThingService.create(response, type, metadataMap, force, user);
         return response;
     }
 
