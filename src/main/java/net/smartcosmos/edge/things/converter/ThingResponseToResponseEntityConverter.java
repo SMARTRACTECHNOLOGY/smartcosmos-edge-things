@@ -8,15 +8,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import net.smartcosmos.edge.things.client.things.model.ThingResponse;
-import net.smartcosmos.edge.things.domain.RestCreateMetadataResponseDto;
 
 /**
  * Convert ThingResponse into ResponseEntity
  */
-public class ThingResponseToResponseEntityConverter implements Converter<ThingResponse, ResponseEntity> {}
+public class ThingResponseToResponseEntityConverter implements Converter<ThingResponse, ResponseEntity> {
 
-
-        public ResponseEntity convert(ThingResponse response) {
+    public ResponseEntity convert(ThingResponse response) {
 
         if (StringUtils.isNotBlank(response.getUrn())) {
             return ResponseEntity.created(URI.create(response.getUrn())).body(response);
@@ -24,5 +22,4 @@ public class ThingResponseToResponseEntityConverter implements Converter<ThingRe
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-
-    }
+}

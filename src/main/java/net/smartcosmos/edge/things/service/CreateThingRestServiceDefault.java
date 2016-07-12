@@ -1,6 +1,5 @@
 package net.smartcosmos.edge.things.service;
 
-import java.util.Map;
 import javax.inject.Inject;
 
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +31,7 @@ public class CreateThingRestServiceDefault implements CreateThingRestService {
     public ResponseEntity<?> create(String type, String urn, SmartCosmosUser user) {
         try {
             RestThingCreate createDto = new RestThingCreate().urn(urn);
-            return conversionService.convert(getCreateThingClient(user).createObjectUsingPOST(createDto, type)),
-                                             ResponseEntity.class);
+            return conversionService.convert(getCreateThingClient(user).createObjectUsingPOST(createDto, type), ResponseEntity.class);
 
         } catch (ApiException e) {
             String msg = String.format("Exception creating thing, type: '%s', urn: '%s', cause: '%s'.",
