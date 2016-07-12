@@ -4,9 +4,9 @@ import org.mockito.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import net.smartcosmos.edge.things.service.CreateMetadataRestService;
+import net.smartcosmos.edge.things.service.local.metadata.CreateMetadataRestService;
 import net.smartcosmos.edge.things.service.CreateThingEdgeService;
-import net.smartcosmos.edge.things.service.CreateThingRestService;
+import net.smartcosmos.edge.things.service.local.things.CreateThingRestService;
 
 @Configuration
 public class ThingsEdgeTestConfig {
