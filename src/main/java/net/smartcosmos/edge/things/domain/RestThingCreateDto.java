@@ -2,6 +2,7 @@ package net.smartcosmos.edge.things.domain;
 
 import java.beans.ConstructorProperties;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -22,6 +23,7 @@ import org.apache.commons.lang.BooleanUtils;
 @ApiModel(description = "Create a \"Thing\" in the Things Server.")
 public class RestThingCreateDto {
     private static final int VERSION_1 = 1;
+    @JsonIgnore
     @Setter(AccessLevel.NONE)
     private int version = VERSION_1;
 
