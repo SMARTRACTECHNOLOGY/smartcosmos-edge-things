@@ -15,6 +15,7 @@ import net.smartcosmos.spring.EnableSmartCosmosSecurity;
 @EnableSmartCosmosSecurity
 @EnableSwagger2
 @ComponentScan(basePackages={"net.smartcosmos.edge"}) // required, because @EnableSmartCosmosExtension only scans net.smartcosmos.(dao|extension)
+//@EnabledSmartCosmosEdgeService // could be the annotation that enables the component scan for net.smartcosmos.edge from above
 public class ThingEdgeRdao extends WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter {
 
     public static void main(String[] args) {
