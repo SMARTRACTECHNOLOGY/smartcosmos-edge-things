@@ -1,4 +1,4 @@
-package net.smartcosmos.edge.things.service;
+package net.smartcosmos.edge.things.service.local.things;
 
 import org.springframework.http.ResponseEntity;
 
