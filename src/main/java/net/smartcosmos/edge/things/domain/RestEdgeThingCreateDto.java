@@ -33,7 +33,7 @@ public class RestEdgeThingCreateDto {
     private Boolean isActive = true;
 
     @Builder // used in tests
-    @ConstructorProperties({ "urn", "isActive" })
+    @ConstructorProperties({ "urn", "active" })
     public RestEdgeThingCreateDto(String urn, String type, Boolean isActive) {
         this.urn = urn;
         this.isActive = BooleanUtils.toBoolean(isActive);

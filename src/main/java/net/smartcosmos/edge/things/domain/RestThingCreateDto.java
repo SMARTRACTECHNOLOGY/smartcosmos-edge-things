@@ -34,14 +34,14 @@ public class RestThingCreateDto {
     private String urn;
 
     @ApiModelProperty(notes = "Default: true.")
-    private Boolean isActive = true;
+    private Boolean active = true;
 
     @Builder
-    @ConstructorProperties({ "urn", "isActive", "type" })
-    public RestThingCreateDto(String urn, String type, Boolean isActive) {
+    @ConstructorProperties({ "urn", "active", "type" })
+    public RestThingCreateDto(String urn, String type, Boolean active) {
         this.urn = urn;
         this.type = type;
-        this.isActive = BooleanUtils.toBoolean(isActive);
+        this.active = BooleanUtils.toBoolean(active);
         this.version = VERSION_1;
     }
 }

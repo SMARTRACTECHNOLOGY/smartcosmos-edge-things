@@ -11,14 +11,14 @@ public class RestEdgeThingCreateDtoTest {
             .urn("urn")
             .build();
 
-        assertTrue(thingCreate.getIsActive());
+        assertTrue(thingCreate.getActive());
     }
 
     @Test
     public void thatRestThingCreateAlwaysIsActiveWithNoArgsConstructor() throws Exception {
         RestThingCreateDto thingCreate = new RestThingCreateDto();
 
-        assertTrue(thingCreate.getIsActive());
+        assertTrue(thingCreate.getActive());
     }
 
     @Test

@@ -31,7 +31,7 @@ public class RestEdgeThingCreateResponseDto {
     private final Map<String, Object> metadata;
 
     @Builder
-    @ConstructorProperties({ "type", "urn", "isActive", "tenantUrn", "metadata" })
+    @ConstructorProperties({ "type", "urn", "active", "tenantUrn", "metadata" })
     public RestEdgeThingCreateResponseDto(String type, String urn, Boolean isActive, String tenantUrn, Map<String, Object> metadata) {
         this.type = type;
         this.urn = urn;
