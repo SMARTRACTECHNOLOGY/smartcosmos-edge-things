@@ -4,6 +4,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.annotation.ComponentScan;
 
 import net.smartcosmos.spring.EnableSmartCosmos;
 import net.smartcosmos.spring.EnableSmartCosmosExtension;
@@ -13,6 +14,7 @@ import net.smartcosmos.spring.EnableSmartCosmosSecurity;
 @EnableSmartCosmos
 @EnableSmartCosmosSecurity
 @EnableSwagger2
+@ComponentScan(basePackages={"net.smartcosmos.edge"}) // required, because @EnableSmartCosmosExtension only scans net.smartcosmos.(dao|extension)
 public class ThingEdgeRdao extends WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter {
 
     public static void main(String[] args) {
