@@ -9,6 +9,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import net.smartcosmos.edge.things.domain.local.things.RestThingCreate;
+import net.smartcosmos.edge.things.service.local.metadata.CreateMetadataRestService;
+import net.smartcosmos.edge.things.service.local.things.CreateThingRestService;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
@@ -22,7 +25,6 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
     private final CreateThingRestService createThingRestService;
 
     @Inject
-
     public CreateThingEdgeServiceDefault(
         EventSendingService eventSendingService, ConversionService conversionService, CreateMetadataRestService createMetadataService,
         CreateThingRestService createThingRestService) {
@@ -34,10 +36,21 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
 
     @Override
     @Async
-    public void create(
-        DeferredResult<ResponseEntity> response, String type, String urn, Map<String, Object> metadataMap, Boolean force, SmartCosmosUser user) {
-        // lookup and call things REST service
-        // if all goes well
-        //     lookup and call metadata REST service
+    public void create(DeferredResult<ResponseEntity> response, String type, Map<String, Object> metadataMap, Boolean force, SmartCosmosUser user) {
+
+        // when the conversion is done, all fields consumable by the Things local service are removed, thus the remaining fields are metadata
+        RestThingCreate thingCreate = conversionService.convert(metadataMap, RestThingCreate.class);
+        ResponseEntity thingResponse = createThingRestService.create(type, thingCreate);
+
+        if (!thingResponse.getStatusCode().is2xxSuccessful()) {
+            // if there was an error creating the Thing, that's the error to return
+            response.setResult(thingResponse);
+        }
+
+        // TODO: Create Metadata
+        // - Get URN from Response
+        // - Send request via metadata service class
+
+        response.setResult(thingResponse);
     }
 }
