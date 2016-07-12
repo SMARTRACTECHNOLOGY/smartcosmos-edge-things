@@ -17,7 +17,7 @@ public class RestEdgeThingCreateToRestThingCreateDtoConverter implements Convert
 
         return RestThingCreateDto.builder()
             .urn(source.getUrn())
-            .isActive(source.getIsActive())
+            .active(source.getIsActive())
             .urn(source.getUrn())
             .build();
     }
