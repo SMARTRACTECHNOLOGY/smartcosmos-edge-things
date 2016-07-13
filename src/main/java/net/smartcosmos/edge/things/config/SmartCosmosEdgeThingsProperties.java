@@ -1,4 +1,4 @@
-package net.smartcosmos.edge.things;
+package net.smartcosmos.edge.things.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

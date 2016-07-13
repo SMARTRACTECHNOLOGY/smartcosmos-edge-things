@@ -10,7 +10,6 @@ import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 
-import net.smartcosmos.edge.things.SmartCosmosEdgeThingsProperties;
 import net.smartcosmos.edge.things.rest.template.metadata.MetadataRestTemplate;
 import net.smartcosmos.edge.things.rest.template.thing.ThingRestTemplate;
 
