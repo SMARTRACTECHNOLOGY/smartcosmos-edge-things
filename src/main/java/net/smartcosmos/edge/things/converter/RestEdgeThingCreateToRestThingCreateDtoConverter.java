@@ -4,18 +4,18 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import net.smartcosmos.edge.things.domain.RestEdgeThingCreateDto;
-import net.smartcosmos.edge.things.domain.local.things.RestThingCreateDto;
+import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
 
 /**
- * Converter for {@link RestEdgeThingCreateDto} to {@link RestThingCreateDto} conversion.
+ * Converter for {@link RestEdgeThingCreateDto} to {@link RestThingCreateResponseDto} conversion.
  */
 @Component
-public class RestEdgeThingCreateToRestThingCreateDtoConverter implements Converter<RestEdgeThingCreateDto, RestThingCreateDto> {
+public class RestEdgeThingCreateToRestThingCreateDtoConverter implements Converter<RestEdgeThingCreateDto, RestThingCreateResponseDto> {
 
     @Override
-    public RestThingCreateDto convert(RestEdgeThingCreateDto source) {
+    public RestThingCreateResponseDto convert(RestEdgeThingCreateDto source) {
 
-        return RestThingCreateDto.builder()
+        return RestThingCreateResponseDto.builder()
             .urn(source.getUrn())
             .active(source.getIsActive())
             .urn(source.getUrn())

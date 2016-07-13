@@ -2,14 +2,14 @@ package net.smartcosmos.edge.things.domain;
 
 import org.junit.*;
 
-import net.smartcosmos.edge.things.domain.local.things.RestThingCreateDto;
+import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
 
 import static org.junit.Assert.*;
 
 public class RestEdgeThingCreateDtoTest {
     @Test
     public void thatRestThingCreateAlwaysIsActiveWithBuilder() throws Exception {
-        RestThingCreateDto thingCreate = RestThingCreateDto.builder()
+        RestThingCreateResponseDto thingCreate = RestThingCreateResponseDto.builder()
             .urn("urn")
             .build();
 
@@ -18,14 +18,14 @@ public class RestEdgeThingCreateDtoTest {
 
     @Test
     public void thatRestThingCreateAlwaysIsActiveWithNoArgsConstructor() throws Exception {
-        RestThingCreateDto thingCreate = new RestThingCreateDto();
+        RestThingCreateResponseDto thingCreate = new RestThingCreateResponseDto();
 
         assertTrue(thingCreate.getActive());
     }
 
     @Test
     public void thatVersionIsSet() {
-        RestThingCreateDto dto = RestThingCreateDto.builder().build();
+        RestThingCreateResponseDto dto = RestThingCreateResponseDto.builder().build();
 
         assertNotNull(dto.getVersion());
         assertEquals(RestEdgeThingCreateDto.VERSION_1, dto.getVersion());

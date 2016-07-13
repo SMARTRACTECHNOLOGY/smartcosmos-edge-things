@@ -21,7 +21,7 @@ import org.apache.commons.lang.BooleanUtils;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @ApiModel(description = "Create a \"Thing\" in the Things Server.")
-public class RestThingCreateDto {
+public class RestThingCreateResponseDto {
     private static final int VERSION_1 = 1;
     @JsonIgnore
     @Setter(AccessLevel.NONE)
@@ -38,7 +38,7 @@ public class RestThingCreateDto {
 
     @Builder
     @ConstructorProperties({ "urn", "active", "type" })
-    public RestThingCreateDto(String urn, String type, Boolean active) {
+    public RestThingCreateResponseDto(String urn, String type, Boolean active) {
         this.urn = urn;
         this.type = type;
         this.active = BooleanUtils.toBoolean(active);

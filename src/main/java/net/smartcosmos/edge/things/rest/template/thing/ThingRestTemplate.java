@@ -7,7 +7,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 
-import net.smartcosmos.edge.things.domain.local.things.RestThingCreateDto;
+import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
 import net.smartcosmos.edge.things.domain.local.things.RestThingCreate;
 import net.smartcosmos.edge.things.rest.template.AbstractRestTemplate;
 import net.smartcosmos.edge.things.rest.template.SmartCosmosRequest;
@@ -24,7 +24,7 @@ public class ThingRestTemplate extends AbstractRestTemplate {
         SmartCosmosRequest<RestThingCreate> requestBody = getRequestBody(type, body);
         RequestEntity<RestThingCreate> requestEntity = requestBody.buildRequest();
 
-        return restOperations.exchange(requestEntity, RestThingCreateDto.class);
+        return restOperations.exchange(requestEntity, RestThingCreateResponseDto.class);
     }
 
     @SuppressWarnings("unchecked")
