@@ -3,9 +3,7 @@ package net.smartcosmos.edge.things.domain.local.things;
 import java.beans.ConstructorProperties;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
@@ -15,12 +13,11 @@ import lombok.Setter;
 import org.apache.commons.lang.BooleanUtils;
 
 /**
- * Data Transfer Object for REST request to create a new Thing.
+ * The create response DTO from the Thing REST service.
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-@ApiModel(description = "Create a \"Thing\" in the Things Server.")
 public class RestThingCreateResponseDto {
     private static final int VERSION_1 = 1;
     @JsonIgnore
@@ -28,21 +25,16 @@ public class RestThingCreateResponseDto {
     private int version = VERSION_1;
 
     private String type;
-
-    @ApiModelProperty(notes = "The programmer provided URN for the Thing. This must be unique to the tenant. If not provided, it will be + " +
-                              "generated. Size is database implementation dependent.", required = false)
     private String urn;
-
     private String tenantUrn;
-
-    @ApiModelProperty(notes = "Default: true.")
-    private Boolean active = true;
+    private Boolean active;
 
     @Builder
-    @ConstructorProperties({ "urn", "active", "type" })
-    public RestThingCreateResponseDto(String urn, String type, Boolean active) {
+    @ConstructorProperties({ "urn", "type", "tenantUrn", "active"})
+    public RestThingCreateResponseDto(String urn, String type, String tenantUrn, Boolean active) {
         this.urn = urn;
         this.type = type;
+        this.tenantUrn = tenantUrn;
         this.active = BooleanUtils.toBoolean(active);
         this.version = VERSION_1;
     }
