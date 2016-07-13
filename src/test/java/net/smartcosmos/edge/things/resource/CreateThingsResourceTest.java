@@ -108,7 +108,7 @@ public class CreateThingsResourceTest {
         final ResponseEntity<?> thingResponseEntity = new ResponseEntity<>(thingResponseBody, HttpStatus.CREATED);
 
         final RestMetadataCreateResponseDto metadataResponseBody = RestMetadataCreateResponseDto.builder()
-            .uri(expectedType + "/" + expectedUrn)
+            .uri("/" + expectedType + "/" + expectedUrn)
             .build();
         final ResponseEntity<?> metadataResponseEntity = new ResponseEntity<>(metadataResponseBody, HttpStatus.OK);
 
