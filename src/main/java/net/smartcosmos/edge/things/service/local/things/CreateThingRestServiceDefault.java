@@ -11,6 +11,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import net.smartcosmos.edge.things.domain.local.things.RestThingCreate;
 import net.smartcosmos.edge.things.rest.template.thing.ThingRestTemplate;
+import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
  * The default implementation to call the REST things endpoint to create a thing.
@@ -28,7 +29,7 @@ public class CreateThingRestServiceDefault implements CreateThingRestService {
     }
 
     @Override
-    public ResponseEntity<?> create(String type, net.smartcosmos.edge.things.domain.local.things.RestThingCreate thingCreate) {
+    public ResponseEntity<?> create(String type, net.smartcosmos.edge.things.domain.local.things.RestThingCreate thingCreate, SmartCosmosUser user) {
         try {
             return restTemplate.create(type, thingCreate);
         } catch (HttpClientErrorException e) {
@@ -41,7 +42,7 @@ public class CreateThingRestServiceDefault implements CreateThingRestService {
     }
 
     @Override
-    public ResponseEntity<?> create(String type) {
-        return create(type, new RestThingCreate());
+    public ResponseEntity<?> create(String type, SmartCosmosUser user) {
+        return create(type, new RestThingCreate(), user);
     }
 }
