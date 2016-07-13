@@ -1,6 +1,7 @@
 package net.smartcosmos.edge.things.resource;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 import org.junit.*;
 import org.junit.runner.*;
@@ -26,17 +27,17 @@ import net.smartcosmos.edge.things.config.ThingsEdgeTestConfig;
 import net.smartcosmos.edge.things.domain.RestEdgeThingCreateDto;
 import net.smartcosmos.edge.things.domain.local.metadata.RestMetadataCreateResponseDto;
 import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
-import net.smartcosmos.edge.things.service.local.metadata.CreateMetadataRestService;
-import net.smartcosmos.edge.things.service.local.things.CreateThingRestService;
+import net.smartcosmos.edge.things.rest.template.metadata.MetadataRestTemplate;
+import net.smartcosmos.edge.things.rest.template.thing.ThingRestTemplate;
 import net.smartcosmos.edge.things.testutil.Testutility;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 import static org.hamcrest.Matchers.is;
+import static org.mockito.BDDMockito.verifyNoMoreInteractions;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.anyBoolean;
-import static org.mockito.Mockito.anyMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
@@ -54,10 +55,10 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 public class CreateThingsResourceTest {
 
     @Autowired
-    private CreateThingRestService createThingRestService;
+    private ThingRestTemplate thingRestTemplate;
 
     @Autowired
-    private CreateMetadataRestService createMetadataRestService;
+    private MetadataRestTemplate metadataRestTemplate;
 
     @Autowired
     protected WebApplicationContext webApplicationContext;
@@ -77,6 +78,12 @@ public class CreateThingsResourceTest {
         SecurityContextHolder.setContext(securityContext);
 
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
+    }
+
+    @After
+    public void tearDown() {
+        Mockito.reset(metadataRestTemplate);
+        Mockito.reset(thingRestTemplate);
     }
 
     /**
@@ -105,10 +112,19 @@ public class CreateThingsResourceTest {
             .build();
         final ResponseEntity<?> metadataResponseEntity = new ResponseEntity<>(metadataResponseBody, HttpStatus.OK);
 
-        willReturn(thingResponseEntity).given(createThingRestService).create(anyString(), anyObject(), anyObject());
-        willReturn(metadataResponseEntity).given(createMetadataRestService).create(anyString(), anyString(), anyBoolean(), anyMap(), anyObject());
+        HashMap<String, Object> requestBody = new HashMap<>();
+        requestBody.put("urn", expectedUrn);
+        requestBody.put("active", expectedActive);
+        requestBody.put("name", "someName");
 
-        byte[] jsonDto = Testutility.convertObjectToJsonBytes(RestEdgeThingCreateDto.builder().urn(expectedUrn).type(expectedType).build());
+        HashMap<String, Object> metadataMap = new HashMap<>();
+        requestBody.put("name", "someName");
+
+        willReturn(thingResponseEntity).given(thingRestTemplate).create(anyString(), anyObject());
+        willReturn(metadataResponseEntity)
+            .given(metadataRestTemplate).create(anyString(), anyString(), anyBoolean(), anyMap());
+
+        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
             post("/someType").content(jsonDto)
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -133,7 +149,7 @@ public class CreateThingsResourceTest {
 
         final ResponseEntity<?> thingResponseEntity = new ResponseEntity<>(HttpStatus.CONFLICT);
 
-        willReturn(thingResponseEntity).given(createThingRestService).create(anyString(), anyObject(), anyObject());
+        willReturn(thingResponseEntity).given(thingRestTemplate).create(anyString(), anyObject());
 
         byte[] jsonDto = Testutility.convertObjectToJsonBytes(RestEdgeThingCreateDto.builder().urn(expectedUrn).type(expectedType).build());
         MvcResult mvcResult = this.mockMvc.perform(
@@ -146,6 +162,6 @@ public class CreateThingsResourceTest {
         this.mockMvc.perform(asyncDispatch(mvcResult))
             .andExpect(status().isConflict());
 
-        verifyNoMoreInteractions(createMetadataRestService);
+        verifyNoMoreInteractions(metadataRestTemplate);
     }
 }

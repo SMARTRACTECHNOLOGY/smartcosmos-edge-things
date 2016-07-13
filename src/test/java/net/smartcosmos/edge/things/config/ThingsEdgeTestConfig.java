@@ -8,21 +8,25 @@ import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResour
 import org.springframework.web.client.RestTemplate;
 
 import net.smartcosmos.edge.things.resource.GetThingResource;
-import net.smartcosmos.edge.things.service.GetThingEdgeService;
-import net.smartcosmos.edge.things.service.local.metadata.CreateMetadataRestService;
-import net.smartcosmos.edge.things.service.local.things.CreateThingRestService;
+import net.smartcosmos.edge.things.rest.template.metadata.MetadataRestTemplate;
+import net.smartcosmos.edge.things.rest.template.thing.ThingRestTemplate;
 
 @Configuration
 public class ThingsEdgeTestConfig {
 
     @Bean
-    public GetThingResource getThingResource() {
-        return Mockito.mock(GetThingResource.class);
+    public ThingRestTemplate thingRestTemplate() {
+        return Mockito.mock(ThingRestTemplate.class);
     }
 
     @Bean
-    public GetThingEdgeService getThingEdgeService() {
-        return Mockito.mock(GetThingEdgeService.class);
+    public MetadataRestTemplate metadataRestTemplate() {
+        return Mockito.mock(MetadataRestTemplate.class);
+    }
+
+    @Bean
+    public GetThingResource getThingResource() {
+        return Mockito.mock(GetThingResource.class);
     }
 
     @Bean
@@ -38,15 +42,5 @@ public class ThingsEdgeTestConfig {
     @Bean
     public OAuth2ProtectedResourceDetails oAuth2ProtectedResourceDetails() {
         return Mockito.mock(OAuth2ProtectedResourceDetails.class);
-    }
-
-    @Bean
-    public CreateMetadataRestService createMetadataRestServiceDefault() {
-        return Mockito.mock(CreateMetadataRestService.class);
-    }
-
-    @Bean
-    public CreateThingRestService createThingRestServiceDefault() {
-        return Mockito.mock(CreateThingRestService.class);
     }
 }
