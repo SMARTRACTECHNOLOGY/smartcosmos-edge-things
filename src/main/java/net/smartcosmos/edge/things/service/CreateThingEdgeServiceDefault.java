@@ -44,7 +44,8 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
         ResponseEntity thingResponse = createThingRestService.create(type, thingCreate, user);
 
         if (thingResponse.getStatusCode().is2xxSuccessful()
-            && thingResponse.hasBody() && thingResponse.getBody() instanceof RestThingCreateResponseDto) {
+            && thingResponse.hasBody() && thingResponse.getBody() instanceof RestThingCreateResponseDto
+            && !metadataMap.isEmpty()) {
             RestThingCreateResponseDto thingResponseBody = (RestThingCreateResponseDto) thingResponse.getBody();
             String urn = thingResponseBody.getUrn();
 
