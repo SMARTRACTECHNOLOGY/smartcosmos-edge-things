@@ -124,4 +124,28 @@ public class CreateThingsResourceTest {
             .andExpect(jsonPath("$.tenantUrn", is(expectedTenantUrn)))
             .andExpect(jsonPath("$.active", is(expectedActive)));
     }
+
+    @Test
+    public void thatCreateDuplicateThingFails() throws Exception {
+
+        final String expectedUrn = "urn";
+        final String expectedType = "someType";
+
+        final ResponseEntity<?> thingResponseEntity = new ResponseEntity<>(HttpStatus.CONFLICT);
+
+        willReturn(thingResponseEntity).given(createThingRestService).create(anyString(), anyObject(), anyObject());
+
+        byte[] jsonDto = Testutility.convertObjectToJsonBytes(RestEdgeThingCreateDto.builder().urn(expectedUrn).type(expectedType).build());
+        MvcResult mvcResult = this.mockMvc.perform(
+            post("/someType").content(jsonDto)
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk())
+            .andExpect(request().asyncStarted())
+            .andReturn();
+
+        this.mockMvc.perform(asyncDispatch(mvcResult))
+            .andExpect(status().isConflict());
+
+        verifyNoMoreInteractions(createMetadataRestService);
+    }
 }
