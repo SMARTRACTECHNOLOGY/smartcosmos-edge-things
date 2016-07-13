@@ -2,6 +2,8 @@ package net.smartcosmos.edge.things.domain;
 
 import org.junit.*;
 
+import net.smartcosmos.edge.things.domain.local.things.RestThingCreateDto;
+
 import static org.junit.Assert.*;
 
 public class RestThingCreateResponseDtoTest {

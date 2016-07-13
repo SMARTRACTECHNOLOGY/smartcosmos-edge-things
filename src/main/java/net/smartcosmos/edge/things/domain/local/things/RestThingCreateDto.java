@@ -1,4 +1,4 @@
-package net.smartcosmos.edge.things.domain;
+package net.smartcosmos.edge.things.domain.local.things;
 
 import java.beans.ConstructorProperties;
 

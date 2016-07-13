@@ -4,7 +4,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import net.smartcosmos.edge.things.domain.RestEdgeThingCreateDto;
-import net.smartcosmos.edge.things.domain.RestThingCreateDto;
+import net.smartcosmos.edge.things.domain.local.things.RestThingCreateDto;
 
 /**
  * Converter for {@link RestEdgeThingCreateDto} to {@link RestThingCreateDto} conversion.
