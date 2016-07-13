@@ -7,7 +7,9 @@ import org.junit.runner.*;
 import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -19,18 +21,25 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 
+import net.smartcosmos.edge.things.ThingEdgeRdao;
 import net.smartcosmos.edge.things.config.ThingsEdgeTestConfig;
 import net.smartcosmos.edge.things.domain.RestEdgeThingCreateDto;
+import net.smartcosmos.edge.things.domain.local.metadata.RestMetadataCreateResponseDto;
+import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
 import net.smartcosmos.edge.things.service.CreateThingEdgeService;
+import net.smartcosmos.edge.things.service.local.metadata.CreateMetadataRestService;
+import net.smartcosmos.edge.things.service.local.things.CreateThingRestService;
 import net.smartcosmos.edge.things.testutil.Testutility;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 import static org.hamcrest.Matchers.is;
+import static org.mockito.BDDMockito.*;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.anyMap;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -41,12 +50,18 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@SpringApplicationConfiguration(classes = { ThingsEdgeTestConfig.class, ThingsEdgeTestConfig.class })
+@SpringApplicationConfiguration(classes = { ThingEdgeRdao.class, ThingsEdgeTestConfig.class })
 @ActiveProfiles("test")
 public class CreateThingsResourceTest {
 
     @Autowired
     private CreateThingEdgeService createThingEdgeService;
+
+    @Autowired
+    private CreateThingRestService createThingRestService;
+
+    @Autowired
+    private CreateMetadataRestService createMetadataRestService;
 
     @Autowired
     protected WebApplicationContext webApplicationContext;
@@ -55,14 +70,14 @@ public class CreateThingsResourceTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(getClass());
-        reset(createThingEdgeService);
+
         // Need to mock out user for conversion service.
-        Authentication authentication = Mockito.mock(Authentication.class);
-        Mockito.when(authentication.getPrincipal())
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal())
             .thenReturn(new SmartCosmosUser("accountUrn", "urn:userUrn", "username",
                                             "password", Arrays.asList(new SimpleGrantedAuthority("USER"))));
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
 
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
@@ -73,7 +88,6 @@ public class CreateThingsResourceTest {
      *
      * @throws Exception
      */
-    @Ignore
     @Test
     public void thatCreateThingSucceeds() throws Exception {
 
@@ -82,7 +96,21 @@ public class CreateThingsResourceTest {
         final String expectedTenantUrn = "tenantUrn";
         final Boolean expectedActive = false;
 
-//        doReturn(Optional.empty()).when(createThingEdgeService.create(anyObject(), anyString(), anyString(), anyMap(), anyBoolean(), anyObject()));
+        final RestThingCreateResponseDto thingResponseBody = RestThingCreateResponseDto.builder()
+            .urn(expectedUrn)
+            .type(expectedType)
+            .tenantUrn(expectedTenantUrn)
+            .active(expectedActive)
+            .build();
+        final ResponseEntity<?> thingResponseEntity = new ResponseEntity<>(thingResponseBody, HttpStatus.CREATED);
+
+        final RestMetadataCreateResponseDto metadataResponseBody = RestMetadataCreateResponseDto.builder()
+            .uri(expectedType + "/" + expectedUrn)
+            .build();
+        final ResponseEntity<?> metadataResponseEntity = new ResponseEntity<>(metadataResponseBody, HttpStatus.OK);
+
+        willReturn(thingResponseEntity).given(createThingRestService).create(anyString(), anyObject(), anyObject());
+        willReturn(metadataResponseEntity).given(createMetadataRestService).create(anyString(), anyString(), anyBoolean(), anyMap(), anyObject());
 
         byte[] jsonDto = Testutility.convertObjectToJsonBytes(RestEdgeThingCreateDto.builder().urn(expectedUrn).type(expectedType).build());
         MvcResult mvcResult = this.mockMvc.perform(
@@ -99,8 +127,5 @@ public class CreateThingsResourceTest {
             .andExpect(jsonPath("$.type", is(expectedType)))
             .andExpect(jsonPath("$.tenantUrn", is(expectedTenantUrn)))
             .andExpect(jsonPath("$.active", is(expectedActive)));
-
-        verify(createThingEdgeService, times(1)).create(anyObject(), anyString(), anyMap(), anyBoolean(), anyObject());
-        verifyNoMoreInteractions(createThingEdgeService);
     }
 }

@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 public class RestEdgeThingCreateDtoTest {
     @Test
     public void thatRestThingCreateAlwaysIsActiveWithBuilder() throws Exception {
-        RestThingCreateResponseDto thingCreate = RestThingCreateResponseDto.builder()
+        RestEdgeThingCreateDto thingCreate = RestEdgeThingCreateDto.builder()
             .urn("urn")
             .build();
 
@@ -18,7 +18,7 @@ public class RestEdgeThingCreateDtoTest {
 
     @Test
     public void thatRestThingCreateAlwaysIsActiveWithNoArgsConstructor() throws Exception {
-        RestThingCreateResponseDto thingCreate = new RestThingCreateResponseDto();
+        RestEdgeThingCreateDto thingCreate = new RestEdgeThingCreateDto();
 
         assertTrue(thingCreate.getActive());
     }
