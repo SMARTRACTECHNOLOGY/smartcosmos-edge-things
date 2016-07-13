@@ -12,8 +12,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import org.apache.commons.lang.BooleanUtils;
+
 /**
- * Data Transfer Object for REST local to create a new Thing.
+ * Data Transfer Object for REST request to create a new Thing.
  */
 @Data
 @NoArgsConstructor
@@ -33,10 +35,10 @@ public class RestThingCreate
     private Boolean active = true;
 
     @Builder // used in tests
-    @ConstructorProperties({ "urn", "active"})
+    @ConstructorProperties({ "urn", "type", "active"})
     public RestThingCreate(String urn, String type, Boolean active) {
         this.urn = urn;
-        this.active = active != null ? active : true;
+        this.active = BooleanUtils.toBooleanDefaultIfNull(active, true);
         this.version = VERSION;
     }
 }
