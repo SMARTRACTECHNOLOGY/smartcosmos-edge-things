@@ -33,6 +33,8 @@ public class RestThingCreateResponseDto {
                               "generated. Size is database implementation dependent.", required = false)
     private String urn;
 
+    private String tenantUrn;
+
     @ApiModelProperty(notes = "Default: true.")
     private Boolean active = true;
 
