@@ -41,14 +41,15 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
         // when the conversion is done, all fields consumable by the Things local service are removed, thus the remaining fields are metadata
         RestThingMetadataCreateContainer container = conversionService.convert(metadataMap, RestThingMetadataCreateContainer.class);
         ResponseEntity thingResponse = createThingRestService.create(type, container.getThingRequestBody(), user);
+        Map<String, Object> reducedMetadataMap = container.getMetadataRequestBody();
 
         if (thingResponse.getStatusCode().is2xxSuccessful()
             && thingResponse.hasBody() && thingResponse.getBody() instanceof RestThingCreateResponseDto
-            && !metadataMap.isEmpty()) {
+            && !reducedMetadataMap.isEmpty()) {
             RestThingCreateResponseDto thingResponseBody = (RestThingCreateResponseDto) thingResponse.getBody();
             String urn = thingResponseBody.getUrn();
 
-            ResponseEntity metadataResponse = createMetadataService.create(type, urn, force, container.getMetadataRequestBody(), user);
+            ResponseEntity metadataResponse = createMetadataService.create(type, urn, force, reducedMetadataMap, user);
 
             if (!metadataResponse.getStatusCode().is2xxSuccessful()) {
                 // if there was a problem with the metadata creation, we return that
