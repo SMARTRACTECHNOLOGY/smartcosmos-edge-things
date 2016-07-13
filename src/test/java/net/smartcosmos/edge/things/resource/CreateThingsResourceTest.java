@@ -141,6 +141,57 @@ public class CreateThingsResourceTest {
             .andExpect(jsonPath("$.active", is(expectedActive)));
     }
 
+    /**
+     * Test that creating a Thing without metadata is successful, but doesn't call the metadata service.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void thatCreateThingWithoutMetadataSucceeds() throws Exception {
+
+        final String expectedUrn = "urn";
+        final String expectedType = "someType";
+        final String expectedTenantUrn = "tenantUrn";
+        final Boolean expectedActive = false;
+
+        final RestThingCreateResponseDto thingResponseBody = RestThingCreateResponseDto.builder()
+            .urn(expectedUrn)
+            .type(expectedType)
+            .tenantUrn(expectedTenantUrn)
+            .active(expectedActive)
+            .build();
+        final ResponseEntity<?> thingResponseEntity = new ResponseEntity<>(thingResponseBody, HttpStatus.CREATED);
+
+        HashMap<String, Object> requestBody = new HashMap<>();
+        requestBody.put("urn", expectedUrn);
+        requestBody.put("active", expectedActive);
+
+        willReturn(thingResponseEntity).given(thingRestTemplate).create(anyString(), anyObject());
+
+        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        MvcResult mvcResult = this.mockMvc.perform(
+            post("/someType").content(jsonDto)
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk())
+            .andExpect(request().asyncStarted())
+            .andReturn();
+
+        this.mockMvc.perform(asyncDispatch(mvcResult))
+            .andExpect(status().isCreated())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(jsonPath("$.urn", is(expectedUrn)))
+            .andExpect(jsonPath("$.type", is(expectedType)))
+            .andExpect(jsonPath("$.tenantUrn", is(expectedTenantUrn)))
+            .andExpect(jsonPath("$.active", is(expectedActive)));
+
+        verifyNoMoreInteractions(metadataRestTemplate);
+    }
+
+    /**
+     * Tests that creating an already existent thing fails.
+     *
+     * @throws Exception
+     */
     @Test
     public void thatCreateDuplicateThingFails() throws Exception {
 
