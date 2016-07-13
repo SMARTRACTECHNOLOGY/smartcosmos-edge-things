@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
 import net.smartcosmos.edge.things.domain.local.things.RestThingCreate;
 import net.smartcosmos.edge.things.service.local.metadata.CreateMetadataRestService;
 import net.smartcosmos.edge.things.service.local.things.CreateThingRestService;
@@ -40,17 +41,23 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
 
         // when the conversion is done, all fields consumable by the Things local service are removed, thus the remaining fields are metadata
         RestThingCreate thingCreate = conversionService.convert(metadataMap, RestThingCreate.class);
-        ResponseEntity thingResponse = createThingRestService.create(type, thingCreate);
+        ResponseEntity thingResponse = createThingRestService.create(type, thingCreate, user);
 
-        if (!thingResponse.getStatusCode().is2xxSuccessful()) {
-            // if there was an error creating the Thing, that's the error to return
-            response.setResult(thingResponse);
+        if (thingResponse.getStatusCode().is2xxSuccessful()
+            && thingResponse.hasBody() && thingResponse.getBody() instanceof RestThingCreateResponseDto) {
+            RestThingCreateResponseDto thingResponseBody = (RestThingCreateResponseDto) thingResponse.getBody();
+            String urn = thingResponseBody.getUrn();
+
+            ResponseEntity metadataResponse = createMetadataService.create(type, urn, force, metadataMap, user);
+
+            if (!metadataResponse.getStatusCode().is2xxSuccessful()) {
+                // if there was a problem with the metadata creation, we return that
+                response.setResult(metadataResponse);
+                return;
+            }
         }
 
-        // TODO: Create Metadata
-        // - Get URN from Response
-        // - Send request via metadata service class
-
+        // usually we just return the Thing creation response
         response.setResult(thingResponse);
     }
 }
