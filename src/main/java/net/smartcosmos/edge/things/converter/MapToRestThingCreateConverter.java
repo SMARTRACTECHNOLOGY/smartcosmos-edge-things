@@ -3,14 +3,12 @@ package net.smartcosmos.edge.things.converter;
 import java.util.Map;
 
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.format.FormatterRegistrar;
-import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
 import net.smartcosmos.edge.things.domain.local.things.RestThingCreate;
 
 @Component
-public class MapToRestThingCreateConverter implements Converter<Map<String, Object>, RestThingCreate>, FormatterRegistrar {
+public class MapToRestThingCreateConverter implements Converter<Map<String, Object>, RestThingCreate> {
 
     private final String URN_FIELD_NAME = "urn";
     private final String ACTIVE_FIELD_NAME = "active";
@@ -42,10 +40,5 @@ public class MapToRestThingCreateConverter implements Converter<Map<String, Obje
         }
 
         return thingCreate;
-    }
-
-    @Override
-    public void registerFormatters(FormatterRegistry registry) {
-        registry.addConverter(this);
     }
 }

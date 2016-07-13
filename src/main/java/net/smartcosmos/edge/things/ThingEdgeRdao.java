@@ -1,16 +1,11 @@
 package net.smartcosmos.edge.things;
 
-import java.util.Map;
-
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.format.FormatterRegistrar;
-import org.springframework.format.FormatterRegistry;
 
 import net.smartcosmos.edge.things.config.ThingsEdgeConfiguration;
 import net.smartcosmos.spring.EnableSmartCosmos;
@@ -28,15 +23,5 @@ public class ThingEdgeRdao extends WebMvcAutoConfiguration.WebMvcAutoConfigurati
 
     public static void main(String[] args) {
         new SpringApplicationBuilder(ThingEdgeRdao.class).web(true).run(args);
-    }
-
-    @Autowired
-    Map<String, FormatterRegistrar> formatterRegistrarMap;
-
-    @Override
-    public void addFormatters(FormatterRegistry registry) {
-        for (FormatterRegistrar registrar : formatterRegistrarMap.values()) {
-            registrar.registerFormatters(registry);
-        }
     }
 }
