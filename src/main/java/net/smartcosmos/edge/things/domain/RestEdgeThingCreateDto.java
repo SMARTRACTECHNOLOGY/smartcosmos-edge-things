@@ -30,13 +30,13 @@ public class RestEdgeThingCreateDto {
     private String urn;
 
     @ApiModelProperty(notes = "Default: true.")
-    private Boolean isActive = true;
+    private Boolean active = true;
 
     @Builder // used in tests
     @ConstructorProperties({ "urn", "active" })
-    public RestEdgeThingCreateDto(String urn, String type, Boolean isActive) {
+    public RestEdgeThingCreateDto(String urn, String type, Boolean active) {
         this.urn = urn;
-        this.isActive = BooleanUtils.toBoolean(isActive);
+        this.active = BooleanUtils.toBooleanDefaultIfNull(active, true);
         this.version = VERSION_1;
     }
 }
