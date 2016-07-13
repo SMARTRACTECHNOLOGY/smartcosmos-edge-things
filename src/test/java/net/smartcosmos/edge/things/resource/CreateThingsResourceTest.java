@@ -26,7 +26,6 @@ import net.smartcosmos.edge.things.config.ThingsEdgeTestConfig;
 import net.smartcosmos.edge.things.domain.RestEdgeThingCreateDto;
 import net.smartcosmos.edge.things.domain.local.metadata.RestMetadataCreateResponseDto;
 import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
-import net.smartcosmos.edge.things.service.CreateThingEdgeService;
 import net.smartcosmos.edge.things.service.local.metadata.CreateMetadataRestService;
 import net.smartcosmos.edge.things.service.local.things.CreateThingRestService;
 import net.smartcosmos.edge.things.testutil.Testutility;
@@ -53,12 +52,6 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @SpringApplicationConfiguration(classes = { ThingEdgeRdao.class, ThingsEdgeTestConfig.class })
 @ActiveProfiles("test")
 public class CreateThingsResourceTest {
-
-    @Autowired
-    private CreateThingEdgeService createThingEdgeService;
-
-    @Autowired
-    private GetThingResource getThingResource;
 
     @Autowired
     private CreateThingRestService createThingRestService;
