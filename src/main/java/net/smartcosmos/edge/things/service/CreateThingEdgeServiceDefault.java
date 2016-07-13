@@ -38,7 +38,6 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
     @Async
     public void create(DeferredResult<ResponseEntity> response, String type, Map<String, Object> metadataMap, Boolean force, SmartCosmosUser user) {
 
-        // when the conversion is done, all fields consumable by the Things local service are removed, thus the remaining fields are metadata
         RestThingMetadataCreateContainer container = conversionService.convert(metadataMap, RestThingMetadataCreateContainer.class);
         ResponseEntity thingResponse = createThingRestService.create(type, container.getThingRequestBody(), user);
         Map<String, Object> reducedMetadataMap = container.getMetadataRequestBody();
