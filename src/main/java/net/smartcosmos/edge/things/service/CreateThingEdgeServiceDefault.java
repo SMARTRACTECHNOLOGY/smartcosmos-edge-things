@@ -1,19 +1,18 @@
 package net.smartcosmos.edge.things.service;
 
-import java.util.Map;
-import javax.inject.Inject;
-
+import net.smartcosmos.edge.things.domain.RestThingMetadataCreateContainer;
+import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
+import net.smartcosmos.edge.things.service.local.metadata.CreateMetadataRestService;
+import net.smartcosmos.edge.things.service.local.things.CreateThingRestService;
+import net.smartcosmos.security.user.SmartCosmosUser;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
-import net.smartcosmos.edge.things.domain.local.things.RestThingCreate;
-import net.smartcosmos.edge.things.service.local.metadata.CreateMetadataRestService;
-import net.smartcosmos.edge.things.service.local.things.CreateThingRestService;
-import net.smartcosmos.security.user.SmartCosmosUser;
+import javax.inject.Inject;
+import java.util.Map;
 
 /**
  * Default implementation for {@Link net.smartcosmos.edge.things.service.CreateThingEdgeService}
@@ -40,8 +39,8 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
     public void create(DeferredResult<ResponseEntity> response, String type, Map<String, Object> metadataMap, Boolean force, SmartCosmosUser user) {
 
         // when the conversion is done, all fields consumable by the Things local service are removed, thus the remaining fields are metadata
-        RestThingCreate thingCreate = conversionService.convert(metadataMap, RestThingCreate.class);
-        ResponseEntity thingResponse = createThingRestService.create(type, thingCreate, user);
+        RestThingMetadataCreateContainer container = conversionService.convert(metadataMap, RestThingMetadataCreateContainer.class);
+        ResponseEntity thingResponse = createThingRestService.create(type, container.getThingRequestBody(), user);
 
         if (thingResponse.getStatusCode().is2xxSuccessful()
             && thingResponse.hasBody() && thingResponse.getBody() instanceof RestThingCreateResponseDto
@@ -49,7 +48,7 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
             RestThingCreateResponseDto thingResponseBody = (RestThingCreateResponseDto) thingResponse.getBody();
             String urn = thingResponseBody.getUrn();
 
-            ResponseEntity metadataResponse = createMetadataService.create(type, urn, force, metadataMap, user);
+            ResponseEntity metadataResponse = createMetadataService.create(type, urn, force, container.getMetadataRequestBody(), user);
 
             if (!metadataResponse.getStatusCode().is2xxSuccessful()) {
                 // if there was a problem with the metadata creation, we return that
