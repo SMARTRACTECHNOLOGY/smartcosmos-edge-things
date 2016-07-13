@@ -3,19 +3,10 @@ package net.smartcosmos.edge.things.utility;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * An Enum defining the events reported by the Metadata service.
+ * An Enum defining the events reported by the Thing edge service.
  */
 public enum ThingEdgeEventType {
-    THING_EDGE_CREATED("thing-edge:created"),
-    THING_EDGE_UPDATED("thing-edge:updated"),
-    THING_EDGE_UPSERTED("thing-edge:upserted"),
-    THING_EDGE_READ("thing-edge:read"),
-    THING_EDGE_DEACTIVATED("thing-edge:deactivated"),
-    THING_EDGE_DELETED("thing-edge:deleted"),
-    THING_EDGE_NOT_FOUND("thing-edge:notFound"),
-    THING_EDGE_EMPTY_REQUEST("thing-edge:emptyRequest"),
-    THING_EDGE_CONSTRAINT_VIOLATION("thing-edge:constraintViolation"),
-    THING_EDGE_CREATE_FAILED_ALREADY_EXISTS("thing-edge:createFailedAlreadyExists"),
+
     UNKNOWN("thing-edge:unknown");
 
     private String eventName;
