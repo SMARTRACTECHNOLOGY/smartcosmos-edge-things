@@ -24,7 +24,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import net.smartcosmos.edge.things.ThingEdgeRdao;
 import net.smartcosmos.edge.things.config.ThingsEdgeTestConfig;
-import net.smartcosmos.edge.things.domain.RestEdgeThingCreateDto;
 import net.smartcosmos.edge.things.domain.local.metadata.RestMetadataCreateResponseDto;
 import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
 import net.smartcosmos.edge.things.rest.template.metadata.MetadataRestTemplate;
@@ -33,6 +32,7 @@ import net.smartcosmos.edge.things.testutil.Testutility;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 import static org.hamcrest.Matchers.is;
+import static org.mockito.BDDMockito.anyMap;
 import static org.mockito.BDDMockito.verifyNoMoreInteractions;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Matchers.anyObject;
@@ -202,7 +202,10 @@ public class CreateThingsResourceTest {
 
         willReturn(thingResponseEntity).given(thingRestTemplate).create(anyString(), anyObject());
 
-        byte[] jsonDto = Testutility.convertObjectToJsonBytes(RestEdgeThingCreateDto.builder().urn(expectedUrn).type(expectedType).build());
+        HashMap<String, Object> requestBody = new HashMap<>();
+        requestBody.put("urn", expectedUrn);
+
+        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
             post("/someType").content(jsonDto)
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
