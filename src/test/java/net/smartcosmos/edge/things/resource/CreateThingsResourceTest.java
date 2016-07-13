@@ -27,6 +27,7 @@ import net.smartcosmos.edge.things.domain.RestEdgeThingCreateDto;
 import net.smartcosmos.edge.things.domain.local.metadata.RestMetadataCreateResponseDto;
 import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
 import net.smartcosmos.edge.things.service.CreateThingEdgeService;
+import net.smartcosmos.edge.things.service.GetThingEdgeService;
 import net.smartcosmos.edge.things.service.local.metadata.CreateMetadataRestService;
 import net.smartcosmos.edge.things.service.local.things.CreateThingRestService;
 import net.smartcosmos.edge.things.testutil.Testutility;
@@ -56,6 +57,9 @@ public class CreateThingsResourceTest {
 
     @Autowired
     private CreateThingEdgeService createThingEdgeService;
+
+    @Autowired
+    private GetThingEdgeService getThingEdgeService;
 
     @Autowired
     private CreateThingRestService createThingRestService;
