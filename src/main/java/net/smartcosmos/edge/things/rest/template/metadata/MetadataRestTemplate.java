@@ -52,4 +52,8 @@ public class MetadataRestTemplate extends AbstractRestTemplate {
             .requestBody(body)
             .build();
     }
+
+    public ResponseEntity<?> upsert(String ownerType, String ownerUrn, Map<String, Object> metadataMap) {
+        throw new UnsupportedOperationException("not yet implemented");
+    }
 }

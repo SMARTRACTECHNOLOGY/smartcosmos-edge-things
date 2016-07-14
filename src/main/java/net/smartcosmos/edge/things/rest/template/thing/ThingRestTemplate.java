@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 
 import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
 import net.smartcosmos.edge.things.domain.local.things.RestThingCreate;
+import net.smartcosmos.edge.things.domain.local.things.RestThingUpdate;
 import net.smartcosmos.edge.things.rest.template.AbstractRestTemplate;
 import net.smartcosmos.edge.things.rest.template.SmartCosmosRequest;
 
@@ -35,5 +36,9 @@ public class ThingRestTemplate extends AbstractRestTemplate {
                     .url(type)
                     .requestBody(body)
                     .build();
+    }
+
+    public ResponseEntity<?> update(String type, String urn, RestThingUpdate body) {
+        throw new UnsupportedOperationException("not yet implemented");
     }
 }
