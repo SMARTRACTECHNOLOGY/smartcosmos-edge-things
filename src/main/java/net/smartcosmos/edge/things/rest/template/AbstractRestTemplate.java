@@ -23,11 +23,11 @@ public abstract class AbstractRestTemplate {
         return restOperations.exchange(requestEntity, Void.class);
     }
 
-    private SmartCosmosRequest<?> getDeleteRequest(String ownerType, String ownerUrn) {
+    private SmartCosmosRequest<?> getDeleteRequest(String type, String urn) {
 
-        StringBuilder url = new StringBuilder(ownerType)
+        StringBuilder url = new StringBuilder(type)
             .append("/")
-            .append(ownerUrn);
+            .append(urn);
 
         return SmartCosmosRequest.builder()
             .serviceName(serviceName)
