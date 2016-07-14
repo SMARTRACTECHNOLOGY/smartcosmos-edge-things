@@ -19,7 +19,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 @SmartCosmosRdao
 @Slf4j
-@ConditionalOnProperty(prefix = "smt.endpoints.things", name = "enabled", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "smartcosmos.endpoints.things", name = "enabled", matchIfMissing = true)
 public class GetThingResource {
 
     GetThingEdgeService getThingService;

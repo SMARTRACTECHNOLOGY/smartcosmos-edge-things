@@ -17,7 +17,7 @@ import net.smartcosmos.spring.SmartCosmosRdao;
 
 @SmartCosmosRdao
 @Slf4j
-@ConditionalOnProperty(prefix = "smt.endpoints.things", name = "enabled", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "smartcosmos.endpoints.things", name = "enabled", matchIfMissing = true)
 public class DeleteThingResource {
 
     DeleteThingEdgeService deleteThingService;
