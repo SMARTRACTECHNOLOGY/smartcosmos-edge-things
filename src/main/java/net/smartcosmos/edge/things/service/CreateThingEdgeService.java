@@ -13,11 +13,11 @@ import net.smartcosmos.security.user.SmartCosmosUser;
 public interface CreateThingEdgeService {
     /**
      * Create the Thing with metadata.
-     *  @param response the {@Link DeferredResponse} response that should be asynchronous
+     *  @param response the {@link DeferredResult} response that should be asynchronous
      * @param type the programmer/user defined type of the thing to create/update
      * @param metadataMap a Map of the metadata to save for the thing
      * @param force are we acting as upsert (true)
-     * @param user the Spring embedded {@Link SmartCosmosUser}
+     * @param user the Spring embedded {@link SmartCosmosUser}
      */
     void create(
         DeferredResult<ResponseEntity> response, String type, Map<String, Object> metadataMap, Boolean force, SmartCosmosUser user);

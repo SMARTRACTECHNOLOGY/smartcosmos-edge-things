@@ -12,10 +12,10 @@ public interface DeleteThingEdgeService {
 
     /**
      * Delete the Thing and metadata.
-     * @param response the {@Link DeferredResponse} response that should be asynchronous
+     * @param response the {@link DeferredResult} response that should be asynchronous
      * @param type the type of the thing to delete
      * @param urn the URN of the thing to delete
-     * @param user the Spring embedded {@Link SmartCosmosUser}
+     * @param user the Spring embedded {@link SmartCosmosUser}
      */
     void delete(DeferredResult<ResponseEntity> response, String type, String urn, SmartCosmosUser user);
 }
