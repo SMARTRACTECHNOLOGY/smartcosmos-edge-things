@@ -3,6 +3,7 @@ package net.smartcosmos.edge.things.service;
 import javax.inject.Inject;
 
 import org.springframework.core.convert.ConversionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -43,8 +44,8 @@ public class DeleteThingEdgeServiceDefault implements DeleteThingEdgeService {
         if (thingResponse.getStatusCode().is2xxSuccessful()) {
             ResponseEntity metadataResponse = deleteMetadataService.delete(type, urn, user);
 
-            if (!metadataResponse.getStatusCode().is2xxSuccessful()) {
-                // if there was a problem with the metadata creation, we return that
+            if ( !metadataResponse.getStatusCode().is2xxSuccessful() && HttpStatus.NOT_FOUND != metadataResponse.getStatusCode()) {
+                // if there was a problem with the metadata deletion, we return that (but 404 Not Found is okay)
                 response.setResult(metadataResponse);
                 return;
             }
