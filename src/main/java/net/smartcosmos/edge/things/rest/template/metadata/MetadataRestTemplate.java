@@ -24,7 +24,7 @@ public class MetadataRestTemplate extends AbstractRestTemplate {
 
     public ResponseEntity<?> create(String ownerType, String ownerUrn, Boolean force, Map<String, Object> metadataMap) {
 
-        SmartCosmosRequest<Map<String, Object>> requestBody = getCreateRequest(ownerType, ownerUrn, force, metadataMap);
+        SmartCosmosRequest<Map<String, Object>> requestBody = getRequest(ownerType, ownerUrn, force, metadataMap);
         RequestEntity<Map<String, Object>> requestEntity = requestBody.buildRequest();
 
         return restOperations.exchange(requestEntity, RestMetadataCreateResponseDto.class);
@@ -34,8 +34,12 @@ public class MetadataRestTemplate extends AbstractRestTemplate {
         return create(ownerType, ownerUrn, false, metadataMap);
     }
 
+    public ResponseEntity<?> upsert(String ownerType, String ownerUrn, Map<String, Object> metadataMap) {
+        return create(ownerType, ownerUrn, true, metadataMap);
+    }
+
     @SuppressWarnings("unchecked")
-    private SmartCosmosRequest<Map<String, Object>> getCreateRequest(String ownerType, String ownerUrn, Boolean force, Map<String, Object> body) {
+    private SmartCosmosRequest<Map<String, Object>> getRequest(String ownerType, String ownerUrn, Boolean force, Map<String, Object> body) {
 
         StringBuilder url = new StringBuilder(ownerType)
             .append("/")
@@ -51,9 +55,5 @@ public class MetadataRestTemplate extends AbstractRestTemplate {
             .url(url.toString())
             .requestBody(body)
             .build();
-    }
-
-    public ResponseEntity<?> upsert(String ownerType, String ownerUrn, Map<String, Object> metadataMap) {
-        throw new UnsupportedOperationException("not yet implemented");
     }
 }
