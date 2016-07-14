@@ -1,18 +1,19 @@
 package net.smartcosmos.edge.things.service;
 
-import net.smartcosmos.edge.things.domain.RestThingMetadataCreateContainer;
-import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
-import net.smartcosmos.edge.things.service.local.metadata.CreateMetadataRestService;
-import net.smartcosmos.edge.things.service.local.things.CreateThingRestService;
-import net.smartcosmos.security.user.SmartCosmosUser;
+import java.util.Map;
+import javax.inject.Inject;
+
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import javax.inject.Inject;
-import java.util.Map;
+import net.smartcosmos.edge.things.domain.RestThingMetadataCreateContainer;
+import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
+import net.smartcosmos.edge.things.service.local.metadata.CreateMetadataRestService;
+import net.smartcosmos.edge.things.service.local.things.CreateThingRestService;
+import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
  * Default implementation for {@Link net.smartcosmos.edge.things.service.CreateThingEdgeService}
@@ -22,16 +23,16 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
     private final EventSendingService eventSendingService;
     private final ConversionService conversionService;
     private final CreateMetadataRestService createMetadataService;
-    private final CreateThingRestService createThingRestService;
+    private final CreateThingRestService createThingService;
 
     @Inject
     public CreateThingEdgeServiceDefault(
         EventSendingService eventSendingService, ConversionService conversionService, CreateMetadataRestService createMetadataService,
-        CreateThingRestService createThingRestService) {
+        CreateThingRestService createThingService) {
         this.eventSendingService = eventSendingService;
         this.conversionService = conversionService;
         this.createMetadataService = createMetadataService;
-        this.createThingRestService = createThingRestService;
+        this.createThingService = createThingService;
     }
 
     @Override
@@ -39,7 +40,7 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
     public void create(DeferredResult<ResponseEntity> response, String type, Map<String, Object> metadataMap, Boolean force, SmartCosmosUser user) {
 
         RestThingMetadataCreateContainer container = conversionService.convert(metadataMap, RestThingMetadataCreateContainer.class);
-        ResponseEntity thingResponse = createThingRestService.create(type, container.getThingRequestBody(), user);
+        ResponseEntity thingResponse = createThingService.create(type, container.getThingRequestBody(), user);
         Map<String, Object> reducedMetadataMap = container.getMetadataRequestBody();
 
         if (thingResponse.getStatusCode().is2xxSuccessful()

@@ -5,6 +5,7 @@ import javax.validation.Valid;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,6 +19,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 @SmartCosmosRdao
 @Slf4j
+@ConditionalOnProperty(prefix = "smt.endpoints.things", name = "enabled", matchIfMissing = true)
 public class GetThingResource {
 
     GetThingEdgeService getThingService;

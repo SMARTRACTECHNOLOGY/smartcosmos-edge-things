@@ -1,8 +1,11 @@
 package net.smartcosmos.edge.things.rest.template;
 
+import org.springframework.http.HttpMethod;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestOperations;
 
-public class AbstractRestTemplate {
+public abstract class AbstractRestTemplate {
 
     protected final RestOperations restOperations;
     protected final String serviceName;
@@ -10,5 +13,26 @@ public class AbstractRestTemplate {
     public AbstractRestTemplate(RestOperations restOperations, String serviceName) {
         this.restOperations = restOperations;
         this.serviceName = serviceName;
+    }
+
+    public ResponseEntity<?> delete(String ownerType, String ownerUrn) {
+
+        SmartCosmosRequest<?> requestBody = getDeleteRequest(ownerType, ownerUrn);
+        RequestEntity<?> requestEntity = requestBody.buildRequest();
+
+        return restOperations.exchange(requestEntity, Void.class);
+    }
+
+    private SmartCosmosRequest<?> getDeleteRequest(String type, String urn) {
+
+        StringBuilder url = new StringBuilder(type)
+            .append("/")
+            .append(urn);
+
+        return SmartCosmosRequest.builder()
+            .serviceName(serviceName)
+            .httpMethod(HttpMethod.DELETE)
+            .url(url.toString())
+            .build();
     }
 }

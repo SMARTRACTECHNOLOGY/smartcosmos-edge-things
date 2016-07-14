@@ -31,18 +31,18 @@ import static java.net.HttpURLConnection.HTTP_CREATED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 /**
- * REST endpoints for creating things with embeded metadata.
+ * REST endpoints for creating things with embedded metadata.
  */
 @SmartCosmosRdao
 @Slf4j
-@ConditionalOnProperty(prefix = "smtendpoints.things", name = "enabled", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "smt.endpoints.things", name = "enabled", matchIfMissing = true)
 @Api
-public class CreateThingsResource {
+public class CreateThingResource {
 
     CreateThingEdgeService createThingService;
 
     @Inject
-    public CreateThingsResource(CreateThingEdgeService createThingService) {
+    public CreateThingResource(CreateThingEdgeService createThingService) {
         this.createThingService = createThingService;
     }
 
