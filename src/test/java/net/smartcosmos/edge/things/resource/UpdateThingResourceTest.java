@@ -12,12 +12,13 @@ import net.smartcosmos.edge.things.domain.local.metadata.RestMetadataCreateRespo
 import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
 import net.smartcosmos.edge.things.testutil.Testutility;
 
+import static org.mockito.BDDMockito.anyMap;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -26,26 +27,26 @@ public class UpdateThingResourceTest extends AbstractTestResource {
     @Test
     public void testThatUpdateThingSucceeds() throws Exception {
 
-        final String expectedUrn = "urn";
-        final String expectedType = "someType";
+        final String urn = "urn";
+        final String type = "someType";
         final String expectedTenantUrn = "tenantUrn";
         final Boolean expectedActive = false;
 
         final RestThingCreateResponseDto thingResponseBody = RestThingCreateResponseDto.builder()
-            .urn(expectedUrn)
-            .type(expectedType)
+            .urn(urn)
+            .type(type)
             .tenantUrn(expectedTenantUrn)
             .active(expectedActive)
             .build();
         final ResponseEntity<?> thingResponseEntity = new ResponseEntity<>(thingResponseBody, HttpStatus.CREATED);
 
         final RestMetadataCreateResponseDto metadataResponseBody = RestMetadataCreateResponseDto.builder()
-            .uri("/" + expectedType + "/" + expectedUrn)
+            .uri("/" + type + "/" + urn)
             .build();
         final ResponseEntity<?> metadataResponseEntity = new ResponseEntity<>(metadataResponseBody, HttpStatus.OK);
 
         HashMap<String, Object> requestBody = new HashMap<>();
-        requestBody.put("urn", expectedUrn);
+        requestBody.put("urn", urn);
         requestBody.put("active", expectedActive);
         requestBody.put("name", "someName");
         requestBody.put("someKey", "someValue");
@@ -55,7 +56,7 @@ public class UpdateThingResourceTest extends AbstractTestResource {
 
         byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
-            post("/someType").content(jsonDto)
+            put("{type}/{urn}", type, urn).content(jsonDto)
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
             .andExpect(request().asyncStarted())
