@@ -21,14 +21,14 @@ public class ThingRestTemplate extends AbstractRestTemplate {
 
     public ResponseEntity<?> create(String type, RestThingCreate body) {
 
-        SmartCosmosRequest<RestThingCreate> requestBody = getRequestBody(type, body);
+        SmartCosmosRequest<RestThingCreate> requestBody = getCreateRequestBody(type, body);
         RequestEntity<RestThingCreate> requestEntity = requestBody.buildRequest();
 
         return restOperations.exchange(requestEntity, RestThingCreateResponseDto.class);
     }
 
     @SuppressWarnings("unchecked")
-    private SmartCosmosRequest<RestThingCreate> getRequestBody(String type, RestThingCreate body) {
+    private SmartCosmosRequest<RestThingCreate> getCreateRequestBody(String type, RestThingCreate body) {
         return SmartCosmosRequest.<RestThingCreate>builder()
                     .serviceName(serviceName)
                     .httpMethod(HttpMethod.POST)

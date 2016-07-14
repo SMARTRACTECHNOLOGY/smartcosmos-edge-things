@@ -24,7 +24,7 @@ public class MetadataRestTemplate extends AbstractRestTemplate {
 
     public ResponseEntity<?> create(String ownerType, String ownerUrn, Boolean force, Map<String, Object> metadataMap) {
 
-        SmartCosmosRequest<Map<String, Object>> requestBody = getRequestBody(ownerType, ownerUrn, force, metadataMap);
+        SmartCosmosRequest<Map<String, Object>> requestBody = getCreateRequest(ownerType, ownerUrn, force, metadataMap);
         RequestEntity<Map<String, Object>> requestEntity = requestBody.buildRequest();
 
         return restOperations.exchange(requestEntity, RestMetadataCreateResponseDto.class);
@@ -35,7 +35,7 @@ public class MetadataRestTemplate extends AbstractRestTemplate {
     }
 
     @SuppressWarnings("unchecked")
-    private SmartCosmosRequest<Map<String, Object>> getRequestBody(String ownerType, String ownerUrn, Boolean force, Map<String, Object> body) {
+    private SmartCosmosRequest<Map<String, Object>> getCreateRequest(String ownerType, String ownerUrn, Boolean force, Map<String, Object> body) {
 
         StringBuilder url = new StringBuilder(ownerType)
             .append("/")
