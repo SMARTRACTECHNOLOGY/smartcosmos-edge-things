@@ -27,8 +27,6 @@ public abstract class AbstractRestTemplate {
 
         StringBuilder url = new StringBuilder(ownerType)
             .append("/")
-            .append(ownerType)
-            .append("/")
             .append(ownerUrn);
 
         return SmartCosmosRequest.builder()
