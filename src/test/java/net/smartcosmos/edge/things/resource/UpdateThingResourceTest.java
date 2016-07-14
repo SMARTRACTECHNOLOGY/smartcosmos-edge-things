@@ -9,14 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MvcResult;
 
 import net.smartcosmos.edge.things.domain.local.metadata.RestMetadataCreateResponseDto;
-import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
 import net.smartcosmos.edge.things.testutil.Testutility;
 
 import static org.mockito.BDDMockito.anyMap;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
@@ -29,16 +27,9 @@ public class UpdateThingResourceTest extends AbstractTestResource {
 
         final String urn = "urn";
         final String type = "someType";
-        final String expectedTenantUrn = "tenantUrn";
         final Boolean expectedActive = false;
 
-        final RestThingCreateResponseDto thingResponseBody = RestThingCreateResponseDto.builder()
-            .urn(urn)
-            .type(type)
-            .tenantUrn(expectedTenantUrn)
-            .active(expectedActive)
-            .build();
-        final ResponseEntity<?> thingResponseEntity = new ResponseEntity<>(thingResponseBody, HttpStatus.CREATED);
+        final ResponseEntity<?> thingResponseEntity = ResponseEntity.noContent().build();
 
         final RestMetadataCreateResponseDto metadataResponseBody = RestMetadataCreateResponseDto.builder()
             .uri("/" + type + "/" + urn)
@@ -56,7 +47,7 @@ public class UpdateThingResourceTest extends AbstractTestResource {
 
         byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
-            put("{type}/{urn}", type, urn).content(jsonDto)
+            put("/{type}/{urn}", type, urn).content(jsonDto)
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
             .andExpect(request().asyncStarted())
@@ -66,7 +57,10 @@ public class UpdateThingResourceTest extends AbstractTestResource {
             .andExpect(status().isNoContent())
             .andReturn();
 
+        verify(thingRestTemplate, times(1)).update(anyString(), anyString(), anyObject());
         verifyNoMoreInteractions(thingRestTemplate);
+
+        verify(metadataRestTemplate, times(1)).upsert(anyString(), anyString(), anyMap());
         verifyNoMoreInteractions(metadataRestTemplate);
     }
 }
