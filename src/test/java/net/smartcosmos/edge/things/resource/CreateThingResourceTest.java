@@ -52,7 +52,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @WebAppConfiguration
 @SpringApplicationConfiguration(classes = { ThingEdgeRdao.class, ThingsEdgeTestConfig.class })
 @ActiveProfiles("test")
-public class CreateThingsResourceTest {
+public class CreateThingResourceTest {
 
     @Autowired
     private ThingRestTemplate thingRestTemplate;
