@@ -42,5 +42,11 @@ public class DeleteThingResourceTest extends AbstractTestResource {
         this.mockMvc.perform(asyncDispatch(mvcResult))
             .andExpect(status().isNoContent())
             .andReturn();
+
+        verify(thingRestTemplate, times(1)).delete(anyString(), anyString());
+        verify(metadataRestTemplate, times(1)).delete(anyString(), anyString());
+
+        verifyNoMoreInteractions(metadataRestTemplate);
+        verifyNoMoreInteractions(thingRestTemplate);
     }
 }
