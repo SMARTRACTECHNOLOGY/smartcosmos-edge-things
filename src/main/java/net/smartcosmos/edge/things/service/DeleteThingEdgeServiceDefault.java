@@ -14,7 +14,7 @@ import net.smartcosmos.edge.things.service.local.things.DeleteThingRestService;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
- * Default implementation for {@Link net.smartcosmos.edge.things.service.DeleteThingEdgeService}
+ * Default implementation for {@link net.smartcosmos.edge.things.service.DeleteThingEdgeService}
  */
 @Service
 public class DeleteThingEdgeServiceDefault implements DeleteThingEdgeService {

@@ -16,7 +16,7 @@ import net.smartcosmos.edge.things.service.local.things.CreateThingRestService;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
- * Default implementation for {@Link net.smartcosmos.edge.things.service.CreateThingEdgeService}
+ * Default implementation for {@link net.smartcosmos.edge.things.service.CreateThingEdgeService}
  */
 @Service
 public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
