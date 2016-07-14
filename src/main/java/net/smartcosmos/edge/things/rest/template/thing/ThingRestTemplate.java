@@ -39,6 +39,25 @@ public class ThingRestTemplate extends AbstractRestTemplate {
     }
 
     public ResponseEntity<?> update(String type, String urn, RestThingUpdate body) {
-        throw new UnsupportedOperationException("not yet implemented");
+
+        SmartCosmosRequest<RestThingUpdate> requestBody = getUpdateRequestBody(type, urn, body);
+        RequestEntity<RestThingUpdate> requestEntity = requestBody.buildRequest();
+
+        return restOperations.exchange(requestEntity, Void.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    private SmartCosmosRequest<RestThingUpdate> getUpdateRequestBody(String type, String urn, RestThingUpdate body) {
+
+        StringBuilder url = new StringBuilder(type)
+            .append("/")
+            .append(urn);
+
+        return SmartCosmosRequest.<RestThingUpdate>builder()
+            .serviceName(serviceName)
+            .httpMethod(HttpMethod.PUT)
+            .url(url.toString())
+            .requestBody(body)
+            .build();
     }
 }
