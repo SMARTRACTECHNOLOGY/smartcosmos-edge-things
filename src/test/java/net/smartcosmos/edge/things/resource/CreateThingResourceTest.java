@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CreateThingsResourceTest extends AbstractTestResource {
+public class CreateThingResourceTest extends AbstractTestResource {
 
     /**
      * Test that creating a Thing is successful.
