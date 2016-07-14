@@ -9,8 +9,11 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import net.smartcosmos.edge.things.domain.RestThingMetadataUpdateContainer;
+import net.smartcosmos.edge.things.domain.local.things.RestThingUpdate;
 import net.smartcosmos.edge.things.service.local.metadata.UpsertMetadataRestService;
 import net.smartcosmos.edge.things.service.local.things.UpdateThingRestService;
+import net.smartcosmos.edge.things.utility.ResponseBuilderUtility;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
@@ -38,6 +41,37 @@ public class UpdateThingEdgeServiceDefault implements UpdateThingEdgeService {
     @Async
     public void update(DeferredResult<ResponseEntity> response, String type, String urn, Map<String, Object> requestBody, SmartCosmosUser user) {
 
+        RestThingMetadataUpdateContainer container = conversionService.convert(requestBody, RestThingMetadataUpdateContainer.class);
 
+        Map<String, Object> reducedMetadataMap = container.getMetadataRequestBody();
+        RestThingUpdate thingUpdate = container.getThingRequestBody();
+
+        if (thingUpdate == null && reducedMetadataMap.isEmpty()) {
+            // if there is nothing to update, we return 400 Bad Request
+            ResponseEntity nothingToUpdate = ResponseBuilderUtility.buildBadRequestResponse(1, "Nothing to update");
+            response.setResult(nothingToUpdate);
+            return;
+        }
+
+        if (thingUpdate != null) {
+            ResponseEntity thingResponse = updateThingService.update(type, urn, thingUpdate, user);
+            if (!thingResponse.getStatusCode().is2xxSuccessful()) {
+                // if there was a problem with the thing update, we return that
+                response.setResult(thingResponse);
+                return;
+            }
+        }
+
+        if (!reducedMetadataMap.isEmpty()) {
+            ResponseEntity metadataResponse = upsertMetadataService.upsert(type, urn, reducedMetadataMap, user);
+            if (!metadataResponse.getStatusCode().is2xxSuccessful()) {
+                // if there was a problem with the metadata update, we return that
+                response.setResult(metadataResponse);
+                return;
+            }
+        }
+
+        // usually we just return 204 No Content
+        response.setResult(ResponseEntity.noContent().build());
     }
 }

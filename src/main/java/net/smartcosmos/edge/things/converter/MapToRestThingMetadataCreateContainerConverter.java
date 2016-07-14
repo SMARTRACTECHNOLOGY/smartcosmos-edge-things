@@ -46,7 +46,7 @@ public class MapToRestThingMetadataCreateContainerConverter implements Converter
             }
             thingCreate.setActive(active);
         }
-        
+
         return RestThingMetadataCreateContainer.builder()
             .thingRequestBody(thingCreate)
             .metadataRequestBody(metadataMap)
