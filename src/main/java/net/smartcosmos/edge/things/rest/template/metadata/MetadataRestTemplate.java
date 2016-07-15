@@ -46,7 +46,7 @@ public class MetadataRestTemplate extends AbstractRestTemplate {
             .append(ownerUrn);
 
         if (BooleanUtils.isTrue(force)) {
-            url.append("?force").append(String.valueOf(force));
+            url.append("?force=").append(String.valueOf(force));
         }
 
         return SmartCosmosRequest.<RestThingCreate>builder()
