@@ -63,4 +63,79 @@ public class UpdateThingResourceTest extends AbstractTestResource {
         verify(metadataRestTemplate, times(1)).upsert(anyString(), anyString(), anyMap());
         verifyNoMoreInteractions(metadataRestTemplate);
     }
+
+    @Test
+    public void testThatUpdateNonexistentThingFails() throws Exception {
+
+        final String urn = "urn";
+        final String type = "someType";
+        final Boolean expectedActive = false;
+
+        final ResponseEntity<?> thingResponseEntity = ResponseEntity.notFound().build();
+        final ResponseEntity<?> metadataResponseEntity = ResponseEntity.notFound().build();
+
+        HashMap<String, Object> requestBody = new HashMap<>();
+        requestBody.put("urn", urn);
+        requestBody.put("active", expectedActive);
+        requestBody.put("name", "someName");
+        requestBody.put("someKey", "someValue");
+
+        willReturn(thingResponseEntity).given(thingRestTemplate).update(anyString(), anyString(), anyObject());
+        willReturn(metadataResponseEntity).given(metadataRestTemplate).upsert(anyString(), anyString(), anyMap());
+
+        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        MvcResult mvcResult = this.mockMvc.perform(
+            put("/{type}/{urn}", type, urn).content(jsonDto)
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk())
+            .andExpect(request().asyncStarted())
+            .andReturn();
+
+        this.mockMvc.perform(asyncDispatch(mvcResult))
+            .andExpect(status().isNotFound())
+            .andReturn();
+
+        verify(thingRestTemplate, times(1)).update(anyString(), anyString(), anyObject());
+        verifyNoMoreInteractions(thingRestTemplate);
+
+        verifyNoMoreInteractions(metadataRestTemplate);
+    }
+
+    @Test
+    public void testThatUpdateThingConstraintViolationFails() throws Exception {
+
+        final String urn = "urn";
+        final String type = "someType";
+        final Boolean expectedActive = false;
+
+        final ResponseEntity<?> thingResponseEntity = ResponseEntity.noContent().build();
+        final ResponseEntity<?> metadataResponseEntity = ResponseEntity.badRequest().build();
+
+        HashMap<String, Object> requestBody = new HashMap<>();
+        requestBody.put("urn", urn);
+        requestBody.put("active", expectedActive);
+        requestBody.put("name", "someName");
+        requestBody.put("someKey", "someValue");
+
+        willReturn(thingResponseEntity).given(thingRestTemplate).update(anyString(), anyString(), anyObject());
+        willReturn(metadataResponseEntity).given(metadataRestTemplate).upsert(anyString(), anyString(), anyMap());
+
+        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        MvcResult mvcResult = this.mockMvc.perform(
+            put("/{type}/{urn}", type, urn).content(jsonDto)
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk())
+            .andExpect(request().asyncStarted())
+            .andReturn();
+
+        this.mockMvc.perform(asyncDispatch(mvcResult))
+            .andExpect(status().isBadRequest())
+            .andReturn();
+
+        verify(thingRestTemplate, times(1)).update(anyString(), anyString(), anyObject());
+        verifyNoMoreInteractions(thingRestTemplate);
+
+        verify(metadataRestTemplate, times(1)).upsert(anyString(), anyString(), anyMap());
+        verifyNoMoreInteractions(metadataRestTemplate);
+    }
 }
