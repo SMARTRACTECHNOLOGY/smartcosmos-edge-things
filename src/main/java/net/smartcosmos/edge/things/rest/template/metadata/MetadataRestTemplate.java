@@ -18,8 +18,8 @@ import net.smartcosmos.edge.things.rest.template.SmartCosmosRequest;
 @Slf4j
 public class MetadataRestTemplate extends AbstractRestTemplate {
 
-    public MetadataRestTemplate(RestOperations restOperations, String thingServiceName) {
-        super(restOperations, thingServiceName);
+    public MetadataRestTemplate(RestOperations restOperations, String metadataServiceName) {
+        super(restOperations, metadataServiceName);
     }
 
     public ResponseEntity<?> create(String ownerType, String ownerUrn, Boolean force, Map<String, Object> metadataMap) {
