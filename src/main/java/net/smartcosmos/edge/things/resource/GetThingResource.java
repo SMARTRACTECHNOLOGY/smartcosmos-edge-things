@@ -1,5 +1,6 @@
 package net.smartcosmos.edge.things.resource;
 
+import java.util.Set;
 import javax.inject.Inject;
 import javax.validation.Valid;
 
@@ -42,12 +43,13 @@ public class GetThingResource {
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> findAll(
+        @RequestParam(required = false) Set<String> fields,
         @RequestParam(required = false, defaultValue = "1") Integer page,
         @RequestParam(required = false, defaultValue = "20") Integer size,
         @Valid @RequestParam(required = false, defaultValue = "asc") String sortOrder,
         @RequestParam(required = false, defaultValue = "created") String sortBy,
         SmartCosmosUser user) {
 
-        return getThingService.getAll(page, size, sortOrder, sortBy, user);
+        return getThingService.getAll(fields, page, size, sortOrder, sortBy, user);
     }
 }

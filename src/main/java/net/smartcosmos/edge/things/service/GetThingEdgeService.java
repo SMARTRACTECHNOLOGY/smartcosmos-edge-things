@@ -1,5 +1,7 @@
 package net.smartcosmos.edge.things.service;
 
+import java.util.Set;
+
 import org.springframework.http.ResponseEntity;
 
 import net.smartcosmos.security.user.SmartCosmosUser;
@@ -22,6 +24,7 @@ public interface GetThingEdgeService {
     /**
      * Look up all Things and their Metadata in the realm of the authenticated user.
      *
+     * @param metadataKeys the keys of the Metadata fields to include in the response
      * @param page number of the requested page
      * @param size requested page size
      * @param sortOrder the sort order
@@ -29,5 +32,5 @@ public interface GetThingEdgeService {
      * @param user the Spring embedded {@link SmartCosmosUser}
      * @return the response entity
      */
-    ResponseEntity<?> getAll(Integer page, Integer size, String sortOrder, String sortBy, SmartCosmosUser user);
+    ResponseEntity<?> getAll(Set<String> metadataKeys, Integer page, Integer size, String sortOrder, String sortBy, SmartCosmosUser user);
 }
