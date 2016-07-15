@@ -1,13 +1,14 @@
 package net.smartcosmos.edge.things.converter;
 
-import net.smartcosmos.edge.things.domain.RestThingMetadataCreateContainer;
-import net.smartcosmos.edge.things.domain.local.things.RestThingCreate;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import net.smartcosmos.edge.things.domain.RestThingMetadataCreateContainer;
+import net.smartcosmos.edge.things.domain.local.things.RestThingCreate;
 
 @Component
 public class MapToRestThingMetadataCreateContainerConverter implements Converter<Map<String, Object>, RestThingMetadataCreateContainer> {
@@ -45,7 +46,6 @@ public class MapToRestThingMetadataCreateContainerConverter implements Converter
             }
             thingCreate.setActive(active);
         }
-
 
         return RestThingMetadataCreateContainer.builder()
             .thingRequestBody(thingCreate)

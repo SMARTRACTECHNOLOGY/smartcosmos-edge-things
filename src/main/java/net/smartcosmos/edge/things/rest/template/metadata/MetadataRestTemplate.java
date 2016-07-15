@@ -18,13 +18,13 @@ import net.smartcosmos.edge.things.rest.template.SmartCosmosRequest;
 @Slf4j
 public class MetadataRestTemplate extends AbstractRestTemplate {
 
-    public MetadataRestTemplate(RestOperations restOperations, String thingServiceName) {
-        super(restOperations, thingServiceName);
+    public MetadataRestTemplate(RestOperations restOperations, String metadataServiceName) {
+        super(restOperations, metadataServiceName);
     }
 
     public ResponseEntity<?> create(String ownerType, String ownerUrn, Boolean force, Map<String, Object> metadataMap) {
 
-        SmartCosmosRequest<Map<String, Object>> requestBody = getCreateRequest(ownerType, ownerUrn, force, metadataMap);
+        SmartCosmosRequest<Map<String, Object>> requestBody = getRequest(ownerType, ownerUrn, force, metadataMap);
         RequestEntity<Map<String, Object>> requestEntity = requestBody.buildRequest();
 
         return restOperations.exchange(requestEntity, RestMetadataCreateResponseDto.class);
@@ -34,15 +34,19 @@ public class MetadataRestTemplate extends AbstractRestTemplate {
         return create(ownerType, ownerUrn, false, metadataMap);
     }
 
+    public ResponseEntity<?> upsert(String ownerType, String ownerUrn, Map<String, Object> metadataMap) {
+        return create(ownerType, ownerUrn, true, metadataMap);
+    }
+
     @SuppressWarnings("unchecked")
-    private SmartCosmosRequest<Map<String, Object>> getCreateRequest(String ownerType, String ownerUrn, Boolean force, Map<String, Object> body) {
+    private SmartCosmosRequest<Map<String, Object>> getRequest(String ownerType, String ownerUrn, Boolean force, Map<String, Object> body) {
 
         StringBuilder url = new StringBuilder(ownerType)
             .append("/")
             .append(ownerUrn);
 
         if (BooleanUtils.isTrue(force)) {
-            url.append("?force").append(String.valueOf(force));
+            url.append("?force=").append(String.valueOf(force));
         }
 
         return SmartCosmosRequest.<RestThingCreate>builder()

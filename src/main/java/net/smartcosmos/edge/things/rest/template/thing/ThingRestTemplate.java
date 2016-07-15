@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 
 import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
 import net.smartcosmos.edge.things.domain.local.things.RestThingCreate;
+import net.smartcosmos.edge.things.domain.local.things.RestThingUpdate;
 import net.smartcosmos.edge.things.rest.template.AbstractRestTemplate;
 import net.smartcosmos.edge.things.rest.template.SmartCosmosRequest;
 
@@ -35,5 +36,28 @@ public class ThingRestTemplate extends AbstractRestTemplate {
                     .url(type)
                     .requestBody(body)
                     .build();
+    }
+
+    public ResponseEntity<?> update(String type, String urn, RestThingUpdate body) {
+
+        SmartCosmosRequest<RestThingUpdate> requestBody = getUpdateRequestBody(type, urn, body);
+        RequestEntity<RestThingUpdate> requestEntity = requestBody.buildRequest();
+
+        return restOperations.exchange(requestEntity, Void.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    private SmartCosmosRequest<RestThingUpdate> getUpdateRequestBody(String type, String urn, RestThingUpdate body) {
+
+        StringBuilder url = new StringBuilder(type)
+            .append("/")
+            .append(urn);
+
+        return SmartCosmosRequest.<RestThingUpdate>builder()
+            .serviceName(serviceName)
+            .httpMethod(HttpMethod.PUT)
+            .url(url.toString())
+            .requestBody(body)
+            .build();
     }
 }
