@@ -1,16 +1,5 @@
 package net.smartcosmos.edge.things.resource;
 
-import static org.hamcrest.Matchers.is;
-import static org.mockito.BDDMockito.*;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +9,18 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import net.smartcosmos.edge.things.domain.local.things.RestThingResponse;
+
+import static org.hamcrest.Matchers.is;
+import static org.mockito.BDDMockito.anySet;
+import static org.mockito.BDDMockito.*;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class GetThingResourceTest extends AbstractTestResource {
 
