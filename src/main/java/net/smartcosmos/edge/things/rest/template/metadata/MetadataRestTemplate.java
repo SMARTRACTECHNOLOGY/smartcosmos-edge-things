@@ -1,10 +1,12 @@
 package net.smartcosmos.edge.things.rest.template.metadata;
 
 import java.util.Map;
+import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -54,6 +56,32 @@ public class MetadataRestTemplate extends AbstractRestTemplate {
             .httpMethod(HttpMethod.POST)
             .url(url.toString())
             .requestBody(body)
+            .build();
+    }
+
+    public ResponseEntity<?> findByTypeAndUrn(String ownerType, String ownerUrn, Set<String> keyNames) {
+
+        SmartCosmosRequest<Void> requestBody = getFindByOwnerRequest(ownerType, ownerUrn, keyNames);
+        RequestEntity<Void> requestEntity = requestBody.buildRequest();
+
+        return restOperations.exchange(requestEntity, Map.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    private SmartCosmosRequest<Void> getFindByOwnerRequest(String ownerType, String ownerUrn, Set<String> keyNames) {
+
+        StringBuilder url = new StringBuilder(ownerType)
+            .append("/")
+            .append(ownerUrn);
+
+        if (keyNames != null && !keyNames.isEmpty()) {
+            url.append("?keys=").append(StringUtils.join(keyNames, ','));
+        }
+
+        return SmartCosmosRequest.<Void>builder()
+            .serviceName(serviceName)
+            .httpMethod(HttpMethod.POST)
+            .url(url.toString())
             .build();
     }
 }
