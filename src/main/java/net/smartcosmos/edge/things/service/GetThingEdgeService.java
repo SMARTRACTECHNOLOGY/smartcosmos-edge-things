@@ -16,10 +16,11 @@ public interface GetThingEdgeService {
      *
      * @param type the type of the thing
      * @param urn the URN of the thing
+     * @param metadataKeys the keys of the Metadata fields to include in the response
      * @param user the Spring embedded {@link SmartCosmosUser}
      * @return the response entity
      */
-    ResponseEntity<?> getByTypeAndUrn(String type, String urn, SmartCosmosUser user);
+    ResponseEntity<?> getByTypeAndUrn(String type, String urn, Set<String> metadataKeys, SmartCosmosUser user);
 
     /**
      * Look up all Things and their Metadata in the realm of the authenticated user.

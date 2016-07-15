@@ -36,9 +36,10 @@ public class GetThingResource {
     public ResponseEntity<?> findSpecific(
         @PathVariable("type") String type,
         @PathVariable("urn") String urn,
+        @RequestParam(required = false) Set<String> fields,
         SmartCosmosUser user) {
 
-        return getThingService.getByTypeAndUrn(type, urn, user);
+        return getThingService.getByTypeAndUrn(type, urn, fields, user);
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
