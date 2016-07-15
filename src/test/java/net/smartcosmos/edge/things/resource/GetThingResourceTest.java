@@ -68,4 +68,69 @@ public class GetThingResourceTest extends AbstractTestResource {
         verifyNoMoreInteractions(metadataRestTemplate);
         verifyNoMoreInteractions(thingRestTemplate);
     }
+
+    @Test
+    public void thatLookUpSpecificSucceedsWithNoAdditionalMetadata() throws Exception {
+
+        String type = "ownerType";
+        String urn = "ownerUrn";
+        String tenantUrn = "ownerUrn";
+        Boolean active = true;
+
+        RestThingResponse thingResponseBody = RestThingResponse.builder()
+            .urn(urn)
+            .type(type)
+            .tenantUrn(tenantUrn)
+            .active(active)
+            .build();
+        ResponseEntity<RestThingResponse> thingResponseEntity = new ResponseEntity<>(thingResponseBody, HttpStatus.OK);
+
+        ResponseEntity<?> metadataResponseEntity = ResponseEntity.notFound().build();
+
+        willReturn(thingResponseEntity).given(thingRestTemplate).findByTypeAndUrn(anyString(), anyString());
+        willReturn(metadataResponseEntity).given(metadataRestTemplate).findByTypeAndUrn(anyString(), anyString(), anySet());
+
+        mockMvc.perform(
+            get("/{type}/{urn}", type, urn)
+                .param("fields", "name,description")
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(jsonPath("$.urn", is(urn)))
+            .andExpect(jsonPath("$.type", is(type)))
+            .andExpect(jsonPath("$.tenantUrn", is(tenantUrn)))
+            .andExpect(jsonPath("$.active", is(active)))
+            .andReturn();
+
+        verify(thingRestTemplate, times(1)).findByTypeAndUrn(anyString(), anyString());
+        verify(metadataRestTemplate, times(1)).findByTypeAndUrn(anyString(), anyString(), anySet());
+
+        verifyNoMoreInteractions(metadataRestTemplate);
+        verifyNoMoreInteractions(thingRestTemplate);
+    }
+
+    @Test
+    public void thatLookUpSpecificFailsForNonexistentThing() throws Exception {
+
+        String type = "ownerType";
+        String urn = "ownerUrn";
+
+        ResponseEntity<?> thingResponseEntity = ResponseEntity.notFound().build();
+        ResponseEntity<?> metadataResponseEntity = ResponseEntity.notFound().build();
+
+        willReturn(thingResponseEntity).given(thingRestTemplate).findByTypeAndUrn(anyString(), anyString());
+        willReturn(metadataResponseEntity).given(metadataRestTemplate).findByTypeAndUrn(anyString(), anyString(), anySet());
+
+        mockMvc.perform(
+            get("/{type}/{urn}", type, urn)
+                .param("fields", "name,description")
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(status().isNotFound())
+            .andReturn();
+
+        verify(thingRestTemplate, times(1)).findByTypeAndUrn(anyString(), anyString());
+
+        verifyNoMoreInteractions(metadataRestTemplate);
+        verifyNoMoreInteractions(thingRestTemplate);
+    }
 }
