@@ -39,8 +39,6 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
     @Override
     public ResponseEntity<?> getByTypeAndUrn(String type, String urn, Set<String> metadataKeys, SmartCosmosUser user) {
 
-//        Set<String> metadataKeys = new HashSet<>(Arrays.asList(fields));
-
         ResponseEntity thingResponse = getThingService.findByTypeAndUrn(type, urn, user);
         if (!thingResponse.getStatusCode().is2xxSuccessful()) {
             return thingResponse;
