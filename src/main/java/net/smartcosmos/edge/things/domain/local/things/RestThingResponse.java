@@ -8,9 +8,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Data
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"version"})
 public class RestThingResponse {
@@ -18,10 +20,10 @@ public class RestThingResponse {
     private static final int VERSION = 1;
     @Setter(AccessLevel.NONE)
     private int version = VERSION;
-    private final String urn;
-    private final String type;
-    private final String tenantUrn;
-    private final Boolean active;
+    private String urn;
+    private String type;
+    private String tenantUrn;
+    private Boolean active;
 
     @Builder
     @ConstructorProperties({"urn", "type", "tenantUrn", "active"})
