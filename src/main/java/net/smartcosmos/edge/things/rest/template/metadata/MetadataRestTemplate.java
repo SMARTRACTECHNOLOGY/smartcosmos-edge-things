@@ -80,7 +80,7 @@ public class MetadataRestTemplate extends AbstractRestTemplate {
 
         return SmartCosmosRequest.<Void>builder()
             .serviceName(serviceName)
-            .httpMethod(HttpMethod.POST)
+            .httpMethod(HttpMethod.GET)
             .url(url.toString())
             .build();
     }
