@@ -208,7 +208,7 @@ public class GetThingResourceTest extends AbstractTestResource {
     public void thatLookUpByTypeThingNotFoundFails() throws Exception {
 
         String type = "ownerType";
-                
+
         ResponseEntity<?> thingResponseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         willReturn(thingResponseEntity).given(thingRestTemplate).findByType(anyString());
 
