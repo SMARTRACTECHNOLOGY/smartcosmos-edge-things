@@ -1,5 +1,6 @@
 package net.smartcosmos.edge.things.resource;
 
+import java.util.Set;
 import javax.inject.Inject;
 import javax.validation.Valid;
 
@@ -17,6 +18,7 @@ import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.spring.SmartCosmosRdao;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @SmartCosmosRdao
 @Slf4j
@@ -30,15 +32,26 @@ public class GetThingResource {
         this.getThingService = getThingService;
     }
 
+    @RequestMapping(value = "{type}/{urn}", method = GET, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> findSpecific(
+        @PathVariable("type") String type,
+        @PathVariable("urn") String urn,
+        @RequestParam(required = false) Set<String> fields,
+        SmartCosmosUser user) {
+
+        return getThingService.getByTypeAndUrn(type, urn, fields, user);
+    }
+
     @RequestMapping(value = "/{type}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> findByType(
         @PathVariable("type") String type,
+        @RequestParam(required = false) Set<String> fields,
         @RequestParam(required = false, defaultValue = "1") Integer page,
         @RequestParam(required = false, defaultValue = "20") Integer size,
         @Valid @RequestParam(required = false, defaultValue = "asc") String sortOrder,
         @RequestParam(required = false, defaultValue = "created") String sortBy,
         SmartCosmosUser user) {
 
-        return getThingService.getByType(type, user, page, size, sortOrder, sortBy);
+        return getThingService.getByType(type, fields, page, size, sortOrder, sortBy, user);
     }
 }

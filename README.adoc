@@ -16,10 +16,9 @@ This is a private licensed repository, and as such, should not be shared publicl
 
 * <<create1, Create - `POST /{type}`>>
 * <<update1, Update - `PUT /{type}/{urn}`>>
-* <<read1, Read - `GET /{type}?page={pageNumber}&size={pageSize}`>>
-* <<read2, Read - `GET /{type}/{urn}`>>
-* <<read3, Read - `POST /`>>
-* <<read4, Read - `GET /?page={pageNumber}&size={pageSize}`>>
+* <<read1, Read - `GET /{type}?fields={keyNames}&page={pageNumber}&size={pageSize}`>>
+* <<read2, Read - `GET /{type}/{urn}?fields={keyNames}`>>
+* <<read3, Read - `POST /{type}/findByUrns?fields={keyNames}`>>
 * <<delete1, Delete - `DELETE /{type}/{urn}`>>
 
 === JSON Fields
@@ -40,8 +39,9 @@ Note that the illustrated scheme for URNs is only for documentation purposes. Th
 [width="100%",options="header"]
 |====================
 | Parameter | Format | Default | Description
+| `fields` | Comma-separated String list  |  query parameter, not set by default | Metadata to include in the response (all if not set)
 | `page` | String representation long  |  query parameter, defaults to 0 | page number of multi-element returns, starting at 0
-| `size` | String representation of Integer  |  query parameter, defaults 20 | number of elements per page in multi-element returns |
+| `size` | String representation of Integer  |  query parameter, defaults 20 | number of elements per page in multi-element returns
 |====================
 
 
@@ -123,10 +123,10 @@ PUT /Building/urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 
 
 [[read1]]
-==== Read - `GET /{type}?page={pageNumber}&size={pageSize}`
+==== Read - `GET /{type}?fields={keyNames}&page={pageNumber}&size={pageSize}`
 
 ----
-GET /Building?page=0&size=100
+GET /Building?fields=name,description,large&page=0&size=100
 ----
 .Response
 ----
@@ -165,7 +165,7 @@ GET /Building?page=0&size=100
 
 
 [[read2]]
-==== Read - `GET /{type}/{urn}`
+==== Read - `GET /{type}/{urn}?fields={keyNames}`
 
 ----
 GET /Building/urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
@@ -189,10 +189,10 @@ GET /Building/urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 
 
 [[read3]]
-==== Find by URNs - `POST /`
+==== Find by URNs - `POST /{type}/findByUrns?fields={keyNames}`
 
 ----
-POST /
+POST /building/findByUrns
 ----
 [source,json]
 ----
@@ -238,47 +238,6 @@ POST /
 ----
 
 
-
-[[read4]]
-==== Find all - `GET /?page={pageNumber}&size={pageSize}`
-
-----
-GET /?page=0&size=100
-----
-.Response
-----
-200 OK
-----
-[source,json]
-----
-{
-    "data": [
-        {
-            "urn": "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
-            "type": "Building",
-            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
-            "active": true,
-            "name": "My home",
-            "description": "My home in US",
-            "large": true
-        },
-        {
-            "urn": "urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d",
-            "type": "Building",
-            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
-            "active": true,
-            "name": "My school",
-            "description": "My school in US"
-        }
-    ],
-    "page" : {
-        "size" : 100,
-        "totalElements" : 2,
-        "totalPages" : 1,
-        "number" : 0
-    }
-}
-----
 
 
 [[delete1]]
