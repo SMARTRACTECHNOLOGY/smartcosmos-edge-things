@@ -18,4 +18,17 @@ public interface GetThingRestService {
      * @return the response entity
      */
     ResponseEntity<?> findByTypeAndUrn(String type, String urn, SmartCosmosUser user);
+
+    /**
+     * Look up Things by Type.
+     *
+     * @param type the type of the Things
+     * @param page the number of the results page
+     * @param size the size of a results page
+     * @param sortOrder order to sort the result, can be {@code ASC} or {@code DESC}
+     * @param sortBy name of the field to sort by
+     * @param user the user making the request
+     * @return the response entity with the paged response
+     */
+    ResponseEntity findByType(String type, Integer page, Integer size, String sortOrder, String sortBy, SmartCosmosUser user);
 }

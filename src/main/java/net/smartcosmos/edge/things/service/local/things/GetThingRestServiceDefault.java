@@ -40,4 +40,17 @@ public class GetThingRestServiceDefault implements GetThingRestService {
                 .body(e.getResponseBodyAsString());
         }
     }
+
+    @Override
+    public ResponseEntity findByType(String type, Integer page, Integer size, String sortOrder, String sortBy, SmartCosmosUser user) {
+        try {
+            return restTemplate.findByType(type);
+        } catch (HttpClientErrorException e) {
+            // if something goes wrong, forward the response
+            return ResponseEntity
+                .status(e.getStatusCode())
+                .headers(e.getResponseHeaders())
+                .body(e.getResponseBodyAsString());
+        }
+    }
 }
