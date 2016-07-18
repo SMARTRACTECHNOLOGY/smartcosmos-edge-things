@@ -18,8 +18,7 @@ This is a private licensed repository, and as such, should not be shared publicl
 * <<update1, Update - `PUT /{type}/{urn}`>>
 * <<read1, Read - `GET /{type}?page={pageNumber}&size={pageSize}`>>
 * <<read2, Read - `GET /{type}/{urn}`>>
-* <<read3, Read - `POST /`>>
-* <<read4, Read - `GET /?page={pageNumber}&size={pageSize}`>>
+* <<read3, Read - `POST /{type}/findByUrns`>>
 * <<delete1, Delete - `DELETE /{type}/{urn}`>>
 
 === JSON Fields
@@ -189,10 +188,10 @@ GET /Building/urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 
 
 [[read3]]
-==== Find by URNs - `POST /`
+==== Find by URNs - `POST /{type}/findByUrns`
 
 ----
-POST /
+POST /building/findByUrns
 ----
 [source,json]
 ----
@@ -238,47 +237,6 @@ POST /
 ----
 
 
-
-[[read4]]
-==== Find all - `GET /?page={pageNumber}&size={pageSize}`
-
-----
-GET /?page=0&size=100
-----
-.Response
-----
-200 OK
-----
-[source,json]
-----
-{
-    "data": [
-        {
-            "urn": "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
-            "type": "Building",
-            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
-            "active": true,
-            "name": "My home",
-            "description": "My home in US",
-            "large": true
-        },
-        {
-            "urn": "urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d",
-            "type": "Building",
-            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
-            "active": true,
-            "name": "My school",
-            "description": "My school in US"
-        }
-    ],
-    "page" : {
-        "size" : 100,
-        "totalElements" : 2,
-        "totalPages" : 1,
-        "number" : 0
-    }
-}
-----
 
 
 [[delete1]]
