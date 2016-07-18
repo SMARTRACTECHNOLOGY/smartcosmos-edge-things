@@ -42,8 +42,9 @@ public class GetThingResource {
         return getThingService.getByTypeAndUrn(type, urn, fields, user);
     }
 
-    @RequestMapping(value = "", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> findAll(
+    @RequestMapping(value = "/{type}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> findByType(
+        @PathVariable("type") String type,
         @RequestParam(required = false) Set<String> fields,
         @RequestParam(required = false, defaultValue = "1") Integer page,
         @RequestParam(required = false, defaultValue = "20") Integer size,
@@ -51,6 +52,6 @@ public class GetThingResource {
         @RequestParam(required = false, defaultValue = "created") String sortBy,
         SmartCosmosUser user) {
 
-        return getThingService.getAll(fields, page, size, sortOrder, sortBy, user);
+        return getThingService.getByType(type, fields, page, size, sortOrder, sortBy, user);
     }
 }
