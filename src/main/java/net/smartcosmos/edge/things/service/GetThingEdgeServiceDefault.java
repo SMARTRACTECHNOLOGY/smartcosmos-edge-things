@@ -27,7 +27,6 @@ import net.smartcosmos.edge.things.service.local.metadata.GetMetadataRestService
 import net.smartcosmos.edge.things.service.local.things.GetThingRestService;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class GetThingEdgeServiceDefault implements GetThingEdgeService {
