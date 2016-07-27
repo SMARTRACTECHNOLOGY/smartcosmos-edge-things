@@ -1,5 +1,6 @@
 package net.smartcosmos.edge.things.service;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.http.ResponseEntity;
@@ -35,4 +36,19 @@ public interface GetThingEdgeService {
      * @return the response entity
      */
     ResponseEntity<?> getByType(String type, Set<String> metadataKeys, Integer page, Integer size, String sortOrder, String sortBy, SmartCosmosUser user);
+
+    /**
+     * Return owners which have all of the given keys-value pairs assigned to them.
+     *
+     * @param keyValuePairs a Map of the metadata key-value pairs
+     * @param page the page number
+     * @param size the page size
+     * @param user the Spring embedded {@link SmartCosmosUser}
+     * @return the response entity
+     */
+    ResponseEntity<?> findByKeyValuePairs(
+        Map<String, Object> keyValuePairs,
+        Integer page,
+        Integer size,
+        SmartCosmosUser user);
 }

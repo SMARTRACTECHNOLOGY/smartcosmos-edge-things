@@ -5,8 +5,11 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
+import net.smartcosmos.edge.things.domain.local.metadata.RestMetadataFindByKeyValueResponseDto;
+import net.smartcosmos.edge.things.domain.local.metadata.RestMetadataOwnerResponseDto;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,8 @@ import net.smartcosmos.edge.things.exception.RestException;
 import net.smartcosmos.edge.things.service.local.metadata.GetMetadataRestService;
 import net.smartcosmos.edge.things.service.local.things.GetThingRestService;
 import net.smartcosmos.security.user.SmartCosmosUser;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class GetThingEdgeServiceDefault implements GetThingEdgeService {
@@ -85,6 +90,63 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
             // Look up Metadata owners and merge Thing fields
             return getMetadataOwnerMergeThings(type, metadataKeys, page, size, sortOrder, sortBy, user);
         }
+    }
+
+    @Override
+    public ResponseEntity<?> findByKeyValuePairs(
+        Map<String, Object> keyValuePairs,
+        Integer page,
+        Integer size,
+        SmartCosmosUser user) {
+
+        final String sortOrder = "ASC";
+        final String sortBy = "type";
+
+        ResponseEntity metadataResponse = getMetadataService
+            .findByKeyValuePairs(keyValuePairs, page, size, sortOrder, sortBy, user);
+
+        if (metadataResponse.getStatusCode().is2xxSuccessful() &&
+            metadataResponse.hasBody() &&
+            metadataResponse.getBody() instanceof RestMetadataFindByKeyValueResponseDto) {
+
+            RestMetadataFindByKeyValueResponseDto metadataPage =
+                (RestMetadataFindByKeyValueResponseDto) metadataResponse.getBody();
+
+            List<RestThingResponse> data = new ArrayList<>();
+            for (RestMetadataOwnerResponseDto item: metadataPage.getData()) {
+                Optional<RestThingResponse> thingResponse = getCoreThingByTypeAndUrn(
+                    item.getOwnerType(),
+                    item.getOwnerUrn(),
+                    user);
+                if (thingResponse.isPresent()) {
+                    data.add(thingResponse.get());
+                }
+            }
+            if (!data.isEmpty()) {
+
+                // FIXME: in case of corrupted DB (missing Things for Metadata) page.number might be incorrect
+                return ResponseEntity
+                    .ok()
+                    .body(RestPagedThingResponse.builder()
+                        .data(data)
+                        .page(metadataPage.getPage())
+                        .build());
+            }
+        }
+
+        return ResponseEntity.noContent().build();
+    }
+
+    private Optional<RestThingResponse> getCoreThingByTypeAndUrn(String type, String urn, SmartCosmosUser user) {
+        ResponseEntity<?> responseEntity = getThingService.findByTypeAndUrn(type, urn, user);
+        if (responseEntity.getStatusCode().is2xxSuccessful() &&
+            responseEntity.hasBody() &&
+            responseEntity.getBody() instanceof RestThingResponse) {
+
+            RestThingResponse restThingResponse = (RestThingResponse) responseEntity.getBody();
+            return Optional.of(restThingResponse);
+        }
+        return Optional.empty();
     }
 
     private ResponseEntity<?> getThingsMergeMetadata(String type, Set<String> metadataKeys, Integer page, Integer size, String sortOrder, String sortBy, SmartCosmosUser user) {
