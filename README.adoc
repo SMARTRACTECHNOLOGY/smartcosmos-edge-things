@@ -19,7 +19,7 @@ This is a private licensed repository, and as such, should not be shared publicl
 * <<read1, Read - `GET /{type}?fields={keyNames}&page={pageNumber}&size={pageSize}`>>
 * <<read2, Read - `GET /{type}/{urn}?fields={keyNames}`>>
 * <<read3, Read - `POST /{type}/findByUrns?fields={keyNames}`>>
-* <<read4, Read - `POST /findByKeyValuePairs?page={pageNumber}&size={pageSize}`>>
+* <<read4, Read - `POST /{type}/findByKeyValuePairs?page={pageNumber}&size={pageSize}`>>
 * <<delete1, Delete - `DELETE /{type}/{urn}`>>
 
 === JSON Fields
@@ -239,10 +239,10 @@ POST /building/findByUrns
 ----
 
 [[read4]]
-==== Find by Key-Value Pairs - `POST /findByKeyValuePairs?page={pageNumber}&size={pageSize}`
+==== Find by Key-Value Pairs - `POST /{type}/findByKeyValuePairs?page={pageNumber}&size={pageSize}`
 
 ----
-POST /findByKeyValuePairs?page=1&size=100
+POST /Building/findByKeyValuePairs?page=1&size=100
 ----
 [source,json]
 ----
