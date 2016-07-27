@@ -1,5 +1,6 @@
 package net.smartcosmos.edge.things.service.local.metadata;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.http.ResponseEntity;
@@ -31,4 +32,23 @@ public interface GetMetadataRestService {
      * @return the response entity
      */
     ResponseEntity<?> findByOwner(String ownerType, String ownerUrn, SmartCosmosUser user);
+
+    /**
+     * Return owners which have all of the given keys-value pairs assigned to them.
+     *
+     * @param keyValuePairs a Map of the metadata key-value pairs
+     * @param page the page number
+     * @param size the page size
+     * @param sortOrder the sortOrder
+     * @param sortBy the field to sort by
+     * @param user the current logged in user
+     * @return a page of owners
+     */
+    ResponseEntity<?> findByKeyValuePairs(
+        Map<String, Object> keyValuePairs,
+        Integer page,
+        Integer size,
+        String sortOrder,
+        String sortBy,
+        SmartCosmosUser user);
 }

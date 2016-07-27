@@ -1,12 +1,14 @@
 package net.smartcosmos.edge.things.service.local.metadata;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.core.convert.ConversionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -46,5 +48,25 @@ public class GetMetadataRestServiceDefault implements GetMetadataRestService {
     @Override
     public ResponseEntity<?> findByOwner(String ownerType, String ownerUrn, SmartCosmosUser user) {
         return findByOwner(ownerType, ownerUrn, new HashSet<>(), user);
+    }
+
+    @Override
+    public ResponseEntity<?> findByKeyValuePairs(
+        Map<String, Object> keyValuePairs,
+        Integer page,
+        Integer size,
+        String sortOrder,
+        String sortBy,
+        SmartCosmosUser user) {
+
+        try {
+            return restTemplate.findByKeyValuePairs(keyValuePairs, page, size, sortOrder, sortBy);
+        } catch (HttpClientErrorException e) {
+            // if something goes wrong, forward the response
+            return ResponseEntity
+                .status(e.getStatusCode())
+                .headers(e.getResponseHeaders())
+                .body(e.getResponseBodyAsString());
+        }
     }
 }

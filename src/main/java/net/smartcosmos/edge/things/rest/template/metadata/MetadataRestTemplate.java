@@ -5,6 +5,7 @@ import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.smartcosmos.security.user.SmartCosmosUser;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpMethod;
@@ -82,6 +83,41 @@ public class MetadataRestTemplate extends AbstractRestTemplate {
             .serviceName(serviceName)
             .httpMethod(HttpMethod.GET)
             .url(url.toString())
+            .build();
+    }
+
+    public ResponseEntity<?> findByKeyValuePairs(
+        Map<String, Object> keyValuePairs,
+        Integer page,
+        Integer size,
+        String sortOrder,
+        String sortBy) {
+
+        SmartCosmosRequest<Void> requestBody = getFindByKeyValuePairs(keyValuePairs, page, size, sortOrder, sortBy);
+        RequestEntity<Void> requestEntity = requestBody.buildRequest();
+
+        return restOperations.exchange(requestEntity, Map.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    private SmartCosmosRequest<Void> getFindByKeyValuePairs(
+        Map<String, Object> keyValuePairs,
+        Integer page,
+        Integer size,
+        String sortOrder,
+        String sortBy) {
+
+        StringBuilder url = new StringBuilder(String.format("/findByKeyValuePairs?page=%d&size=%d", page, size))
+            .append("&sortOrder=")
+            .append(sortOrder)
+            .append("&sortBy=")
+            .append(sortBy);
+
+        return SmartCosmosRequest.<Void>builder()
+            .serviceName(serviceName)
+            .httpMethod(HttpMethod.POST)
+            .url(url.toString())
+            .requestBody(keyValuePairs)
             .build();
     }
 }
