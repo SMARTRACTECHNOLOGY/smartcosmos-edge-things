@@ -19,7 +19,7 @@
         <jersey.version>1.18</jersey.version>
         <jodatime.version>2.3</jodatime.version>
         <springfox.version>2.4.0</springfox.version>
-        <start-class>net.smartcosmos.edge.things.ThingEdgeRdao</start-class>
+        <start-class>net.smartcosmos.edge.things.ThingEdgeService</start-class>
         <swagger-api-docs-asciidoc-directory>${swagger-api-docs-base-directory}/asciidoc</swagger-api-docs-asciidoc-directory>
         <swagger-api-docs-base-directory>${swagger-base-directory}/api-docs</swagger-api-docs-base-directory>
         <swagger-api-docs-html-directory>${swagger-api-docs-base-directory}/html</swagger-api-docs-html-directory>
