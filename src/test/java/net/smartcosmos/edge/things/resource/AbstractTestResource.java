@@ -17,7 +17,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
-import net.smartcosmos.edge.things.ThingEdgeRdao;
+import net.smartcosmos.edge.things.ThingEdgeService;
 import net.smartcosmos.edge.things.config.ThingsEdgeTestConfig;
 import net.smartcosmos.edge.things.rest.template.metadata.MetadataRestTemplate;
 import net.smartcosmos.edge.things.rest.template.thing.ThingRestTemplate;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@SpringApplicationConfiguration(classes = { ThingEdgeRdao.class, ThingsEdgeTestConfig.class })
+@SpringApplicationConfiguration(classes = { ThingEdgeService.class, ThingsEdgeTestConfig.class })
 @ActiveProfiles("test")
 public abstract class AbstractTestResource {
 

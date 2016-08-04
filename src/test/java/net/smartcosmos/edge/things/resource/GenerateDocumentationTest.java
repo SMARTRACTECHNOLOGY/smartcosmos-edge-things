@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import net.smartcosmos.edge.things.ThingEdgeRdao;
+import net.smartcosmos.edge.things.ThingEdgeService;
 import net.smartcosmos.edge.things.config.SpringfoxDocumentationConfig;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@SpringApplicationConfiguration(classes = { ThingEdgeRdao.class, SpringfoxDocumentationConfig.class })
+@SpringApplicationConfiguration(classes = { ThingEdgeService.class, SpringfoxDocumentationConfig.class })
 @ActiveProfiles("test")
 public class GenerateDocumentationTest {
     public static final String GENERATED_DOCS_ROOT_LOCATION = "target/generated/api-docs";
