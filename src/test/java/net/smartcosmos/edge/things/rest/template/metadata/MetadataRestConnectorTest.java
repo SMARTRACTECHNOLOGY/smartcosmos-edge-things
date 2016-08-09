@@ -10,35 +10,17 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.*;
-import org.junit.runner.*;
-import org.mockito.*;
-import org.mockito.runners.*;
 
 import net.smartcosmos.edge.things.config.SmartCosmosEdgeThingsProperties;
 import net.smartcosmos.edge.things.rest.RestTemplateFactory;
 import net.smartcosmos.edge.things.rest.template.SmartCosmosRequest;
 
-@RunWith(MockitoJUnitRunner.class)
 public class MetadataRestConnectorTest {
 
-    @Mock
-    RestTemplateFactory restTemplateFactory;
+    RestTemplateFactory restTemplateFactory = mock(RestTemplateFactory.class);
+    SmartCosmosEdgeThingsProperties edgeThingsProperties = new SmartCosmosEdgeThingsProperties();
 
-    @Mock
-    SmartCosmosEdgeThingsProperties edgeThingsProperties;
-
-    @InjectMocks
-    MetadataRestConnector metadataRestConnector;
-
-    @Before
-    public void setUp() {
-
-        SmartCosmosEdgeThingsProperties.LocalServiceProperties mockLocalProperties = mock(
-                SmartCosmosEdgeThingsProperties.LocalServiceProperties.class);
-
-        doReturn(mockLocalProperties).when(edgeThingsProperties.getLocal());
-        doReturn("service").when(mockLocalProperties.getMetadata());
-    }
+    MetadataRestConnector metadataRestConnector = new MetadataRestConnector(restTemplateFactory, edgeThingsProperties);
 
     @Test
     public void thatGetRequestBuildsCorrectUrlWithForceTrue() throws Exception {
