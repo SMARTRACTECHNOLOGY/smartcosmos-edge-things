@@ -1,5 +1,14 @@
 package net.smartcosmos.edge.things.resource;
 
+import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.anyMap;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.util.HashMap;
 
 import org.junit.*;
@@ -10,15 +19,6 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import net.smartcosmos.edge.things.domain.local.metadata.RestMetadataCreateResponseDto;
 import net.smartcosmos.edge.things.testutil.Testutility;
-
-import static org.mockito.BDDMockito.anyMap;
-import static org.mockito.BDDMockito.*;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class UpdateThingResourceTest extends AbstractTestResource {
 
@@ -42,8 +42,8 @@ public class UpdateThingResourceTest extends AbstractTestResource {
         requestBody.put("name", "someName");
         requestBody.put("someKey", "someValue");
 
-        willReturn(thingResponseEntity).given(thingRestTemplate).update(anyString(), anyString(), anyObject());
-        willReturn(metadataResponseEntity).given(metadataRestTemplate).upsert(anyString(), anyString(), anyMap());
+        willReturn(thingResponseEntity).given(thingRestConnector).update(anyString(), anyString(), anyObject());
+        willReturn(metadataResponseEntity).given(metadataRestConnector).upsert(anyString(), anyString(), anyMap());
 
         byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
@@ -57,11 +57,11 @@ public class UpdateThingResourceTest extends AbstractTestResource {
             .andExpect(status().isNoContent())
             .andReturn();
 
-        verify(thingRestTemplate, times(1)).update(anyString(), anyString(), anyObject());
-        verifyNoMoreInteractions(thingRestTemplate);
+        verify(thingRestConnector, times(1)).update(anyString(), anyString(), anyObject());
+        verifyNoMoreInteractions(thingRestConnector);
 
-        verify(metadataRestTemplate, times(1)).upsert(anyString(), anyString(), anyMap());
-        verifyNoMoreInteractions(metadataRestTemplate);
+        verify(metadataRestConnector, times(1)).upsert(anyString(), anyString(), anyMap());
+        verifyNoMoreInteractions(metadataRestConnector);
     }
 
     @Test
@@ -80,8 +80,8 @@ public class UpdateThingResourceTest extends AbstractTestResource {
         requestBody.put("name", "someName");
         requestBody.put("someKey", "someValue");
 
-        willReturn(thingResponseEntity).given(thingRestTemplate).update(anyString(), anyString(), anyObject());
-        willReturn(metadataResponseEntity).given(metadataRestTemplate).upsert(anyString(), anyString(), anyMap());
+        willReturn(thingResponseEntity).given(thingRestConnector).update(anyString(), anyString(), anyObject());
+        willReturn(metadataResponseEntity).given(metadataRestConnector).upsert(anyString(), anyString(), anyMap());
 
         byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
@@ -95,10 +95,10 @@ public class UpdateThingResourceTest extends AbstractTestResource {
             .andExpect(status().isNotFound())
             .andReturn();
 
-        verify(thingRestTemplate, times(1)).update(anyString(), anyString(), anyObject());
-        verifyNoMoreInteractions(thingRestTemplate);
+        verify(thingRestConnector, times(1)).update(anyString(), anyString(), anyObject());
+        verifyNoMoreInteractions(thingRestConnector);
 
-        verifyNoMoreInteractions(metadataRestTemplate);
+        verifyNoMoreInteractions(metadataRestConnector);
     }
 
     @Test
@@ -117,8 +117,8 @@ public class UpdateThingResourceTest extends AbstractTestResource {
         requestBody.put("name", "someName");
         requestBody.put("someKey", "someValue");
 
-        willReturn(thingResponseEntity).given(thingRestTemplate).update(anyString(), anyString(), anyObject());
-        willReturn(metadataResponseEntity).given(metadataRestTemplate).upsert(anyString(), anyString(), anyMap());
+        willReturn(thingResponseEntity).given(thingRestConnector).update(anyString(), anyString(), anyObject());
+        willReturn(metadataResponseEntity).given(metadataRestConnector).upsert(anyString(), anyString(), anyMap());
 
         byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
@@ -132,10 +132,10 @@ public class UpdateThingResourceTest extends AbstractTestResource {
             .andExpect(status().isBadRequest())
             .andReturn();
 
-        verify(thingRestTemplate, times(1)).update(anyString(), anyString(), anyObject());
-        verifyNoMoreInteractions(thingRestTemplate);
+        verify(thingRestConnector, times(1)).update(anyString(), anyString(), anyObject());
+        verifyNoMoreInteractions(thingRestConnector);
 
-        verify(metadataRestTemplate, times(1)).upsert(anyString(), anyString(), anyMap());
-        verifyNoMoreInteractions(metadataRestTemplate);
+        verify(metadataRestConnector, times(1)).upsert(anyString(), anyString(), anyMap());
+        verifyNoMoreInteractions(metadataRestConnector);
     }
 }

@@ -2,14 +2,15 @@ package net.smartcosmos.edge.things.service.local.metadata;
 
 import javax.inject.Inject;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
-import net.smartcosmos.edge.things.rest.template.metadata.MetadataRestTemplate;
+import lombok.extern.slf4j.Slf4j;
+
+import net.smartcosmos.edge.things.rest.template.metadata.MetadataRestConnector;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
@@ -20,12 +21,14 @@ import net.smartcosmos.security.user.SmartCosmosUser;
 public class DeleteMetadataRestServiceDefault implements DeleteMetadataRestService {
 
     private final ConversionService conversionService;
-    private final MetadataRestTemplate restTemplate;
+    private final MetadataRestConnector restTemplate;
 
     @Inject
-    public DeleteMetadataRestServiceDefault(ConversionService conversionService, MetadataRestTemplate restTemplate) {
+    public DeleteMetadataRestServiceDefault(ConversionService conversionService, MetadataRestConnector restTemplate) {
         this.conversionService = conversionService;
         this.restTemplate = restTemplate;
+
+        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
     }
 
     @Override

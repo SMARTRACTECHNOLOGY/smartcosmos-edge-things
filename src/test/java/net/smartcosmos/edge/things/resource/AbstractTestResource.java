@@ -1,5 +1,8 @@
 package net.smartcosmos.edge.things.resource;
 
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
 import java.util.Arrays;
 
 import org.junit.*;
@@ -19,13 +22,9 @@ import org.springframework.web.context.WebApplicationContext;
 
 import net.smartcosmos.edge.things.ThingEdgeService;
 import net.smartcosmos.edge.things.config.ThingsEdgeTestConfig;
-import net.smartcosmos.edge.things.rest.template.metadata.MetadataRestTemplate;
-import net.smartcosmos.edge.things.rest.template.thing.ThingRestTemplate;
+import net.smartcosmos.edge.things.rest.template.metadata.MetadataRestConnector;
+import net.smartcosmos.edge.things.rest.template.thing.ThingRestConnector;
 import net.smartcosmos.security.user.SmartCosmosUser;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -34,10 +33,10 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 public abstract class AbstractTestResource {
 
     @Autowired
-    protected ThingRestTemplate thingRestTemplate;
+    protected ThingRestConnector thingRestConnector;
 
     @Autowired
-    protected MetadataRestTemplate metadataRestTemplate;
+    protected MetadataRestConnector metadataRestConnector;
 
     @Autowired
     protected WebApplicationContext webApplicationContext;
@@ -61,7 +60,7 @@ public abstract class AbstractTestResource {
 
     @After
     public void tearDown() {
-        Mockito.reset(metadataRestTemplate);
-        Mockito.reset(thingRestTemplate);
+        Mockito.reset(metadataRestConnector);
+        Mockito.reset(thingRestConnector);
     }
 }

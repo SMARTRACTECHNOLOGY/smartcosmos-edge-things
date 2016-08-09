@@ -2,14 +2,15 @@ package net.smartcosmos.edge.things.service.local.things;
 
 import javax.inject.Inject;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
-import net.smartcosmos.edge.things.rest.template.thing.ThingRestTemplate;
+import lombok.extern.slf4j.Slf4j;
+
+import net.smartcosmos.edge.things.rest.template.thing.ThingRestConnector;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
@@ -20,12 +21,14 @@ import net.smartcosmos.security.user.SmartCosmosUser;
 public class GetThingRestServiceDefault implements GetThingRestService {
 
     private final ConversionService conversionService;
-    private final ThingRestTemplate restTemplate;
+    private final ThingRestConnector restTemplate;
 
     @Inject
-    public GetThingRestServiceDefault(ConversionService conversionService, ThingRestTemplate restTemplate) {
+    public GetThingRestServiceDefault(ConversionService conversionService, ThingRestConnector restTemplate) {
         this.conversionService = conversionService;
         this.restTemplate = restTemplate;
+
+        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
     }
 
     @Override
