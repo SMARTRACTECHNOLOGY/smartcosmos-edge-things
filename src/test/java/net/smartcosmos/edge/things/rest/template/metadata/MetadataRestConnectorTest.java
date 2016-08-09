@@ -1,5 +1,8 @@
 package net.smartcosmos.edge.things.rest.template.metadata;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -7,18 +10,35 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.*;
+import org.junit.runner.*;
 import org.mockito.*;
-import org.springframework.web.client.RestOperations;
+import org.mockito.runners.*;
 
+import net.smartcosmos.edge.things.config.SmartCosmosEdgeThingsProperties;
+import net.smartcosmos.edge.things.rest.RestTemplateFactory;
 import net.smartcosmos.edge.things.rest.template.SmartCosmosRequest;
 
-import static org.junit.Assert.*;
+@RunWith(MockitoJUnitRunner.class)
+public class MetadataRestConnectorTest {
 
-public class MetadataRestTemplateTest {
+    @Mock
+    RestTemplateFactory restTemplateFactory;
 
-    private final String serviceName = "service";
-    private final RestOperations mockRestOperations = Mockito.mock(RestOperations.class);
-    MetadataRestTemplate restTemplate = new MetadataRestTemplate(mockRestOperations, serviceName);
+    @Mock
+    SmartCosmosEdgeThingsProperties edgeThingsProperties;
+
+    @InjectMocks
+    MetadataRestConnector metadataRestConnector;
+
+    @Before
+    public void setUp() {
+
+        SmartCosmosEdgeThingsProperties.LocalServiceProperties mockLocalProperties = mock(
+                SmartCosmosEdgeThingsProperties.LocalServiceProperties.class);
+
+        doReturn(mockLocalProperties).when(edgeThingsProperties.getLocal());
+        doReturn("service").when(mockLocalProperties.getMetadata());
+    }
 
     @Test
     public void thatGetRequestBuildsCorrectUrlWithForceTrue() throws Exception {
@@ -30,10 +50,10 @@ public class MetadataRestTemplateTest {
 
         final String expectedUrl = ownerType + "/" + ownerUrn + "?force=true";
 
-        Method method = MetadataRestTemplate.class.getDeclaredMethod("getRequest", String.class, String.class, Boolean.class, Map.class);
+        Method method = MetadataRestConnector.class.getDeclaredMethod("getRequest", String.class, String.class, Boolean.class, Map.class);
         method.setAccessible(true);
 
-        Object methodResponse = method.invoke(restTemplate, ownerType, ownerUrn, force, body);
+        Object methodResponse = method.invoke(metadataRestConnector, ownerType, ownerUrn, force, body);
         assertTrue(methodResponse instanceof SmartCosmosRequest);
 
         SmartCosmosRequest<?> request = (SmartCosmosRequest) methodResponse;
@@ -51,10 +71,10 @@ public class MetadataRestTemplateTest {
 
         final String expectedUrl = ownerType + "/" + ownerUrn;
 
-        Method method = MetadataRestTemplate.class.getDeclaredMethod("getRequest", String.class, String.class, Boolean.class, Map.class);
+        Method method = MetadataRestConnector.class.getDeclaredMethod("getRequest", String.class, String.class, Boolean.class, Map.class);
         method.setAccessible(true);
 
-        Object methodResponse = method.invoke(restTemplate, ownerType, ownerUrn, force, body);
+        Object methodResponse = method.invoke(metadataRestConnector, ownerType, ownerUrn, force, body);
         assertTrue(methodResponse instanceof SmartCosmosRequest);
 
         SmartCosmosRequest<?> request = (SmartCosmosRequest) methodResponse;
@@ -73,10 +93,10 @@ public class MetadataRestTemplateTest {
 
         final String expectedUrl = ownerType + "/" + ownerUrn + "?keys=name,description";
 
-        Method method = MetadataRestTemplate.class.getDeclaredMethod("getFindByOwnerRequest", String.class, String.class, Set.class);
+        Method method = MetadataRestConnector.class.getDeclaredMethod("getFindByOwnerRequest", String.class, String.class, Set.class);
         method.setAccessible(true);
 
-        Object methodResponse = method.invoke(restTemplate, ownerType, ownerUrn, keyNames);
+        Object methodResponse = method.invoke(metadataRestConnector, ownerType, ownerUrn, keyNames);
         assertTrue(methodResponse instanceof SmartCosmosRequest);
 
         SmartCosmosRequest<?> request = (SmartCosmosRequest) methodResponse;
@@ -93,10 +113,10 @@ public class MetadataRestTemplateTest {
 
         final String expectedUrl = ownerType + "/" + ownerUrn;
 
-        Method method = MetadataRestTemplate.class.getDeclaredMethod("getFindByOwnerRequest", String.class, String.class, Set.class);
+        Method method = MetadataRestConnector.class.getDeclaredMethod("getFindByOwnerRequest", String.class, String.class, Set.class);
         method.setAccessible(true);
 
-        Object methodResponse = method.invoke(restTemplate, ownerType, ownerUrn, keyNames);
+        Object methodResponse = method.invoke(metadataRestConnector, ownerType, ownerUrn, keyNames);
         assertTrue(methodResponse instanceof SmartCosmosRequest);
 
         SmartCosmosRequest<?> request = (SmartCosmosRequest) methodResponse;
@@ -113,10 +133,10 @@ public class MetadataRestTemplateTest {
 
         final String expectedUrl = ownerType + "/" + ownerUrn;
 
-        Method method = MetadataRestTemplate.class.getDeclaredMethod("getFindByOwnerRequest", String.class, String.class, Set.class);
+        Method method = MetadataRestConnector.class.getDeclaredMethod("getFindByOwnerRequest", String.class, String.class, Set.class);
         method.setAccessible(true);
 
-        Object methodResponse = method.invoke(restTemplate, ownerType, ownerUrn, keyNames);
+        Object methodResponse = method.invoke(metadataRestConnector, ownerType, ownerUrn, keyNames);
         assertTrue(methodResponse instanceof SmartCosmosRequest);
 
         SmartCosmosRequest<?> request = (SmartCosmosRequest) methodResponse;
