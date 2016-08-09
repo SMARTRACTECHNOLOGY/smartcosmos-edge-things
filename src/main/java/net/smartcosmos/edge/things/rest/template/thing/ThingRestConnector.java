@@ -1,25 +1,34 @@
 package net.smartcosmos.edge.things.rest.template.thing;
 
-import lombok.extern.slf4j.Slf4j;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
+import net.smartcosmos.edge.things.config.SmartCosmosEdgeThingsProperties;
 import net.smartcosmos.edge.things.domain.local.things.RestPagedThingResponse;
 import net.smartcosmos.edge.things.domain.local.things.RestThingCreate;
 import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
 import net.smartcosmos.edge.things.domain.local.things.RestThingResponse;
 import net.smartcosmos.edge.things.domain.local.things.RestThingUpdate;
-import net.smartcosmos.edge.things.rest.template.AbstractRestTemplate;
+import net.smartcosmos.edge.things.rest.RestTemplateFactory;
 import net.smartcosmos.edge.things.rest.template.SmartCosmosRequest;
 
+@Component
 @Slf4j
-public class ThingRestTemplate extends AbstractRestTemplate {
+public class ThingRestConnector {
 
-    public ThingRestTemplate(OAuth2RestTemplate restOperations, String thingSeviceName) {
-        super(restOperations, thingSeviceName);
+    private final RestTemplateFactory restTemplateFactory;
+    private final String serviceName;
+
+    @Autowired
+    public ThingRestConnector(RestTemplateFactory restTemplateFactory, SmartCosmosEdgeThingsProperties edgeThingsProperties) {
+
+        this.restTemplateFactory = restTemplateFactory;
+        serviceName = edgeThingsProperties.getLocal().getThings();
     }
 
     public ResponseEntity<?> create(String type, RestThingCreate body) {
@@ -27,10 +36,9 @@ public class ThingRestTemplate extends AbstractRestTemplate {
         SmartCosmosRequest<RestThingCreate> requestBody = getCreateRequestBody(type, body);
         RequestEntity<RestThingCreate> requestEntity = requestBody.buildRequest();
 
-        return restOperations.exchange(requestEntity, RestThingCreateResponseDto.class);
+        return restTemplateFactory.getRestTemplate().exchange(requestEntity, RestThingCreateResponseDto.class);
     }
 
-    @SuppressWarnings("unchecked")
     private SmartCosmosRequest<RestThingCreate> getCreateRequestBody(String type, RestThingCreate body) {
         return SmartCosmosRequest.<RestThingCreate>builder()
                     .serviceName(serviceName)
@@ -45,10 +53,9 @@ public class ThingRestTemplate extends AbstractRestTemplate {
         SmartCosmosRequest<RestThingUpdate> requestBody = getUpdateRequestBody(type, urn, body);
         RequestEntity<RestThingUpdate> requestEntity = requestBody.buildRequest();
 
-        return restOperations.exchange(requestEntity, Void.class);
+        return restTemplateFactory.getRestTemplate().exchange(requestEntity, Void.class);
     }
 
-    @SuppressWarnings("unchecked")
     private SmartCosmosRequest<RestThingUpdate> getUpdateRequestBody(String type, String urn, RestThingUpdate body) {
 
         StringBuilder url = new StringBuilder(type)
@@ -68,10 +75,9 @@ public class ThingRestTemplate extends AbstractRestTemplate {
         SmartCosmosRequest<Void> requestBody = getFindSpecificRequestBody(type, urn);
         RequestEntity<Void> requestEntity = requestBody.buildRequest();
 
-        return restOperations.exchange(requestEntity, RestThingResponse.class);
+        return restTemplateFactory.getRestTemplate().exchange(requestEntity, RestThingResponse.class);
     }
 
-    @SuppressWarnings("unchecked")
     private SmartCosmosRequest<Void> getFindSpecificRequestBody(String type, String urn) {
 
         StringBuilder url = new StringBuilder(type)
@@ -90,10 +96,9 @@ public class ThingRestTemplate extends AbstractRestTemplate {
         SmartCosmosRequest<Void> requestBody = getFindByTypeRequest(type);
         RequestEntity<Void> requestEntity = requestBody.buildRequest();
 
-        return restOperations.exchange(requestEntity, RestPagedThingResponse.class);
+        return restTemplateFactory.getRestTemplate().exchange(requestEntity, RestPagedThingResponse.class);
     }
 
-    @SuppressWarnings("unchecked")
     private SmartCosmosRequest<Void> getFindByTypeRequest(String type) {
 
         return SmartCosmosRequest.<RestThingUpdate>builder()
@@ -101,5 +106,20 @@ public class ThingRestTemplate extends AbstractRestTemplate {
             .httpMethod(HttpMethod.GET)
             .url(type)
             .build();
+    }
+
+    public ResponseEntity<?> delete(String ownerType, String ownerUrn) {
+
+        SmartCosmosRequest<?> requestBody = getDeleteRequest(ownerType, ownerUrn);
+        RequestEntity<?> requestEntity = requestBody.buildRequest();
+
+        return restTemplateFactory.getRestTemplate().exchange(requestEntity, Void.class);
+    }
+
+    private SmartCosmosRequest<?> getDeleteRequest(String type, String urn) {
+
+        StringBuilder url = new StringBuilder(type).append("/").append(urn);
+
+        return SmartCosmosRequest.builder().serviceName(serviceName).httpMethod(HttpMethod.DELETE).url(url.toString()).build();
     }
 }

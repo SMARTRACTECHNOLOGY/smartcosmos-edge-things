@@ -1,15 +1,17 @@
 package net.smartcosmos.edge.things.service.local.metadata;
 
 import java.util.Map;
+
 import javax.inject.Inject;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
-import net.smartcosmos.edge.things.rest.template.metadata.MetadataRestTemplate;
+import lombok.extern.slf4j.Slf4j;
+
+import net.smartcosmos.edge.things.rest.template.metadata.MetadataRestConnector;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
@@ -19,11 +21,13 @@ import net.smartcosmos.security.user.SmartCosmosUser;
 @Service
 public class UpsertMetadataRestServiceDefault implements UpsertMetadataRestService {
 
-    private final MetadataRestTemplate restTemplate;
+    private final MetadataRestConnector restTemplate;
 
     @Inject
-    public UpsertMetadataRestServiceDefault(MetadataRestTemplate restTemplate) {
+    public UpsertMetadataRestServiceDefault(MetadataRestConnector restTemplate) {
         this.restTemplate = restTemplate;
+
+        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
     }
 
     @Override
