@@ -1,11 +1,12 @@
 package net.smartcosmos.edge.things.service;
 
 import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -35,10 +36,11 @@ public class UpdateThingEdgeServiceDefault implements UpdateThingEdgeService {
         this.conversionService = conversionService;
         this.upsertMetadataService = upsertMetadataService;
         this.updateThingService = updateThingService;
+
+        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
     }
 
     @Override
-    @Async
     public void update(DeferredResult<ResponseEntity> response, String type, String urn, Map<String, Object> requestBody, SmartCosmosUser user) {
 
         RestThingMetadataUpdateContainer container = conversionService.convert(requestBody, RestThingMetadataUpdateContainer.class);

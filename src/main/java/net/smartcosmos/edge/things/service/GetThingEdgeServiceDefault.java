@@ -14,6 +14,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import net.smartcosmos.edge.things.domain.RestEdgePagedThingResponseDto;
@@ -44,6 +45,8 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
         this.conversionService = conversionService;
         this.getMetadataService = getMetadataService;
         this.getThingService = getThingService;
+
+        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
     }
 
     @Override
@@ -57,7 +60,6 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
         Map<String, Object> resultMap = new LinkedHashMap<>();
 
         if (thingResponse.hasBody() && thingResponse.getBody() instanceof RestThingResponse) {
-            @SuppressWarnings("unchecked")
             Map<String, Object> thingResponseMap = conversionService.convert(thingResponse.getBody(), Map.class);
             resultMap.putAll(thingResponseMap);
         }
@@ -130,7 +132,6 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
         List<Map<String, Object>> data = new ArrayList<>();
 
         for (RestThingResponse thing : responseList) {
-            @SuppressWarnings("unchecked")
             Map<String, Object> thingMap = conversionService.convert(thing, Map.class);
             Map<String, Object> metadataMap = getMetadataForThing(thing.getType(), thing.getUrn(), metadataKeys, user);
             thingMap.putAll(metadataMap);
@@ -153,7 +154,6 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
 
         if (metadataHttpStatus.is2xxSuccessful()
             && metadataResponse.hasBody() && metadataResponse.getBody() instanceof Map) {
-            @SuppressWarnings("unchecked")
             Map<String, Object> metadaResponseMap = (Map<String, Object>) metadataResponse.getBody();
             resultMap.putAll(metadaResponseMap);
         }
