@@ -1,7 +1,6 @@
 package net.smartcosmos.edge.things.rest;
 
-import javax.inject.Inject;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.ribbon.RibbonClientHttpRequestFactory;
 import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
@@ -24,7 +23,7 @@ public class RestTemplateFactory {
 
     private final OAuth2TokenProvider tokenProvider;
 
-    @Inject
+    @Autowired
     public RestTemplateFactory(SpringClientFactory clientFactory, OAuth2ProtectedResourceDetails resourceDetails, OAuth2TokenProvider tokenProvider) {
 
         this.ribbonClientHttpRequestFactory = new RibbonClientHttpRequestFactory(clientFactory);

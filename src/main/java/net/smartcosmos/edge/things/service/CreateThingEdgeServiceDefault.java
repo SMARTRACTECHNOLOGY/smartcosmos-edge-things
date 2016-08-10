@@ -2,8 +2,7 @@ package net.smartcosmos.edge.things.service;
 
 import java.util.Map;
 
-import javax.inject.Inject;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,10 +25,9 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
     private final CreateMetadataRestService createMetadataService;
     private final CreateThingRestService createThingService;
 
-    @Inject
-    public CreateThingEdgeServiceDefault(
-        EventSendingService eventSendingService, ConversionService conversionService, CreateMetadataRestService createMetadataService,
-        CreateThingRestService createThingService) {
+    @Autowired
+    public CreateThingEdgeServiceDefault(EventSendingService eventSendingService, ConversionService conversionService,
+            CreateMetadataRestService createMetadataService, CreateThingRestService createThingService) {
         this.eventSendingService = eventSendingService;
         this.conversionService = conversionService;
         this.createMetadataService = createMetadataService;
@@ -45,9 +43,8 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
         ResponseEntity thingResponse = createThingService.create(type, container.getThingRequestBody(), user);
         Map<String, Object> reducedMetadataMap = container.getMetadataRequestBody();
 
-        if (thingResponse.getStatusCode().is2xxSuccessful()
-            && thingResponse.hasBody() && thingResponse.getBody() instanceof RestThingCreateResponseDto
-            && !reducedMetadataMap.isEmpty()) {
+        if (thingResponse.getStatusCode().is2xxSuccessful() && thingResponse.hasBody()
+                && thingResponse.getBody() instanceof RestThingCreateResponseDto && !reducedMetadataMap.isEmpty()) {
             RestThingCreateResponseDto thingResponseBody = (RestThingCreateResponseDto) thingResponse.getBody();
             String urn = thingResponseBody.getUrn();
 

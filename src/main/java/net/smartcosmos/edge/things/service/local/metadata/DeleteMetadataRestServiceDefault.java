@@ -1,7 +1,6 @@
 package net.smartcosmos.edge.things.service.local.metadata;
 
-import javax.inject.Inject;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +22,7 @@ public class DeleteMetadataRestServiceDefault implements DeleteMetadataRestServi
     private final ConversionService conversionService;
     private final MetadataRestConnector restTemplate;
 
-    @Inject
+    @Autowired
     public DeleteMetadataRestServiceDefault(ConversionService conversionService, MetadataRestConnector restTemplate) {
         this.conversionService = conversionService;
         this.restTemplate = restTemplate;
@@ -35,12 +34,10 @@ public class DeleteMetadataRestServiceDefault implements DeleteMetadataRestServi
     public ResponseEntity<?> delete(String ownerType, String ownerUrn, SmartCosmosUser user) {
         try {
             return restTemplate.delete(ownerType, ownerUrn);
-        } catch (HttpClientErrorException e) {
+        }
+        catch (HttpClientErrorException e) {
             // if something goes wrong, forward the response
-            return ResponseEntity
-                .status(e.getStatusCode())
-                .headers(e.getResponseHeaders())
-                .body(e.getResponseBodyAsString());
+            return ResponseEntity.status(e.getStatusCode()).headers(e.getResponseHeaders()).body(e.getResponseBodyAsString());
         }
     }
 }

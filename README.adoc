@@ -292,3 +292,32 @@ DELETE /urn/Building/urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d
 ----
 204 NO CONTENT
 ----
+
+== Configuration
+
+[source,yaml]
+----
+server:
+  port: 50594
+
+smartcosmos:
+  security:
+    enabled: true
+
+  endpoints:
+    edge:
+      things:
+        enabled: true
+        create.enabled: true
+        read:
+          urn.enabled: true
+          type.enabled: true
+        update.enabled: true
+        delete.enabled: true
+
+  edge:
+    things:
+      local:
+        things: smartcosmos-ext-things
+        metadata: smartcosmos-ext-metadata
+----

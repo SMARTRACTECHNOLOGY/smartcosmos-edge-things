@@ -1,7 +1,6 @@
 package net.smartcosmos.edge.things.service;
 
-import javax.inject.Inject;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,7 @@ import net.smartcosmos.security.user.SmartCosmosUser;
 public class ThingEdgeEventSendingService implements EventSendingService {
     private final SmartCosmosEventTemplate smartCosmosEventTemplate;
 
-    @Inject
+    @Autowired
     public ThingEdgeEventSendingService(SmartCosmosEventTemplate smartCosmosEventTemplate) {
         this.smartCosmosEventTemplate = smartCosmosEventTemplate;
 
@@ -36,7 +35,8 @@ public class ThingEdgeEventSendingService implements EventSendingService {
     public void sendEvent(SmartCosmosUser user, String eventType, Object entity) {
         try {
             smartCosmosEventTemplate.sendEvent(entity, eventType, user);
-        } catch (SmartCosmosEventException e) {
+        }
+        catch (SmartCosmosEventException e) {
             String msg = String.format("Exception processing metadata event '%s', entity: '%s', cause: '%s'.", eventType, entity, e.toString());
             log.error(msg);
             log.debug(msg, e);
