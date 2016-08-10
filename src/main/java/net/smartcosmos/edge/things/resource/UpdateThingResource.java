@@ -43,10 +43,10 @@ public class UpdateThingResource {
     @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_THINGS_UPDATE, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
     @RequestMapping(method = RequestMethod.PUT, value = ENDPOINT_TYPE_URN, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
     public DeferredResult<ResponseEntity> update( // @formatter:off
-            @PathVariable(TYPE) String type,
-            @PathVariable(URN) String urn,
-            @RequestBody @Valid Map<String, Object> requestBody,
-            SmartCosmosUser user) { // @formatter:on
+        @PathVariable(TYPE) String type,
+        @PathVariable(URN) String urn,
+        @RequestBody @Valid Map<String, Object> requestBody,
+        SmartCosmosUser user) { // @formatter:on
 
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
         updateThingService.update(response, type, urn, requestBody, user);
