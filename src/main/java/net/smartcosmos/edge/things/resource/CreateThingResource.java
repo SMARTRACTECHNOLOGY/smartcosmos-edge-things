@@ -78,7 +78,7 @@ public class CreateThingResource {
     public DeferredResult<ResponseEntity> create(
         @ApiParam(value = "Case-insensitive Thing type to create.", required = true, example = "building")
         @PathVariable(TYPE) String type,
-        @ApiParam(value = "Force API to behanve as an upsert and update data if a thing already exists.", required = false, defaultValue = "false")
+        @ApiParam(value = "Force API to behave as an upsert and update data if a thing already exists.", required = false, defaultValue = "false")
         @RequestParam(name = PARAM_FORCE, required = false, defaultValue = "false") boolean force,
         @ApiParam(value = "The standard fields to create a new Thing.", required = true)
         @RequestBody @Valid Map<String, Object> metadataMap,
