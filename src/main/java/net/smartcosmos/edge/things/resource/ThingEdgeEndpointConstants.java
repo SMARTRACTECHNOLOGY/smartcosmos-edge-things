@@ -36,34 +36,17 @@ public interface ThingEdgeEndpointConstants {
 
     // endregion
 
-    // region CreateThingResource Endpoint Enablement
+    // region Endpoint Enablement
 
     String ENDPOINT_ENABLEMENT_THINGS_CREATE = ENDPOINT_ENABLEMENT_THINGS + ".create";
 
-    // endregion
-
-    // region DeleteThingResource Endpoint Enablement
-
     String ENDPOINT_ENABLEMENT_THINGS_DELETE = ENDPOINT_ENABLEMENT_THINGS + ".delete";
-
-    // endregion
-
-    // region GetThingResource Endpoint Enablement
 
     String ENDPOINT_ENABLEMENT_THINGS_READ = ENDPOINT_ENABLEMENT_THINGS + ".read";
     String ENDPOINT_ENABLEMENT_THINGS_READ_TYPE = ENDPOINT_ENABLEMENT_THINGS_READ + "." + TYPE;
     String ENDPOINT_ENABLEMENT_THINGS_READ_URN = ENDPOINT_ENABLEMENT_THINGS_READ + "." + URN;
 
-    // endregion
-
-    // region UpdateThingResource Endpoint Enablement
-
     String ENDPOINT_ENABLEMENT_THINGS_UPDATE = ENDPOINT_ENABLEMENT_THINGS + ".update";
 
     // endregion
-
-    public static final String ENDPOINT_TENANTS_URN = "/" + ENDPOINT_BASE_NAME_THINGS + "/{urn}";
-    public static final String ENDPOINT_ENABLEMENT_TENANTS_CREATE = ENDPOINT_ENABLEMENT_THINGS + ".create";
-    public static final String ENDPOINT_ENABLEMENT_TENANTS_READ_URN = ENDPOINT_ENABLEMENT_THINGS_READ + ".urn";
-    public static final String ENDPOINT_ENABLEMENT_TENANTS_UPDATE = ENDPOINT_ENABLEMENT_THINGS + ".update";
 }
