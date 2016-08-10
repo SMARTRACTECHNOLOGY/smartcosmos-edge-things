@@ -1,8 +1,5 @@
 package net.smartcosmos.edge.things.resource;
 
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
-
 import java.util.Arrays;
 
 import org.junit.*;
@@ -26,6 +23,9 @@ import net.smartcosmos.edge.things.rest.template.metadata.MetadataRestConnector;
 import net.smartcosmos.edge.things.rest.template.thing.ThingRestConnector;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @SpringApplicationConfiguration(classes = { ThingEdgeService.class, ThingsEdgeTestConfig.class })
@@ -44,13 +44,14 @@ public abstract class AbstractTestResource {
 
     @Before
     public void setUp() throws Exception {
+
         MockitoAnnotations.initMocks(getClass());
 
         // Need to mock out user for conversion service.
         Authentication authentication = mock(Authentication.class);
         when(authentication.getPrincipal())
             .thenReturn(new SmartCosmosUser("accountUrn", "urn:userUrn", "username",
-                "password", Arrays.asList(new SimpleGrantedAuthority("USER"))));
+                                            "password", Arrays.asList(new SimpleGrantedAuthority("USER"))));
         SecurityContext securityContext = mock(SecurityContext.class);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
@@ -60,6 +61,7 @@ public abstract class AbstractTestResource {
 
     @After
     public void tearDown() {
+
         Mockito.reset(metadataRestConnector);
         Mockito.reset(thingRestConnector);
     }

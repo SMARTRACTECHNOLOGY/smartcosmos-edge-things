@@ -1,5 +1,7 @@
 package net.smartcosmos.edge.things.rest;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.ribbon.RibbonClientHttpRequestFactory;
 import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
@@ -8,8 +10,6 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Factory class creating new {@link RestTemplate} instances for calls to other services in the roundRock.

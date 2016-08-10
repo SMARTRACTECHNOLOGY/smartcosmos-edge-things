@@ -42,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringApplicationConfiguration(classes = { ThingEdgeService.class, SpringfoxDocumentationConfig.class })
 @ActiveProfiles("test")
 public class GenerateDocumentationTest {
+
     public static final String GENERATED_DOCS_ROOT_LOCATION = "target/generated/api-docs";
     public static final String GENERATED_ASCIIDOCS_LOCATION = GENERATED_DOCS_ROOT_LOCATION + "/asciidoc";
     public static final String GENERATED_JSON_LOCATION = GENERATED_DOCS_ROOT_LOCATION + "/json";
@@ -60,15 +61,18 @@ public class GenerateDocumentationTest {
             .thenReturn(new SmartCosmosUser("accountUrn", "urn:userUrn", "username",
                                             "password", Arrays.asList(new SimpleGrantedAuthority("USER"))));
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        Mockito.when(securityContext.getAuthentication())
+            .thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
         MockitoAnnotations.initMocks(getClass());
 
-        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(context)
+            .build();
     }
 
     @Test
     public void convertSwaggerToAsciiDoc() throws Exception {
+
         mockMvc.perform(get(Swagger2Controller.DEFAULT_URL).accept(MediaType.APPLICATION_JSON))
             .andDo(Swagger2MarkupResultHandler.outputDirectory(getDocOutputLocation())
                        .withMarkupLanguage(MarkupLanguage.ASCIIDOC)
@@ -79,17 +83,23 @@ public class GenerateDocumentationTest {
     }
 
     private String getJsonOutputLocation() {
+
         return new File(getTargetFileLocation(), GENERATED_JSON_LOCATION).getAbsolutePath();
     }
 
     private String getDocOutputLocation() {
+
         return new File(getTargetFileLocation(), GENERATED_ASCIIDOCS_LOCATION).getAbsolutePath();
     }
 
     private File getTargetFileLocation() {
+
         ClassPathResource pathfileRes = new ClassPathResource("application-test.yml");
         try {
-            return pathfileRes.getFile().getParentFile().getParentFile().getParentFile();
+            return pathfileRes.getFile()
+                .getParentFile()
+                .getParentFile()
+                .getParentFile();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,14 +1,5 @@
 package net.smartcosmos.edge.things.resource;
 
-import static org.mockito.BDDMockito.*;
-import static org.mockito.BDDMockito.anyMap;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.util.HashMap;
 
 import org.junit.*;
@@ -20,6 +11,15 @@ import org.springframework.test.web.servlet.MvcResult;
 import net.smartcosmos.edge.things.domain.local.metadata.RestMetadataCreateResponseDto;
 import net.smartcosmos.edge.things.testutil.Testutility;
 
+import static org.mockito.BDDMockito.anyMap;
+import static org.mockito.BDDMockito.*;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 public class UpdateThingResourceTest extends AbstractTestResource {
 
     @Test
@@ -29,7 +29,8 @@ public class UpdateThingResourceTest extends AbstractTestResource {
         final String type = "someType";
         final Boolean expectedActive = false;
 
-        final ResponseEntity<?> thingResponseEntity = ResponseEntity.noContent().build();
+        final ResponseEntity<?> thingResponseEntity = ResponseEntity.noContent()
+            .build();
 
         final RestMetadataCreateResponseDto metadataResponseBody = RestMetadataCreateResponseDto.builder()
             .uri("/" + type + "/" + urn)
@@ -42,8 +43,10 @@ public class UpdateThingResourceTest extends AbstractTestResource {
         requestBody.put("name", "someName");
         requestBody.put("someKey", "someValue");
 
-        willReturn(thingResponseEntity).given(thingRestConnector).update(anyString(), anyString(), anyObject());
-        willReturn(metadataResponseEntity).given(metadataRestConnector).upsert(anyString(), anyString(), anyMap());
+        willReturn(thingResponseEntity).given(thingRestConnector)
+            .update(anyString(), anyString(), anyObject());
+        willReturn(metadataResponseEntity).given(metadataRestConnector)
+            .upsert(anyString(), anyString(), anyMap());
 
         byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
@@ -71,8 +74,10 @@ public class UpdateThingResourceTest extends AbstractTestResource {
         final String type = "someType";
         final Boolean expectedActive = false;
 
-        final ResponseEntity<?> thingResponseEntity = ResponseEntity.notFound().build();
-        final ResponseEntity<?> metadataResponseEntity = ResponseEntity.notFound().build();
+        final ResponseEntity<?> thingResponseEntity = ResponseEntity.notFound()
+            .build();
+        final ResponseEntity<?> metadataResponseEntity = ResponseEntity.notFound()
+            .build();
 
         HashMap<String, Object> requestBody = new HashMap<>();
         requestBody.put("urn", urn);
@@ -80,8 +85,10 @@ public class UpdateThingResourceTest extends AbstractTestResource {
         requestBody.put("name", "someName");
         requestBody.put("someKey", "someValue");
 
-        willReturn(thingResponseEntity).given(thingRestConnector).update(anyString(), anyString(), anyObject());
-        willReturn(metadataResponseEntity).given(metadataRestConnector).upsert(anyString(), anyString(), anyMap());
+        willReturn(thingResponseEntity).given(thingRestConnector)
+            .update(anyString(), anyString(), anyObject());
+        willReturn(metadataResponseEntity).given(metadataRestConnector)
+            .upsert(anyString(), anyString(), anyMap());
 
         byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
@@ -108,8 +115,10 @@ public class UpdateThingResourceTest extends AbstractTestResource {
         final String type = "someType";
         final Boolean expectedActive = false;
 
-        final ResponseEntity<?> thingResponseEntity = ResponseEntity.noContent().build();
-        final ResponseEntity<?> metadataResponseEntity = ResponseEntity.badRequest().build();
+        final ResponseEntity<?> thingResponseEntity = ResponseEntity.noContent()
+            .build();
+        final ResponseEntity<?> metadataResponseEntity = ResponseEntity.badRequest()
+            .build();
 
         HashMap<String, Object> requestBody = new HashMap<>();
         requestBody.put("urn", urn);
@@ -117,8 +126,10 @@ public class UpdateThingResourceTest extends AbstractTestResource {
         requestBody.put("name", "someName");
         requestBody.put("someKey", "someValue");
 
-        willReturn(thingResponseEntity).given(thingRestConnector).update(anyString(), anyString(), anyObject());
-        willReturn(metadataResponseEntity).given(metadataRestConnector).upsert(anyString(), anyString(), anyMap());
+        willReturn(thingResponseEntity).given(thingRestConnector)
+            .update(anyString(), anyString(), anyObject());
+        willReturn(metadataResponseEntity).given(metadataRestConnector)
+            .upsert(anyString(), anyString(), anyMap());
 
         byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(

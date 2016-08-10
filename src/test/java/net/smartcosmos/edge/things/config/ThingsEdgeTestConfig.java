@@ -13,16 +13,19 @@ public class ThingsEdgeTestConfig {
 
     @Bean
     public ThingRestConnector thingRestConnector() {
+
         return Mockito.mock(ThingRestConnector.class);
     }
 
     @Bean
     public MetadataRestConnector metadataRestConnector() {
+
         return Mockito.mock(MetadataRestConnector.class);
     }
 
     @Bean
     public OAuth2ProtectedResourceDetails oAuth2ProtectedResourceDetails() {
+
         return Mockito.mock(OAuth2ProtectedResourceDetails.class);
     }
 }
