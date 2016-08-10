@@ -1,12 +1,12 @@
 package net.smartcosmos.edge.things.service.local.things;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+
+import lombok.extern.slf4j.Slf4j;
 
 import net.smartcosmos.edge.things.domain.local.things.RestThingUpdate;
 import net.smartcosmos.edge.things.rest.template.thing.ThingRestConnector;
@@ -23,7 +23,6 @@ public class UpdateThingRestServiceDefault implements UpdateThingRestService {
 
     @Autowired
     public UpdateThingRestServiceDefault(ThingRestConnector restTemplate) {
-
         this.restTemplate = restTemplate;
 
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
@@ -31,7 +30,6 @@ public class UpdateThingRestServiceDefault implements UpdateThingRestService {
 
     @Override
     public ResponseEntity<?> update(String type, String urn, RestThingUpdate thingUpdate, SmartCosmosUser user) {
-
         try {
             return restTemplate.update(type, urn, thingUpdate);
         } catch (HttpClientErrorException e) {

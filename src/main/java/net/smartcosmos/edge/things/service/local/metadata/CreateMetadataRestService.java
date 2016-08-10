@@ -10,7 +10,6 @@ import net.smartcosmos.security.user.SmartCosmosUser;
  * Defines the service for calling the REST endpoint used for creating metadata.
  */
 public interface CreateMetadataRestService {
-
     public static final String NO_METADATA_SPECIFIED_IN_REQUEST_BODY = "No metadata specified in request body";
 
     /**

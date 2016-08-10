@@ -7,7 +7,6 @@ import net.smartcosmos.security.user.SmartCosmosUser;
  * A service that sends message to the event service.
  */
 public interface EventSendingService<T> {
-
     /**
      * Send the event using {@link ThingEdgeEventType}.
      *

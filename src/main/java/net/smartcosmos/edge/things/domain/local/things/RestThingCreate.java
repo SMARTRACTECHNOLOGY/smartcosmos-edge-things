@@ -26,9 +26,8 @@ public class RestThingCreate {
     private Boolean active = ACTIVE_DEFAUL_VALUE;
 
     @Builder // used in tests
-    @ConstructorProperties({ "urn", "type", "active" })
+    @ConstructorProperties({ "urn", "type", "active"})
     public RestThingCreate(String urn, String type, Boolean active) {
-
         this.urn = urn;
         this.active = BooleanUtils.toBooleanDefaultIfNull(active, ACTIVE_DEFAUL_VALUE);
     }

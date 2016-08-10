@@ -34,12 +34,5 @@ public interface GetThingEdgeService {
      * @param user the Spring embedded {@link SmartCosmosUser}
      * @return the response entity
      */
-    ResponseEntity<?> getByType(
-        String type,
-        Set<String> metadataKeys,
-        Integer page,
-        Integer size,
-        String sortOrder,
-        String sortBy,
-        SmartCosmosUser user);
+    ResponseEntity<?> getByType(String type, Set<String> metadataKeys, Integer page, Integer size, String sortOrder, String sortBy, SmartCosmosUser user);
 }

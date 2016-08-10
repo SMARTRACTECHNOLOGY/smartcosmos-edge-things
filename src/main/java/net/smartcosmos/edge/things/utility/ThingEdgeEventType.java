@@ -12,12 +12,10 @@ public enum ThingEdgeEventType {
     private String eventName;
 
     private ThingEdgeEventType(String anEventName) {
-
         eventName = anEventName;
     }
 
     private String eventName() {
-
         return eventName;
     }
 
@@ -29,15 +27,13 @@ public enum ThingEdgeEventType {
      * @throws IllegalArgumentException If a null, blank or whitespace only String is provided
      */
     public static ThingEdgeEventType fromString(String anEventName) {
-
         if (StringUtils.isBlank(anEventName)) {
             throw new IllegalArgumentException("Invalid value for event name.  Null, blank and whitespace are not allowed. value: '" +
                                                anEventName + "'.");
         }
 
         for (ThingEdgeEventType eventType : ThingEdgeEventType.values()) {
-            if (eventType.eventName()
-                .equalsIgnoreCase(anEventName)) {
+            if (eventType.eventName().equalsIgnoreCase(anEventName)) {
                 return eventType;
             }
         }
@@ -46,7 +42,6 @@ public enum ThingEdgeEventType {
     }
 
     public String getEventName() {
-
         return eventName;
     }
 

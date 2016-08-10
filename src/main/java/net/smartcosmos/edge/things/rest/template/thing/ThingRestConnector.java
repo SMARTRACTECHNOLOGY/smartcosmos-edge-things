@@ -1,12 +1,12 @@
 package net.smartcosmos.edge.things.rest.template.thing;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 import net.smartcosmos.edge.things.config.SmartCosmosEdgeThingsProperties;
 import net.smartcosmos.edge.things.domain.local.things.RestPagedThingResponse;
@@ -28,8 +28,7 @@ public class ThingRestConnector {
     public ThingRestConnector(RestTemplateFactory restTemplateFactory, SmartCosmosEdgeThingsProperties edgeThingsProperties) {
 
         this.restTemplateFactory = restTemplateFactory;
-        serviceName = edgeThingsProperties.getLocal()
-            .getThings();
+        serviceName = edgeThingsProperties.getLocal().getThings();
     }
 
     public ResponseEntity<?> create(String type, RestThingCreate body) {
@@ -37,18 +36,16 @@ public class ThingRestConnector {
         SmartCosmosRequest<RestThingCreate> requestBody = getCreateRequestBody(type, body);
         RequestEntity<RestThingCreate> requestEntity = requestBody.buildRequest();
 
-        return restTemplateFactory.getRestTemplate()
-            .exchange(requestEntity, RestThingCreateResponseDto.class);
+        return restTemplateFactory.getRestTemplate().exchange(requestEntity, RestThingCreateResponseDto.class);
     }
 
     private SmartCosmosRequest<RestThingCreate> getCreateRequestBody(String type, RestThingCreate body) {
-
         return SmartCosmosRequest.<RestThingCreate>builder()
-            .serviceName(serviceName)
-            .httpMethod(HttpMethod.POST)
-            .url(type)
-            .requestBody(body)
-            .build();
+                    .serviceName(serviceName)
+                    .httpMethod(HttpMethod.POST)
+                    .url(type)
+                    .requestBody(body)
+                    .build();
     }
 
     public ResponseEntity<?> update(String type, String urn, RestThingUpdate body) {
@@ -56,8 +53,7 @@ public class ThingRestConnector {
         SmartCosmosRequest<RestThingUpdate> requestBody = getUpdateRequestBody(type, urn, body);
         RequestEntity<RestThingUpdate> requestEntity = requestBody.buildRequest();
 
-        return restTemplateFactory.getRestTemplate()
-            .exchange(requestEntity, Void.class);
+        return restTemplateFactory.getRestTemplate().exchange(requestEntity, Void.class);
     }
 
     private SmartCosmosRequest<RestThingUpdate> getUpdateRequestBody(String type, String urn, RestThingUpdate body) {
@@ -79,8 +75,7 @@ public class ThingRestConnector {
         SmartCosmosRequest<Void> requestBody = getFindSpecificRequestBody(type, urn);
         RequestEntity<Void> requestEntity = requestBody.buildRequest();
 
-        return restTemplateFactory.getRestTemplate()
-            .exchange(requestEntity, RestThingResponse.class);
+        return restTemplateFactory.getRestTemplate().exchange(requestEntity, RestThingResponse.class);
     }
 
     private SmartCosmosRequest<Void> getFindSpecificRequestBody(String type, String urn) {
@@ -101,8 +96,7 @@ public class ThingRestConnector {
         SmartCosmosRequest<Void> requestBody = getFindByTypeRequest(type);
         RequestEntity<Void> requestEntity = requestBody.buildRequest();
 
-        return restTemplateFactory.getRestTemplate()
-            .exchange(requestEntity, RestPagedThingResponse.class);
+        return restTemplateFactory.getRestTemplate().exchange(requestEntity, RestPagedThingResponse.class);
     }
 
     private SmartCosmosRequest<Void> getFindByTypeRequest(String type) {
@@ -119,19 +113,13 @@ public class ThingRestConnector {
         SmartCosmosRequest<?> requestBody = getDeleteRequest(ownerType, ownerUrn);
         RequestEntity<?> requestEntity = requestBody.buildRequest();
 
-        return restTemplateFactory.getRestTemplate()
-            .exchange(requestEntity, Void.class);
+        return restTemplateFactory.getRestTemplate().exchange(requestEntity, Void.class);
     }
 
     private SmartCosmosRequest<?> getDeleteRequest(String type, String urn) {
 
-        StringBuilder url = new StringBuilder(type).append("/")
-            .append(urn);
+        StringBuilder url = new StringBuilder(type).append("/").append(urn);
 
-        return SmartCosmosRequest.builder()
-            .serviceName(serviceName)
-            .httpMethod(HttpMethod.DELETE)
-            .url(url.toString())
-            .build();
+        return SmartCosmosRequest.builder().serviceName(serviceName).httpMethod(HttpMethod.DELETE).url(url.toString()).build();
     }
 }

@@ -24,10 +24,8 @@ public class DeleteThingEdgeServiceDefault implements DeleteThingEdgeService {
     private final DeleteThingRestService deleteThingService;
 
     @Autowired
-    public DeleteThingEdgeServiceDefault(
-        EventSendingService eventSendingService, ConversionService conversionService,
-        DeleteMetadataRestService deleteMetadataService, DeleteThingRestService deleteThingService) {
-
+    public DeleteThingEdgeServiceDefault(EventSendingService eventSendingService, ConversionService conversionService,
+            DeleteMetadataRestService deleteMetadataService, DeleteThingRestService deleteThingService) {
         this.eventSendingService = eventSendingService;
         this.conversionService = conversionService;
         this.deleteMetadataService = deleteMetadataService;
@@ -41,12 +39,10 @@ public class DeleteThingEdgeServiceDefault implements DeleteThingEdgeService {
 
         ResponseEntity thingResponse = deleteThingService.delete(type, urn, user);
 
-        if (thingResponse.getStatusCode()
-            .is2xxSuccessful()) {
+        if (thingResponse.getStatusCode().is2xxSuccessful()) {
             ResponseEntity metadataResponse = deleteMetadataService.delete(type, urn, user);
 
-            if (!metadataResponse.getStatusCode()
-                .is2xxSuccessful() && HttpStatus.NOT_FOUND != metadataResponse.getStatusCode()) {
+            if (!metadataResponse.getStatusCode().is2xxSuccessful() && HttpStatus.NOT_FOUND != metadataResponse.getStatusCode()) {
                 // if there was a problem with the metadata deletion, we return that (but 404 Not Found is okay)
                 response.setResult(metadataResponse);
                 return;

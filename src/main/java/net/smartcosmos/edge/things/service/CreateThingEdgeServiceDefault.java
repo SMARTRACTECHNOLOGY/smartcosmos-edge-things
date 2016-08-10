@@ -20,17 +20,14 @@ import net.smartcosmos.security.user.SmartCosmosUser;
  */
 @Service
 public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
-
     private final EventSendingService eventSendingService;
     private final ConversionService conversionService;
     private final CreateMetadataRestService createMetadataService;
     private final CreateThingRestService createThingService;
 
     @Autowired
-    public CreateThingEdgeServiceDefault(
-        EventSendingService eventSendingService, ConversionService conversionService,
-        CreateMetadataRestService createMetadataService, CreateThingRestService createThingService) {
-
+    public CreateThingEdgeServiceDefault(EventSendingService eventSendingService, ConversionService conversionService,
+            CreateMetadataRestService createMetadataService, CreateThingRestService createThingService) {
         this.eventSendingService = eventSendingService;
         this.conversionService = conversionService;
         this.createMetadataService = createMetadataService;
@@ -46,16 +43,14 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
         ResponseEntity thingResponse = createThingService.create(type, container.getThingRequestBody(), user);
         Map<String, Object> reducedMetadataMap = container.getMetadataRequestBody();
 
-        if (thingResponse.getStatusCode()
-                .is2xxSuccessful() && thingResponse.hasBody()
-            && thingResponse.getBody() instanceof RestThingCreateResponseDto && !reducedMetadataMap.isEmpty()) {
+        if (thingResponse.getStatusCode().is2xxSuccessful() && thingResponse.hasBody()
+                && thingResponse.getBody() instanceof RestThingCreateResponseDto && !reducedMetadataMap.isEmpty()) {
             RestThingCreateResponseDto thingResponseBody = (RestThingCreateResponseDto) thingResponse.getBody();
             String urn = thingResponseBody.getUrn();
 
             ResponseEntity metadataResponse = createMetadataService.create(type, urn, force, reducedMetadataMap, user);
 
-            if (!metadataResponse.getStatusCode()
-                .is2xxSuccessful()) {
+            if (!metadataResponse.getStatusCode().is2xxSuccessful()) {
                 // if there was a problem with the metadata creation, we return that
                 response.setResult(metadataResponse);
                 return;

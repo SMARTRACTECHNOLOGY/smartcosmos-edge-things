@@ -29,9 +29,8 @@ public class MapToRestThingMetadataCreateContainerConverter implements Converter
 
         if (metadataMap.containsKey(URN_FIELD_NAME)) {
             Object urnObject = metadataMap.remove(URN_FIELD_NAME);
-            if (urnObject instanceof String) {
-                thingCreate.setUrn(String.valueOf(urnObject));
-            }
+            if (urnObject instanceof String)
+            thingCreate.setUrn(String.valueOf(urnObject));
         }
 
         if (metadataMap.containsKey(ACTIVE_FIELD_NAME)) {

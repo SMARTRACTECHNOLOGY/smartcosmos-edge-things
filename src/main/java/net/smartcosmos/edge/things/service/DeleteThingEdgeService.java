@@ -12,7 +12,6 @@ public interface DeleteThingEdgeService {
 
     /**
      * Delete the Thing and metadata.
-     *
      * @param response the {@link DeferredResult} response that should be asynchronous
      * @param type the type of the thing to delete
      * @param urn the URN of the thing to delete
