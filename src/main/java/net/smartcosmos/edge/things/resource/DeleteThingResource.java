@@ -7,8 +7,7 @@ import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.EN
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.TYPE;
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.URN;
 
-import javax.inject.Inject;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +28,7 @@ public class DeleteThingResource {
 
     DeleteThingEdgeService deleteThingService;
 
-    @Inject
+    @Autowired
     public DeleteThingResource(DeleteThingEdgeService deleteThingService) {
         this.deleteThingService = deleteThingService;
     }

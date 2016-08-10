@@ -2,8 +2,7 @@ package net.smartcosmos.edge.things.service;
 
 import java.util.Map;
 
-import javax.inject.Inject;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,10 +27,9 @@ public class UpdateThingEdgeServiceDefault implements UpdateThingEdgeService {
     private final UpsertMetadataRestService upsertMetadataService;
     private final UpdateThingRestService updateThingService;
 
-    @Inject
-    public UpdateThingEdgeServiceDefault(
-        EventSendingService eventSendingService, ConversionService conversionService, UpsertMetadataRestService upsertMetadataService,
-        UpdateThingRestService updateThingService) {
+    @Autowired
+    public UpdateThingEdgeServiceDefault(EventSendingService eventSendingService, ConversionService conversionService,
+            UpsertMetadataRestService upsertMetadataService, UpdateThingRestService updateThingService) {
         this.eventSendingService = eventSendingService;
         this.conversionService = conversionService;
         this.upsertMetadataService = upsertMetadataService;

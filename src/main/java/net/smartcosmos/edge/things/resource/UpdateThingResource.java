@@ -11,9 +11,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +35,7 @@ public class UpdateThingResource {
 
     private UpdateThingEdgeService updateThingService;
 
-    @Inject
+    @Autowired
     public UpdateThingResource(UpdateThingEdgeService updateThingService) {
         this.updateThingService = updateThingService;
     }

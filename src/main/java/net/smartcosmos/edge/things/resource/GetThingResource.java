@@ -19,9 +19,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 import java.util.Set;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,7 +42,7 @@ public class GetThingResource {
 
     GetThingEdgeService getThingService;
 
-    @Inject
+    @Autowired
     public GetThingResource(GetThingEdgeService getThingService) {
         this.getThingService = getThingService;
     }

@@ -1,7 +1,6 @@
 package net.smartcosmos.edge.things.service;
 
-import javax.inject.Inject;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +23,9 @@ public class DeleteThingEdgeServiceDefault implements DeleteThingEdgeService {
     private final DeleteMetadataRestService deleteMetadataService;
     private final DeleteThingRestService deleteThingService;
 
-    @Inject
-    public DeleteThingEdgeServiceDefault(
-        EventSendingService eventSendingService, ConversionService conversionService, DeleteMetadataRestService deleteMetadataService,
-        DeleteThingRestService deleteThingService) {
+    @Autowired
+    public DeleteThingEdgeServiceDefault(EventSendingService eventSendingService, ConversionService conversionService,
+            DeleteMetadataRestService deleteMetadataService, DeleteThingRestService deleteThingService) {
         this.eventSendingService = eventSendingService;
         this.conversionService = conversionService;
         this.deleteMetadataService = deleteMetadataService;
@@ -37,15 +35,14 @@ public class DeleteThingEdgeServiceDefault implements DeleteThingEdgeService {
     }
 
     @Override
-    public void delete(
-        DeferredResult<ResponseEntity> response, String type, String urn, SmartCosmosUser user) {
+    public void delete(DeferredResult<ResponseEntity> response, String type, String urn, SmartCosmosUser user) {
 
         ResponseEntity thingResponse = deleteThingService.delete(type, urn, user);
 
         if (thingResponse.getStatusCode().is2xxSuccessful()) {
             ResponseEntity metadataResponse = deleteMetadataService.delete(type, urn, user);
 
-            if ( !metadataResponse.getStatusCode().is2xxSuccessful() && HttpStatus.NOT_FOUND != metadataResponse.getStatusCode()) {
+            if (!metadataResponse.getStatusCode().is2xxSuccessful() && HttpStatus.NOT_FOUND != metadataResponse.getStatusCode()) {
                 // if there was a problem with the metadata deletion, we return that (but 404 Not Found is okay)
                 response.setResult(metadataResponse);
                 return;

@@ -3,9 +3,8 @@ package net.smartcosmos.edge.things.rest;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.ribbon.RibbonClientHttpRequestFactory;
 import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
 import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
@@ -31,7 +30,7 @@ public class OAuth2TokenProvider {
 
     private final RibbonClientHttpRequestFactory ribbonClientHttpRequestFactory;
 
-    @Inject
+    @Autowired
     public OAuth2TokenProvider(SpringClientFactory clientFactory) {
 
         ribbonClientHttpRequestFactory = new RibbonClientHttpRequestFactory(clientFactory);

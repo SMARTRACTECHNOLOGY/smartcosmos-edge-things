@@ -1,7 +1,6 @@
 package net.smartcosmos.edge.things.service.local.things;
 
-import javax.inject.Inject;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,7 @@ public class UpdateThingRestServiceDefault implements UpdateThingRestService {
 
     private final ThingRestConnector restTemplate;
 
-    @Inject
+    @Autowired
     public UpdateThingRestServiceDefault(ThingRestConnector restTemplate) {
         this.restTemplate = restTemplate;
 
