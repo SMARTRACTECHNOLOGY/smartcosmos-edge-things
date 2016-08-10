@@ -1,16 +1,16 @@
 package net.smartcosmos.edge.things.resource;
 
+import org.junit.*;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MvcResult;
+
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Matchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import org.junit.*;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MvcResult;
 
 public class DeleteThingResourceTest extends AbstractTestResource {
 
@@ -25,12 +25,16 @@ public class DeleteThingResourceTest extends AbstractTestResource {
         String ownerType = "ownerType";
         String ownerUrn = "ownerUrn";
 
-        ResponseEntity<?> thingResponseEntity = ResponseEntity.noContent().build();
-        ResponseEntity<?> metadataResponseEntity = ResponseEntity.noContent().build();
+        ResponseEntity<?> thingResponseEntity = ResponseEntity.noContent()
+            .build();
+        ResponseEntity<?> metadataResponseEntity = ResponseEntity.noContent()
+            .build();
 
-        willReturn(thingResponseEntity).given(thingRestConnector).delete(anyString(), anyString());
+        willReturn(thingResponseEntity).given(thingRestConnector)
+            .delete(anyString(), anyString());
         willReturn(metadataResponseEntity)
-                .given(metadataRestConnector).delete(anyString(), anyString());
+            .given(metadataRestConnector)
+            .delete(anyString(), anyString());
 
         MvcResult mvcResult = mockMvc.perform(
             delete("/{type}/{urn}", ownerType, ownerUrn)
@@ -56,9 +60,11 @@ public class DeleteThingResourceTest extends AbstractTestResource {
         String ownerType = "ownerType";
         String ownerUrn = "ownerUrn";
 
-        ResponseEntity<?> thingResponseEntity = ResponseEntity.notFound().build();
+        ResponseEntity<?> thingResponseEntity = ResponseEntity.notFound()
+            .build();
 
-        willReturn(thingResponseEntity).given(thingRestConnector).delete(anyString(), anyString());
+        willReturn(thingResponseEntity).given(thingRestConnector)
+            .delete(anyString(), anyString());
 
         MvcResult mvcResult = mockMvc.perform(
             delete("/{type}/{urn}", ownerType, ownerUrn)
@@ -84,12 +90,16 @@ public class DeleteThingResourceTest extends AbstractTestResource {
         String ownerType = "ownerType";
         String ownerUrn = "ownerUrn";
 
-        ResponseEntity<?> thingResponseEntity = ResponseEntity.noContent().build();
-        ResponseEntity<?> metadataResponseEntity = ResponseEntity.notFound().build();
+        ResponseEntity<?> thingResponseEntity = ResponseEntity.noContent()
+            .build();
+        ResponseEntity<?> metadataResponseEntity = ResponseEntity.notFound()
+            .build();
 
-        willReturn(thingResponseEntity).given(thingRestConnector).delete(anyString(), anyString());
+        willReturn(thingResponseEntity).given(thingRestConnector)
+            .delete(anyString(), anyString());
         willReturn(metadataResponseEntity)
-                .given(metadataRestConnector).delete(anyString(), anyString());
+            .given(metadataRestConnector)
+            .delete(anyString(), anyString());
 
         MvcResult mvcResult = mockMvc.perform(
             delete("/{type}/{urn}", ownerType, ownerUrn)

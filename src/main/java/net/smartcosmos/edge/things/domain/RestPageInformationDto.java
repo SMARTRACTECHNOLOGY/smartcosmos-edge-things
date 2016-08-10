@@ -1,7 +1,6 @@
 package net.smartcosmos.edge.things.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,8 +1,5 @@
 package net.smartcosmos.edge.things.rest.template.metadata;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,6 +11,9 @@ import org.junit.*;
 import net.smartcosmos.edge.things.config.SmartCosmosEdgeThingsProperties;
 import net.smartcosmos.edge.things.rest.RestTemplateFactory;
 import net.smartcosmos.edge.things.rest.template.SmartCosmosRequest;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class MetadataRestConnectorTest {
 

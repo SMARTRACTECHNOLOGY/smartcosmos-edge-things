@@ -8,7 +8,9 @@ public class RestEdgeThingCreateResponseDtoTest {
 
     @Test
     public void thatVersionIsSet() {
-        RestEdgeThingCreateResponseDto dto = RestEdgeThingCreateResponseDto.builder().build();
+
+        RestEdgeThingCreateResponseDto dto = RestEdgeThingCreateResponseDto.builder()
+            .build();
 
         assertNotNull(dto.getVersion());
         assertEquals(RestEdgeThingCreateResponseDto.VERSION_1, dto.getVersion());
@@ -16,6 +18,7 @@ public class RestEdgeThingCreateResponseDtoTest {
 
     @Test(expected = NoSuchMethodException.class)
     public void thatVersionHasNoSetter() throws Exception {
+
         RestEdgeThingCreateResponseDto.class.getDeclaredMethod("setVersion", int.class);
     }
 
