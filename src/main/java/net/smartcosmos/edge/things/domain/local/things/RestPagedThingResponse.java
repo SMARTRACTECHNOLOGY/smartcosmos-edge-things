@@ -19,7 +19,7 @@ import net.smartcosmos.edge.things.domain.RestPageInformationDto;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties({ "version"})
+@JsonIgnoreProperties({ "version" })
 public class RestPagedThingResponse {
 
     private static final int VERSION = 1;

@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RestThingUpdate
-{
+public class RestThingUpdate {
+
     private static final int VERSION = 1;
     private final int version = VERSION;
 

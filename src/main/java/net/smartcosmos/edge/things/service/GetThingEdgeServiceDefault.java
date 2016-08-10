@@ -33,14 +33,15 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
     private final GetMetadataRestService getMetadataService;
     private final GetThingRestService getThingService;
 
-    private final String[]  THING_FIELDS = {"urn", "id", "active", "type", "created", "lastModified"};
-
+    private final String[] THING_FIELDS = { "urn", "id", "active", "type", "created", "lastModified" };
 
     @Autowired
-    public GetThingEdgeServiceDefault(EventSendingService eventSendingService,
-                                      ConversionService conversionService,
-                                      GetMetadataRestService getMetadataService,
-                                      GetThingRestService getThingService) {
+    public GetThingEdgeServiceDefault(
+        EventSendingService eventSendingService,
+        ConversionService conversionService,
+        GetMetadataRestService getMetadataService,
+        GetThingRestService getThingService) {
+
         this.eventSendingService = eventSendingService;
         this.conversionService = conversionService;
         this.getMetadataService = getMetadataService;
@@ -53,7 +54,8 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
     public ResponseEntity<?> getByTypeAndUrn(String type, String urn, Set<String> metadataKeys, SmartCosmosUser user) {
 
         ResponseEntity thingResponse = getThingService.findByTypeAndUrn(type, urn, user);
-        if (!thingResponse.getStatusCode().is2xxSuccessful()) {
+        if (!thingResponse.getStatusCode()
+            .is2xxSuccessful()) {
             return thingResponse;
         }
 
@@ -89,10 +91,18 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
         }
     }
 
-    private ResponseEntity<?> getThingsMergeMetadata(String type, Set<String> metadataKeys, Integer page, Integer size, String sortOrder, String sortBy, SmartCosmosUser user) {
+    private ResponseEntity<?> getThingsMergeMetadata(
+        String type,
+        Set<String> metadataKeys,
+        Integer page,
+        Integer size,
+        String sortOrder,
+        String sortBy,
+        SmartCosmosUser user) {
 
         ResponseEntity thingResponse = getThingService.findByType(type, page, size, sortOrder, sortBy, user);
-        if (!thingResponse.getStatusCode().is2xxSuccessful()) {
+        if (!thingResponse.getStatusCode()
+            .is2xxSuccessful()) {
             return thingResponse;
         }
 
@@ -118,7 +128,14 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
         return thingResponse;
     }
 
-    private ResponseEntity<?> getMetadataOwnerMergeThings(String type, Set<String> metadataKeys, Integer page, Integer size, String sortOrder, String sortBy, SmartCosmosUser user) {
+    private ResponseEntity<?> getMetadataOwnerMergeThings(
+        String type,
+        Set<String> metadataKeys,
+        Integer page,
+        Integer size,
+        String sortOrder,
+        String sortBy,
+        SmartCosmosUser user) {
         /**
          * TODO: Add Sorting by Metadata keys (OBJECTS-910)
          * author: asiegel
@@ -128,7 +145,11 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
         throw new UnsupportedOperationException("Sorting by Metadata keys is currently not supported.");
     }
 
-    private List<Map<String, Object>> collectFindByTypeData(Collection<RestThingResponse> responseList, Set<String> metadataKeys, SmartCosmosUser user) throws RestException {
+    private List<Map<String, Object>> collectFindByTypeData(
+        Collection<RestThingResponse> responseList,
+        Set<String> metadataKeys,
+        SmartCosmosUser user) throws RestException {
+
         List<Map<String, Object>> data = new ArrayList<>();
 
         for (RestThingResponse thing : responseList) {

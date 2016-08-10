@@ -20,11 +20,14 @@ public class RestException extends HTTPException {
      * @param statusCode <code>int</code> for the HTTP status code
      **/
     private RestException(int statusCode) {
+
         super(statusCode);
     }
 
-    public RestException(ResponseEntity<?> responseEntity){
-        super(responseEntity.getStatusCode().value());
+    public RestException(ResponseEntity<?> responseEntity) {
+
+        super(responseEntity.getStatusCode()
+                  .value());
 
         this.responseEntity = responseEntity;
     }

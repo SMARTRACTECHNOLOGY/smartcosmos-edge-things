@@ -28,8 +28,10 @@ public class UpdateThingEdgeServiceDefault implements UpdateThingEdgeService {
     private final UpdateThingRestService updateThingService;
 
     @Autowired
-    public UpdateThingEdgeServiceDefault(EventSendingService eventSendingService, ConversionService conversionService,
-            UpsertMetadataRestService upsertMetadataService, UpdateThingRestService updateThingService) {
+    public UpdateThingEdgeServiceDefault(
+        EventSendingService eventSendingService, ConversionService conversionService,
+        UpsertMetadataRestService upsertMetadataService, UpdateThingRestService updateThingService) {
+
         this.eventSendingService = eventSendingService;
         this.conversionService = conversionService;
         this.upsertMetadataService = upsertMetadataService;
@@ -55,7 +57,8 @@ public class UpdateThingEdgeServiceDefault implements UpdateThingEdgeService {
 
         if (thingUpdate != null) {
             ResponseEntity thingResponse = updateThingService.update(type, urn, thingUpdate, user);
-            if (!thingResponse.getStatusCode().is2xxSuccessful()) {
+            if (!thingResponse.getStatusCode()
+                .is2xxSuccessful()) {
                 // if there was a problem with the thing update, we return that
                 response.setResult(thingResponse);
                 return;
@@ -64,7 +67,8 @@ public class UpdateThingEdgeServiceDefault implements UpdateThingEdgeService {
 
         if (!reducedMetadataMap.isEmpty()) {
             ResponseEntity metadataResponse = upsertMetadataService.upsert(type, urn, reducedMetadataMap, user);
-            if (!metadataResponse.getStatusCode().is2xxSuccessful()) {
+            if (!metadataResponse.getStatusCode()
+                .is2xxSuccessful()) {
                 // if there was a problem with the metadata update, we return that
                 response.setResult(metadataResponse);
                 return;
@@ -72,6 +76,7 @@ public class UpdateThingEdgeServiceDefault implements UpdateThingEdgeService {
         }
 
         // usually we just return 204 No Content
-        response.setResult(ResponseEntity.noContent().build());
+        response.setResult(ResponseEntity.noContent()
+                               .build());
     }
 }

@@ -19,6 +19,7 @@ import org.apache.commons.lang.BooleanUtils;
 @JsonIgnoreProperties({ "version" })
 @ApiModel(description = "Create a \"Thing\" with embedded metadata in the Objects Server.")
 public class RestEdgeThingCreateResponseDto {
+
     public static final int VERSION_1 = 1;
     private final int version = VERSION_1;
 
@@ -33,6 +34,7 @@ public class RestEdgeThingCreateResponseDto {
     @Builder
     @ConstructorProperties({ "type", "urn", "active", "tenantUrn", "metadata" })
     public RestEdgeThingCreateResponseDto(String type, String urn, Boolean isActive, String tenantUrn, Map<String, Object> metadata) {
+
         this.type = type;
         this.urn = urn;
         this.tenantUrn = tenantUrn;

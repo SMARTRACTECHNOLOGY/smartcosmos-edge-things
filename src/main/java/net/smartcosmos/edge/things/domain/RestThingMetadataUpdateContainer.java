@@ -10,6 +10,7 @@ import net.smartcosmos.edge.things.domain.local.things.RestThingUpdate;
 @Data
 @Builder
 public class RestThingMetadataUpdateContainer {
+
     private RestThingUpdate thingRequestBody;
     private Map<String, Object> metadataRequestBody;
 }
