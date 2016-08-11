@@ -14,13 +14,13 @@ This is a private licensed repository, and as such, should not be shared publicl
 
 *Available methods*
 
-* <<create1, Create - `POST /{type}`>>
-* <<update1, Update - `PUT /{type}/{urn}`>>
-* <<read1, Read - `GET /{type}?fields={keyNames}&page={pageNumber}&size={pageSize}`>>
-* <<read2, Read - `GET /{type}/{urn}?fields={keyNames}`>>
-* <<read3, Read - `POST /{type}/findByUrns?fields={keyNames}`>>
-* <<read4, Read - `POST /{type}/findByKeyValuePairs?page={pageNumber}&size={pageSize}`>>
-* <<delete1, Delete - `DELETE /{type}/{urn}`>>
+* <<create1, Create - `POST /things/{type}`>>
+* <<update1, Update - `PUT /things/{type}/{urn}`>>
+* <<read1, Read - `GET /things/{type}?fields={keyNames}&page={pageNumber}&size={pageSize}`>>
+* <<read2, Read - `GET /things/{type}/{urn}?fields={keyNames}`>>
+* <<read3, Read - `POST /things/{type}/findByUrns?fields={keyNames}`>>
+* <<read4, Read - `POST /things/{type}/findByKeyValuePairs?page={pageNumber}&size={pageSize}`>>
+* <<delete1, Delete - `DELETE /things/{type}/{urn}`>>
 
 === JSON Fields
 [width="100%",options="header"]
@@ -49,10 +49,10 @@ Note that the illustrated scheme for URNs is only for documentation purposes. Th
 === API Endpoints
 
 [[create1]]
-==== Create - `POST /{type}`
+==== Create - `POST /things/{type}`
 
 ----
-POST /Building
+POST /things/Building
 ----
 
 The fields `name`, `description` and `large` will be added as metadata for this thing.
@@ -105,10 +105,10 @@ The fields `name`, `description` and `large` will be added as metadata for this 
 ----
 
 [[update1]]
-==== Update - `PUT /{type}/{urn}`
+==== Update - `PUT /things/{type}/{urn}`
 
 ----
-PUT /Building/urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
+PUT /things/Building/urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 ----
 [source,json]
 ----
@@ -124,10 +124,10 @@ PUT /Building/urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 
 
 [[read1]]
-==== Read - `GET /{type}?fields={keyNames}&page={pageNumber}&size={pageSize}`
+==== Read - `GET /things/{type}?fields={keyNames}&page={pageNumber}&size={pageSize}`
 
 ----
-GET /Building?fields=name,description,large&page=0&size=100
+GET /things/Building?fields=name,description,large&page=0&size=100
 ----
 .Response
 ----
@@ -166,10 +166,10 @@ GET /Building?fields=name,description,large&page=0&size=100
 
 
 [[read2]]
-==== Read - `GET /{type}/{urn}?fields={keyNames}`
+==== Read - `GET /things/{type}/{urn}?fields={keyNames}`
 
 ----
-GET /Building/urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
+GET /things/Building/urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 ----
 .Response
 ----
@@ -190,10 +190,10 @@ GET /Building/urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 
 
 [[read3]]
-==== Find by URNs - `POST /{type}/findByUrns?fields={keyNames}`
+==== Find by URNs - `POST /things/{type}/findByUrns?fields={keyNames}`
 
 ----
-POST /building/findByUrns
+POST /things/building/findByUrns
 ----
 [source,json]
 ----
@@ -239,10 +239,10 @@ POST /building/findByUrns
 ----
 
 [[read4]]
-==== Find by Key-Value Pairs - `POST /{type}/findByKeyValuePairs?page={pageNumber}&size={pageSize}`
+==== Find by Key-Value Pairs - `POST /things/{type}/findByKeyValuePairs?page={pageNumber}&size={pageSize}`
 
 ----
-POST /Building/findByKeyValuePairs?page=1&size=100
+POST /things/Building/findByKeyValuePairs?page=1&size=100
 ----
 [source,json]
 ----
@@ -283,10 +283,10 @@ POST /Building/findByKeyValuePairs?page=1&size=100
 ----
 
 [[delete1]]
-==== Delete - `DELETE /{type}/{urn}`
+==== Delete - `DELETE /things/{type}/{urn}`
 
 ----
-DELETE /urn/Building/urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d
+DELETE /things/urn/Building/urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d
 ----
 .Response
 ----

@@ -30,7 +30,7 @@ public class MetadataRestConnectorTest {
         final Boolean force = true;
         Map<String, Object> body = new HashMap<>();
 
-        final String expectedUrl = ownerType + "/" + ownerUrn + "?force=true";
+        final String expectedUrl = "metadata/" + ownerType + "/" + ownerUrn + "?force=true";
 
         Method method = MetadataRestConnector.class.getDeclaredMethod("getRequest", String.class, String.class, Boolean.class, Map.class);
         method.setAccessible(true);
@@ -51,7 +51,7 @@ public class MetadataRestConnectorTest {
         final Boolean force = false;
         Map<String, Object> body = new HashMap<>();
 
-        final String expectedUrl = ownerType + "/" + ownerUrn;
+        final String expectedUrl = "metadata/" + ownerType + "/" + ownerUrn;
 
         Method method = MetadataRestConnector.class.getDeclaredMethod("getRequest", String.class, String.class, Boolean.class, Map.class);
         method.setAccessible(true);
@@ -73,7 +73,7 @@ public class MetadataRestConnectorTest {
         keyNames.add("name");
         keyNames.add("description");
 
-        final String expectedUrl = ownerType + "/" + ownerUrn + "?keys=name,description";
+        final String expectedUrl = "metadata/" + ownerType + "/" + ownerUrn + "?keys=name,description";
 
         Method method = MetadataRestConnector.class.getDeclaredMethod("getFindByOwnerRequest", String.class, String.class, Set.class);
         method.setAccessible(true);
@@ -93,7 +93,7 @@ public class MetadataRestConnectorTest {
         final String ownerUrn = "ownerUrn";
         Set<String> keyNames = new HashSet<>();
 
-        final String expectedUrl = ownerType + "/" + ownerUrn;
+        final String expectedUrl = "metadata/" + ownerType + "/" + ownerUrn;
 
         Method method = MetadataRestConnector.class.getDeclaredMethod("getFindByOwnerRequest", String.class, String.class, Set.class);
         method.setAccessible(true);
@@ -113,7 +113,7 @@ public class MetadataRestConnectorTest {
         final String ownerUrn = "ownerUrn";
         Set<String> keyNames = null;
 
-        final String expectedUrl = ownerType + "/" + ownerUrn;
+        final String expectedUrl = "metadata/" + ownerType + "/" + ownerUrn;
 
         Method method = MetadataRestConnector.class.getDeclaredMethod("getFindByOwnerRequest", String.class, String.class, Set.class);
         method.setAccessible(true);

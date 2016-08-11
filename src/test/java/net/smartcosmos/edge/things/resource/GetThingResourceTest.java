@@ -28,6 +28,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.ENDPOINT_TYPE;
+import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.ENDPOINT_TYPE_URN;
+import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.PARAM_FIELDS;
+
 public class GetThingResourceTest extends AbstractTestResource {
 
     @Test
@@ -57,8 +61,8 @@ public class GetThingResourceTest extends AbstractTestResource {
             .findByTypeAndUrn(anyString(), anyString(), anySet());
 
         mockMvc.perform(
-            get("/{type}/{urn}", type, urn)
-                .param("fields", "name,description")
+            get(ENDPOINT_TYPE_URN, type, urn)
+                .param(PARAM_FIELDS, "name,description")
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -102,8 +106,8 @@ public class GetThingResourceTest extends AbstractTestResource {
             .findByTypeAndUrn(anyString(), anyString(), anySet());
 
         mockMvc.perform(
-            get("/{type}/{urn}", type, urn)
-                .param("fields", "name,description")
+            get(ENDPOINT_TYPE_URN, type, urn)
+                .param(PARAM_FIELDS, "name,description")
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -137,8 +141,8 @@ public class GetThingResourceTest extends AbstractTestResource {
             .findByTypeAndUrn(anyString(), anyString(), anySet());
 
         mockMvc.perform(
-            get("/{type}/{urn}", type, urn)
-                .param("fields", "name,description")
+            get(ENDPOINT_TYPE_URN, type, urn)
+                .param(PARAM_FIELDS, "name,description")
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isNotFound())
             .andReturn();
@@ -189,8 +193,8 @@ public class GetThingResourceTest extends AbstractTestResource {
             .findByTypeAndUrn(anyString(), anyString(), anySet());
 
         mockMvc.perform(
-            get("/{type}", type)
-                .param("fields", "name,description")
+            get(ENDPOINT_TYPE, type)
+                .param(PARAM_FIELDS, "name,description")
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -224,8 +228,8 @@ public class GetThingResourceTest extends AbstractTestResource {
             .findByType(anyString());
 
         mockMvc.perform(
-            get("/{type}", type)
-                .param("fields", "name,description")
+            get(ENDPOINT_TYPE, type)
+                .param(PARAM_FIELDS, "name,description")
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isNotFound())
             .andReturn();
@@ -274,8 +278,8 @@ public class GetThingResourceTest extends AbstractTestResource {
             .findByTypeAndUrn(anyString(), anyString(), anySet());
 
         mockMvc.perform(
-            get("/{type}", type)
-                .param("fields", "name,description")
+            get(ENDPOINT_TYPE, type)
+                .param(PARAM_FIELDS, "name,description")
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -336,8 +340,8 @@ public class GetThingResourceTest extends AbstractTestResource {
             .findByTypeAndUrn(anyString(), anyString(), anySet());
 
         mockMvc.perform(
-            get("/{type}", type)
-                .param("fields", "name,description")
+            get(ENDPOINT_TYPE, type)
+                .param(PARAM_FIELDS, "name,description")
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isBadRequest())
             .andReturn();
@@ -360,8 +364,8 @@ public class GetThingResourceTest extends AbstractTestResource {
             .findByType(anyString());
 
         mockMvc.perform(
-            get("/{type}", type)
-                .param("fields", "name,description")
+            get(ENDPOINT_TYPE, type)
+                .param(PARAM_FIELDS, "name,description")
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isBadRequest())
             .andReturn();

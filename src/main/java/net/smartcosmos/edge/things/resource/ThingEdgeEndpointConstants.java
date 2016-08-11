@@ -31,7 +31,8 @@ public interface ThingEdgeEndpointConstants {
 
     // region Resource Paths
 
-    String ENDPOINT_TYPE = "/{" + TYPE + "}";
+    String ENDPOINT_BASE = "/" + ENDPOINT_BASE_NAME_THINGS;
+    String ENDPOINT_TYPE = ENDPOINT_BASE + "/{" + TYPE + "}";
     String ENDPOINT_TYPE_URN = ENDPOINT_TYPE + "/{" + URN + "}";
 
     // endregion
