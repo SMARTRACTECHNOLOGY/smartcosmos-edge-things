@@ -26,6 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.ENDPOINT_TYPE;
+
 public class CreateThingResourceTest extends AbstractTestResource {
 
     /**
@@ -70,8 +72,9 @@ public class CreateThingResourceTest extends AbstractTestResource {
 
         byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
-            post("/someType").content(jsonDto)
-                .contentType(MediaType.APPLICATION_JSON_UTF8))
+            post(ENDPOINT_TYPE, "someType")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(jsonDto))
             .andExpect(status().isOk())
             .andExpect(request().asyncStarted())
             .andReturn();
@@ -115,8 +118,9 @@ public class CreateThingResourceTest extends AbstractTestResource {
 
         byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
-            post("/someType").content(jsonDto)
-                .contentType(MediaType.APPLICATION_JSON_UTF8))
+            post(ENDPOINT_TYPE, "someType")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(jsonDto))
             .andExpect(status().isOk())
             .andExpect(request().asyncStarted())
             .andReturn();
@@ -153,8 +157,9 @@ public class CreateThingResourceTest extends AbstractTestResource {
 
         byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
-            post("/someType").content(jsonDto)
-                .contentType(MediaType.APPLICATION_JSON_UTF8))
+            post(ENDPOINT_TYPE, "someType")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(jsonDto))
             .andExpect(status().isOk())
             .andExpect(request().asyncStarted())
             .andReturn();

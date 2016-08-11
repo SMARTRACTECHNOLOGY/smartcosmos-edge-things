@@ -12,6 +12,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.ENDPOINT_TYPE_URN;
+
 public class DeleteThingResourceTest extends AbstractTestResource {
 
     /**
@@ -37,7 +39,7 @@ public class DeleteThingResourceTest extends AbstractTestResource {
             .delete(anyString(), anyString());
 
         MvcResult mvcResult = mockMvc.perform(
-            delete("/{type}/{urn}", ownerType, ownerUrn)
+            delete(ENDPOINT_TYPE_URN, ownerType, ownerUrn)
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
             .andExpect(request().asyncStarted())
@@ -67,7 +69,7 @@ public class DeleteThingResourceTest extends AbstractTestResource {
             .delete(anyString(), anyString());
 
         MvcResult mvcResult = mockMvc.perform(
-            delete("/{type}/{urn}", ownerType, ownerUrn)
+            delete(ENDPOINT_TYPE_URN, ownerType, ownerUrn)
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
             .andExpect(request().asyncStarted())
@@ -102,7 +104,7 @@ public class DeleteThingResourceTest extends AbstractTestResource {
             .delete(anyString(), anyString());
 
         MvcResult mvcResult = mockMvc.perform(
-            delete("/{type}/{urn}", ownerType, ownerUrn)
+            delete(ENDPOINT_TYPE_URN, ownerType, ownerUrn)
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
             .andExpect(request().asyncStarted())
