@@ -33,7 +33,7 @@ public interface ThingEdgeEndpointConstants {
 
     String ENDPOINT_BASE = "/";
     String ENDPOINT_TYPE = ENDPOINT_BASE + "{" + TYPE + "}";
-    String ENDPOINT_TYPE_URN = ENDPOINT_TYPE + "{" + URN + "}";
+    String ENDPOINT_TYPE_URN = ENDPOINT_TYPE + "/{" + URN + "}";
 
     // endregion
 
