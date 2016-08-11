@@ -55,7 +55,7 @@ public class MetadataRestConnector {
 
     private SmartCosmosRequest<Map<String, Object>> getRequest(String ownerType, String ownerUrn, Boolean force, Map<String, Object> body) {
 
-        StringBuilder url = new StringBuilder("metadata/")
+        StringBuilder url = new StringBuilder("")
             .append(ownerType)
             .append("/")
             .append(ownerUrn);
@@ -84,7 +84,7 @@ public class MetadataRestConnector {
 
     private SmartCosmosRequest<Void> getFindByOwnerRequest(String ownerType, String ownerUrn, Set<String> keyNames) {
 
-        StringBuilder url = new StringBuilder("metadata/")
+        StringBuilder url = new StringBuilder("")
             .append(ownerType)
             .append("/")
             .append(ownerUrn);
@@ -112,7 +112,7 @@ public class MetadataRestConnector {
 
     private SmartCosmosRequest<?> getDeleteRequest(String type, String urn) {
 
-        StringBuilder url = new StringBuilder("metadata/")
+        StringBuilder url = new StringBuilder("")
             .append(type)
             .append("/")
             .append(urn);

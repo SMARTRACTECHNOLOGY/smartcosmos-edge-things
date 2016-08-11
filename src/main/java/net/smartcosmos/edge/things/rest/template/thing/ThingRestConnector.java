@@ -43,7 +43,7 @@ public class ThingRestConnector {
 
     private SmartCosmosRequest<RestThingCreate> getCreateRequestBody(String type, RestThingCreate body) {
 
-        StringBuilder url = new StringBuilder("things/")
+        StringBuilder url = new StringBuilder("")
             .append(type);
 
         return SmartCosmosRequest.<RestThingCreate>builder()
@@ -65,7 +65,7 @@ public class ThingRestConnector {
 
     private SmartCosmosRequest<RestThingUpdate> getUpdateRequestBody(String type, String urn, RestThingUpdate body) {
 
-        StringBuilder url = new StringBuilder("things/")
+        StringBuilder url = new StringBuilder("")
             .append(type)
             .append("/")
             .append(urn);
@@ -89,7 +89,7 @@ public class ThingRestConnector {
 
     private SmartCosmosRequest<Void> getFindSpecificRequestBody(String type, String urn) {
 
-        StringBuilder url = new StringBuilder("things/")
+        StringBuilder url = new StringBuilder("")
             .append(type)
             .append("/")
             .append(urn);
@@ -112,7 +112,7 @@ public class ThingRestConnector {
 
     private SmartCosmosRequest<Void> getFindByTypeRequest(String type) {
 
-        StringBuilder url = new StringBuilder("things/")
+        StringBuilder url = new StringBuilder("")
             .append(type);
 
         return SmartCosmosRequest.<RestThingUpdate>builder()
@@ -133,7 +133,7 @@ public class ThingRestConnector {
 
     private SmartCosmosRequest<?> getDeleteRequest(String type, String urn) {
 
-        StringBuilder url = new StringBuilder("things/")
+        StringBuilder url = new StringBuilder("")
             .append(type)
             .append("/")
             .append(urn);
