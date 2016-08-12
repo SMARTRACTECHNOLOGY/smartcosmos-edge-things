@@ -7,8 +7,8 @@ ifdef::env-github[:BRANCH: master]
 
 Microservice which provides extended Things logic, like "Create a thing with metadata with one API call
 
-== License
-This is a private licensed repository, and as such, should not be shared publicly.
+== Copyright and License
+Code and documentation copyright 2016 Smartrac Technology Fletcher, Inc.  Code released under link:LICENSE[Apache 2.0 License].
 
 == REST API
 
