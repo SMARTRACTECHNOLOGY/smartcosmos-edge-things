@@ -5,7 +5,7 @@
     <parent>
         <groupId>net.smartcosmos</groupId>
         <artifactId>smartcosmos-framework-parent</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.0</version>
         <relativePath></relativePath>
     </parent>
 
@@ -148,6 +148,12 @@
             </plugin>
         </plugins>
     </build>
+    <scm>
+        <connection>scm:git:ssh://git@github.com/SMARTRACTECHNOLOGY/smartcosmos-edge-things.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/SMARTRACTECHNOLOGY/smartcosmos-edge-things.git</developerConnection>
+        <url>https://github.com/SMARTRACTECHNOLOGY/smartcosmos-edge-things/tree/master/</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <profiles>
         <profile>
@@ -303,5 +309,4 @@
             </build>
         </profile>
     </profiles>
-
 </project>
