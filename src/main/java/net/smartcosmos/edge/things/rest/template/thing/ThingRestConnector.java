@@ -41,6 +41,7 @@ public class ThingRestConnector {
             .exchange(requestEntity, RestThingCreateResponseDto.class);
     }
 
+    @SuppressWarnings("unchecked")
     private SmartCosmosRequest<RestThingCreate> getCreateRequestBody(String type, RestThingCreate body) {
 
         StringBuilder url = new StringBuilder("")
@@ -63,6 +64,7 @@ public class ThingRestConnector {
             .exchange(requestEntity, Void.class);
     }
 
+    @SuppressWarnings("unchecked")
     private SmartCosmosRequest<RestThingUpdate> getUpdateRequestBody(String type, String urn, RestThingUpdate body) {
 
         StringBuilder url = new StringBuilder("")
@@ -87,6 +89,7 @@ public class ThingRestConnector {
             .exchange(requestEntity, RestThingResponse.class);
     }
 
+    @SuppressWarnings("unchecked")
     private SmartCosmosRequest<Void> getFindSpecificRequestBody(String type, String urn) {
 
         StringBuilder url = new StringBuilder("")
@@ -101,19 +104,24 @@ public class ThingRestConnector {
             .build();
     }
 
-    public ResponseEntity<?> findByType(String type) {
+    public ResponseEntity<?> findByType(String type, Integer page, Integer size) {
 
-        SmartCosmosRequest<Void> requestBody = getFindByTypeRequest(type);
+        SmartCosmosRequest<Void> requestBody = getFindByTypeRequest(type, page, size);
         RequestEntity<Void> requestEntity = requestBody.buildRequest();
 
         return restTemplateFactory.getRestTemplate()
             .exchange(requestEntity, RestPagedThingResponse.class);
     }
 
-    private SmartCosmosRequest<Void> getFindByTypeRequest(String type) {
+    @SuppressWarnings("unchecked")
+    private SmartCosmosRequest<Void> getFindByTypeRequest(String type, Integer page, Integer size) {
 
         StringBuilder url = new StringBuilder("")
-            .append(type);
+            .append(type)
+            .append("?page=")
+            .append(page)
+            .append("size=")
+            .append(size);
 
         return SmartCosmosRequest.<RestThingUpdate>builder()
             .serviceName(serviceName)

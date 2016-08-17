@@ -188,7 +188,7 @@ public class GetThingResourceTest extends AbstractTestResource {
         ResponseEntity<Map<String, Object>> metadataResponseEntity = new ResponseEntity<>(metadataResponseBody, HttpStatus.OK);
 
         willReturn(thingResponseEntity).given(thingRestConnector)
-            .findByType(anyString());
+            .findByType(anyString(), anyInt(), anyInt());
         willReturn(metadataResponseEntity).given(metadataRestConnector)
             .findByTypeAndUrn(anyString(), anyString(), anySet());
 
@@ -211,7 +211,7 @@ public class GetThingResourceTest extends AbstractTestResource {
             .andExpect(jsonPath("$.page.totalElements", is(10)))
             .andReturn();
 
-        verify(thingRestConnector, times(1)).findByType(anyString());
+        verify(thingRestConnector, times(1)).findByType(anyString(), anyInt(), anyInt());
         verify(metadataRestConnector, times(10)).findByTypeAndUrn(anyString(), anyString(), anySet());
 
         verifyNoMoreInteractions(metadataRestConnector);
@@ -225,7 +225,7 @@ public class GetThingResourceTest extends AbstractTestResource {
 
         ResponseEntity<?> thingResponseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         willReturn(thingResponseEntity).given(thingRestConnector)
-            .findByType(anyString());
+            .findByType(anyString(), anyInt(), anyInt());
 
         mockMvc.perform(
             get(ENDPOINT_TYPE, type)
@@ -234,7 +234,7 @@ public class GetThingResourceTest extends AbstractTestResource {
             .andExpect(status().isNotFound())
             .andReturn();
 
-        verify(thingRestConnector, times(1)).findByType(anyString());
+        verify(thingRestConnector, times(1)).findByType(anyString(), anyInt(), anyInt());
         verify(metadataRestConnector, times(0)).findByTypeAndUrn(anyString(), anyString(), anySet());
 
         verifyNoMoreInteractions(metadataRestConnector);
@@ -273,7 +273,7 @@ public class GetThingResourceTest extends AbstractTestResource {
         ResponseEntity<Map<String, Object>> metadataResponseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         willReturn(thingResponseEntity).given(thingRestConnector)
-            .findByType(anyString());
+            .findByType(anyString(), anyInt(), anyInt());
         willReturn(metadataResponseEntity).given(metadataRestConnector)
             .findByTypeAndUrn(anyString(), anyString(), anySet());
 
@@ -296,7 +296,7 @@ public class GetThingResourceTest extends AbstractTestResource {
             .andExpect(jsonPath("$.page.totalElements", is(10)))
             .andReturn();
 
-        verify(thingRestConnector, times(1)).findByType(anyString());
+        verify(thingRestConnector, times(1)).findByType(anyString(), anyInt(), anyInt());
         verify(metadataRestConnector, times(10)).findByTypeAndUrn(anyString(), anyString(), anySet());
 
         verifyNoMoreInteractions(metadataRestConnector);
@@ -335,7 +335,7 @@ public class GetThingResourceTest extends AbstractTestResource {
         ResponseEntity<Map<String, Object>> metadataResponseEntity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         willReturn(thingResponseEntity).given(thingRestConnector)
-            .findByType(anyString());
+            .findByType(anyString(), anyInt(), anyInt());
         willReturn(metadataResponseEntity).given(metadataRestConnector)
             .findByTypeAndUrn(anyString(), anyString(), anySet());
 
@@ -346,7 +346,7 @@ public class GetThingResourceTest extends AbstractTestResource {
             .andExpect(status().isBadRequest())
             .andReturn();
 
-        verify(thingRestConnector, times(1)).findByType(anyString());
+        verify(thingRestConnector, times(1)).findByType(anyString(), anyInt(), anyInt());
         verify(metadataRestConnector, times(1)).findByTypeAndUrn(anyString(), anyString(), anySet());
 
         verifyNoMoreInteractions(metadataRestConnector);
@@ -361,7 +361,7 @@ public class GetThingResourceTest extends AbstractTestResource {
         ResponseEntity<?> thingResponseEntity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         willReturn(thingResponseEntity).given(thingRestConnector)
-            .findByType(anyString());
+            .findByType(anyString(), anyInt(), anyInt());
 
         mockMvc.perform(
             get(ENDPOINT_TYPE, type)
@@ -370,7 +370,7 @@ public class GetThingResourceTest extends AbstractTestResource {
             .andExpect(status().isBadRequest())
             .andReturn();
 
-        verify(thingRestConnector, times(1)).findByType(anyString());
+        verify(thingRestConnector, times(1)).findByType(anyString(), anyInt(), anyInt());
 
         verifyNoMoreInteractions(metadataRestConnector);
         verifyNoMoreInteractions(thingRestConnector);
