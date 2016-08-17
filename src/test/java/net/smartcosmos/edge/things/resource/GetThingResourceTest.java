@@ -235,9 +235,8 @@ public class GetThingResourceTest extends AbstractTestResource {
             .andReturn();
 
         verify(thingRestConnector, times(1)).findByType(anyString(), anyInt(), anyInt());
-        verify(metadataRestConnector, times(0)).findByTypeAndUrn(anyString(), anyString(), anySet());
 
-        verifyNoMoreInteractions(metadataRestConnector);
+        verifyZeroInteractions(metadataRestConnector);
         verifyNoMoreInteractions(thingRestConnector);
     }
 
@@ -372,7 +371,7 @@ public class GetThingResourceTest extends AbstractTestResource {
 
         verify(thingRestConnector, times(1)).findByType(anyString(), anyInt(), anyInt());
 
-        verifyNoMoreInteractions(metadataRestConnector);
+        verifyZeroInteractions(metadataRestConnector);
         verifyNoMoreInteractions(thingRestConnector);
     }
 }
