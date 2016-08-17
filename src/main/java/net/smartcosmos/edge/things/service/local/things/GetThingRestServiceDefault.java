@@ -44,7 +44,7 @@ public class GetThingRestServiceDefault implements GetThingRestService {
     @Override
     public ResponseEntity findByType(String type, Integer page, Integer size, String sortOrder, String sortBy, SmartCosmosUser user) {
         try {
-            return restTemplate.findByType(type);
+            return restTemplate.findByType(type, page, size);
         }
         catch (HttpClientErrorException e) {
             // if something goes wrong, forward the response
