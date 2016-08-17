@@ -120,7 +120,7 @@ public class ThingRestConnector {
             .append(type)
             .append("?page=")
             .append(page)
-            .append("size=")
+            .append("&size=")
             .append(size);
 
         return SmartCosmosRequest.<RestThingUpdate>builder()
