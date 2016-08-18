@@ -22,14 +22,20 @@ public class RestTemplateFactory {
     private final RibbonClientHttpRequestFactory ribbonClientHttpRequestFactory;
 
     private final OAuth2TokenProvider tokenProvider;
+    private final ConflictOauth2ErrorHandler errorHandler;
 
     @Autowired
-    public RestTemplateFactory(SpringClientFactory clientFactory, OAuth2ProtectedResourceDetails resourceDetails, OAuth2TokenProvider tokenProvider) {
+    public RestTemplateFactory(
+        SpringClientFactory clientFactory,
+        OAuth2ProtectedResourceDetails resourceDetails,
+        OAuth2TokenProvider tokenProvider,
+        ConflictOauth2ErrorHandler errorHandler) {
 
         this.ribbonClientHttpRequestFactory = new RibbonClientHttpRequestFactory(clientFactory);
 
         this.resourceDetails = resourceDetails;
         this.tokenProvider = tokenProvider;
+        this.errorHandler = errorHandler;
     }
 
     /**
@@ -47,6 +53,7 @@ public class RestTemplateFactory {
 
         OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(resourceDetails, context);
         restTemplate.setRequestFactory(ribbonClientHttpRequestFactory);
+        restTemplate.setErrorHandler(errorHandler);
 
         return restTemplate;
     }

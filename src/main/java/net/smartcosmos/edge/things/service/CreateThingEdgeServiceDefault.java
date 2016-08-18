@@ -2,8 +2,11 @@ package net.smartcosmos.edge.things.service;
 
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -19,15 +22,19 @@ import net.smartcosmos.security.user.SmartCosmosUser;
  * Default implementation for {@link net.smartcosmos.edge.things.service.CreateThingEdgeService}
  */
 @Service
+@Slf4j
 public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
+
     private final EventSendingService eventSendingService;
     private final ConversionService conversionService;
     private final CreateMetadataRestService createMetadataService;
     private final CreateThingRestService createThingService;
 
     @Autowired
-    public CreateThingEdgeServiceDefault(EventSendingService eventSendingService, ConversionService conversionService,
-            CreateMetadataRestService createMetadataService, CreateThingRestService createThingService) {
+    public CreateThingEdgeServiceDefault(
+        EventSendingService eventSendingService, ConversionService conversionService,
+        CreateMetadataRestService createMetadataService, CreateThingRestService createThingService) {
+
         this.eventSendingService = eventSendingService;
         this.conversionService = conversionService;
         this.createMetadataService = createMetadataService;
@@ -39,25 +46,38 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
     @Override
     public void create(DeferredResult<ResponseEntity> response, String type, Map<String, Object> metadataMap, Boolean force, SmartCosmosUser user) {
 
+        try {
+            response.setResult(createWorker(type, metadataMap, force, user));
+        } catch (Exception e) {
+            log.debug(e.getMessage(), e);
+            response.setErrorResult(e);
+        }
+    }
+
+    protected ResponseEntity<?> createWorker(String type, Map<String, Object> metadataMap, Boolean force, SmartCosmosUser user) {
+
         RestThingMetadataCreateContainer container = conversionService.convert(metadataMap, RestThingMetadataCreateContainer.class);
         ResponseEntity thingResponse = createThingService.create(type, container.getThingRequestBody(), user);
         Map<String, Object> reducedMetadataMap = container.getMetadataRequestBody();
 
-        if (thingResponse.getStatusCode().is2xxSuccessful() && thingResponse.hasBody()
-                && thingResponse.getBody() instanceof RestThingCreateResponseDto && !reducedMetadataMap.isEmpty()) {
+        HttpStatus status = thingResponse.getStatusCode();
+        if ((status.is2xxSuccessful() || (force && HttpStatus.CONFLICT.equals(status)))
+            && thingResponse.hasBody()
+            && thingResponse.getBody() instanceof RestThingCreateResponseDto
+            && !reducedMetadataMap.isEmpty()) {
             RestThingCreateResponseDto thingResponseBody = (RestThingCreateResponseDto) thingResponse.getBody();
             String urn = thingResponseBody.getUrn();
 
             ResponseEntity metadataResponse = createMetadataService.create(type, urn, force, reducedMetadataMap, user);
 
-            if (!metadataResponse.getStatusCode().is2xxSuccessful()) {
+            if (!metadataResponse.getStatusCode()
+                .is2xxSuccessful()) {
                 // if there was a problem with the metadata creation, we return that
-                response.setResult(metadataResponse);
-                return;
+                return metadataResponse;
             }
         }
 
         // usually we just return the Thing creation response
-        response.setResult(thingResponse);
+        return thingResponse;
     }
 }
