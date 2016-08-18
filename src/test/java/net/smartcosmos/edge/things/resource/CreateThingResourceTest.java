@@ -14,6 +14,8 @@ import net.smartcosmos.edge.things.testutil.Testutility;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.anyMap;
+import static org.mockito.BDDMockito.times;
+import static org.mockito.BDDMockito.verify;
 import static org.mockito.BDDMockito.verifyNoMoreInteractions;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Matchers.anyObject;
@@ -27,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.ENDPOINT_TYPE;
+import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.PARAM_FORCE;
 
 public class CreateThingResourceTest extends AbstractTestResource {
 
@@ -147,13 +150,105 @@ public class CreateThingResourceTest extends AbstractTestResource {
         final String expectedUrn = "urn";
         final String expectedType = "someType";
 
-        final ResponseEntity<?> thingResponseEntity = new ResponseEntity<>(HttpStatus.CONFLICT);
+        final RestThingCreateResponseDto thingResponseBody = RestThingCreateResponseDto.builder()
+            .urn("someOtherUrn")
+            .type(expectedType)
+            .tenantUrn("someTenantUrn")
+            .active(true)
+            .build();
+        final ResponseEntity<?> thingResponseEntity = ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(thingResponseBody);
 
         willReturn(thingResponseEntity).given(thingRestConnector)
             .create(anyString(), anyObject());
 
         HashMap<String, Object> requestBody = new HashMap<>();
         requestBody.put("urn", expectedUrn);
+
+        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(ENDPOINT_TYPE, "someType")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(jsonDto))
+            .andExpect(status().isOk())
+            .andExpect(request().asyncStarted())
+            .andReturn();
+
+        this.mockMvc.perform(asyncDispatch(mvcResult))
+            .andExpect(status().isConflict());
+
+        verifyNoMoreInteractions(metadataRestConnector);
+    }
+
+    @Test
+    public void thatCreateDuplicateThingWithMetadataForceSucceeds() throws Exception {
+
+        final String expectedUrn = "urn";
+        final String expectedType = "someType";
+
+        final RestThingCreateResponseDto thingResponseBody = RestThingCreateResponseDto.builder()
+            .urn("someOtherUrn")
+            .type(expectedType)
+            .tenantUrn("someTenantUrn")
+            .active(true)
+            .build();
+        final ResponseEntity<?> thingResponseEntity = ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(thingResponseBody);
+
+        willReturn(thingResponseEntity).given(thingRestConnector)
+            .create(anyString(), anyObject());
+
+        final RestMetadataCreateResponseDto metadataResponseBody = RestMetadataCreateResponseDto.builder()
+            .uri("/" + expectedType + "/" + expectedUrn)
+            .build();
+        final ResponseEntity<?> metadataResponseEntity = new ResponseEntity<>(metadataResponseBody, HttpStatus.OK);
+
+        willReturn(metadataResponseEntity)
+            .given(metadataRestConnector)
+            .create(anyString(), anyString(), anyBoolean(), anyMap());
+
+        HashMap<String, Object> requestBody = new HashMap<>();
+        requestBody.put("urn", expectedUrn);
+        requestBody.put("name", "someName");
+
+        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(ENDPOINT_TYPE, "someType")
+                .param(PARAM_FORCE, "true")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(jsonDto))
+            .andExpect(status().isOk())
+            .andExpect(request().asyncStarted())
+            .andReturn();
+
+        this.mockMvc.perform(asyncDispatch(mvcResult))
+            .andExpect(status().isConflict());
+
+        verify(metadataRestConnector, times(1)).create(anyString(), anyString(), anyBoolean(), anyMap());
+        verifyNoMoreInteractions(metadataRestConnector);
+    }
+
+    @Test
+    public void thatCreateDuplicateThingWithMetadataNoForceFails() throws Exception {
+
+        final String expectedUrn = "urn";
+        final String expectedType = "someType";
+
+        final RestThingCreateResponseDto thingResponseBody = RestThingCreateResponseDto.builder()
+            .urn("someOtherUrn")
+            .type(expectedType)
+            .tenantUrn("someTenantUrn")
+            .active(true)
+            .build();
+        final ResponseEntity<?> thingResponseEntity = ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(thingResponseBody);
+
+        willReturn(thingResponseEntity).given(thingRestConnector)
+            .create(anyString(), anyObject());
+
+        HashMap<String, Object> requestBody = new HashMap<>();
+        requestBody.put("urn", expectedUrn);
+        requestBody.put("name", "someName");
 
         byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
