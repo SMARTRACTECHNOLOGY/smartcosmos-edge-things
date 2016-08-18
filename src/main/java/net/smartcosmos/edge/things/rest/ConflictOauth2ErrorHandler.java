@@ -25,6 +25,6 @@ public class ConflictOauth2ErrorHandler extends OAuth2ErrorHandler {
     public boolean hasError(ClientHttpResponse response) throws IOException {
 
         HttpStatus status = response.getStatusCode();
-        return !(status.is2xxSuccessful() || status.is3xxRedirection() || status.is1xxInformational() || HttpStatus.CONFLICT.equals(status));
+        return super.hasError(response) && !HttpStatus.CONFLICT.equals(status);
     }
 }
