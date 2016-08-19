@@ -8,8 +8,5 @@ logging:
     ROOT: WARN
     #net.smartcosmos: TRACE
     org.springframework: WARN
-    #org.springframework.security: TRACE
-    org.springframework.web: TRACE
     #org.springframework.beans: TRACE
     com.netflix.eureka.registry: WARN
-    springfox: TRACE
