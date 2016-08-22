@@ -18,6 +18,8 @@ import net.smartcosmos.edge.things.service.local.metadata.CreateMetadataRestServ
 import net.smartcosmos.edge.things.service.local.things.CreateThingRestService;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
+import static net.smartcosmos.edge.things.utility.ResponseBuilderUtility.buildForwardingResponse;
+
 /**
  * Default implementation for {@link net.smartcosmos.edge.things.service.CreateThingEdgeService}
  */
@@ -73,11 +75,11 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
             if (!metadataResponse.getStatusCode()
                 .is2xxSuccessful()) {
                 // if there was a problem with the metadata creation, we return that
-                return metadataResponse;
+                return buildForwardingResponse(metadataResponse);
             }
         }
 
         // usually we just return the Thing creation response
-        return thingResponse;
+        return buildForwardingResponse(thingResponse);
     }
 }
