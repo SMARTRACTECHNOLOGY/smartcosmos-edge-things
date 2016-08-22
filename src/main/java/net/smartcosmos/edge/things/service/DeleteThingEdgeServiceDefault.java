@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -37,8 +36,6 @@ public class DeleteThingEdgeServiceDefault implements DeleteThingEdgeService {
         this.conversionService = conversionService;
         this.deleteMetadataService = deleteMetadataService;
         this.deleteThingService = deleteThingService;
-
-        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
     }
 
     @Override

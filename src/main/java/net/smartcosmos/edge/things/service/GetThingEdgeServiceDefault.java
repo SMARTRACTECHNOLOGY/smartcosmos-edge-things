@@ -14,7 +14,6 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import net.smartcosmos.edge.things.domain.RestEdgePagedThingResponseDto;
@@ -47,8 +46,6 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
         this.conversionService = conversionService;
         this.getMetadataService = getMetadataService;
         this.getThingService = getThingService;
-
-        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
     }
 
     @Override

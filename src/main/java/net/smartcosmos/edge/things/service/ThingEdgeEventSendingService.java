@@ -1,10 +1,9 @@
 package net.smartcosmos.edge.things.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import net.smartcosmos.edge.things.utility.ThingEdgeEventType;
 import net.smartcosmos.events.SmartCosmosEventException;
@@ -22,8 +21,6 @@ public class ThingEdgeEventSendingService implements EventSendingService {
     @Autowired
     public ThingEdgeEventSendingService(SmartCosmosEventTemplate smartCosmosEventTemplate) {
         this.smartCosmosEventTemplate = smartCosmosEventTemplate;
-
-        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
     }
 
     @Override
