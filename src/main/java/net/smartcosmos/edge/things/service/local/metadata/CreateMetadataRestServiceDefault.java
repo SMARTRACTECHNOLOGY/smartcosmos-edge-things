@@ -2,14 +2,13 @@ package net.smartcosmos.edge.things.service.local.metadata;
 
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
-
-import lombok.extern.slf4j.Slf4j;
 
 import net.smartcosmos.edge.things.rest.template.metadata.MetadataRestConnector;
 import net.smartcosmos.security.user.SmartCosmosUser;
@@ -27,8 +26,6 @@ public class CreateMetadataRestServiceDefault implements CreateMetadataRestServi
     public CreateMetadataRestServiceDefault(ConversionService conversionService, MetadataRestConnector restTemplate) {
         this.conversionService = conversionService;
         this.restTemplate = restTemplate;
-
-        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
     }
 
     @Override
