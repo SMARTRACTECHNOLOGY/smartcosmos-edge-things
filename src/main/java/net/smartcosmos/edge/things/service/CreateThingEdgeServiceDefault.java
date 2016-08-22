@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -41,8 +40,6 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
         this.conversionService = conversionService;
         this.createMetadataService = createMetadataService;
         this.createThingService = createThingService;
-
-        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
     }
 
     @Override
@@ -51,7 +48,13 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
         try {
             response.setResult(createWorker(type, metadataMap, force, user));
         } catch (Exception e) {
-            log.debug(e.getMessage(), e);
+            log.warn("Create request for Thing with type '{}' by user {} failed: {}\nRequest (force = {}): {}",
+                     type,
+                     user,
+                     e.toString(),
+                     force,
+                     metadataMap);
+            log.debug(e.toString(), e);
             response.setErrorResult(e);
         }
     }

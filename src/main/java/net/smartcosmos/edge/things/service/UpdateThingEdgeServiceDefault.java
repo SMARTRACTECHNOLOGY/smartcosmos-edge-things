@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -41,8 +40,6 @@ public class UpdateThingEdgeServiceDefault implements UpdateThingEdgeService {
         this.conversionService = conversionService;
         this.upsertMetadataService = upsertMetadataService;
         this.updateThingService = updateThingService;
-
-        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
     }
 
     @Override
@@ -51,7 +48,13 @@ public class UpdateThingEdgeServiceDefault implements UpdateThingEdgeService {
         try {
             response.setResult(updateWorker(type, urn, requestBody, user));
         } catch (Exception e) {
-            log.debug(e.getMessage(), e);
+            log.warn("Update request for Thing with type '{}' and URN '{}' by user {} failed: {}\nRequest: {}",
+                     type,
+                     urn,
+                     user,
+                     e.toString(),
+                     requestBody);
+            log.debug(e.toString(), e);
             response.setErrorResult(e);
         }
     }
