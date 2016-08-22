@@ -48,7 +48,13 @@ public class UpdateThingEdgeServiceDefault implements UpdateThingEdgeService {
         try {
             response.setResult(updateWorker(type, urn, requestBody, user));
         } catch (Exception e) {
-            log.debug(e.getMessage(), e);
+            log.warn("Update request for Thing with type '{}' and URN '{}' by user {} failed: {}\nRequest: {}",
+                     type,
+                     urn,
+                     user,
+                     e.toString(),
+                     requestBody);
+            log.debug(e.toString(), e);
             response.setErrorResult(e);
         }
     }

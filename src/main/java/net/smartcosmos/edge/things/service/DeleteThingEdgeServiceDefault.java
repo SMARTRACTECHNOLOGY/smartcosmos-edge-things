@@ -44,7 +44,12 @@ public class DeleteThingEdgeServiceDefault implements DeleteThingEdgeService {
         try {
             response.setResult(deleteWorker(type, urn, user));
         } catch (Exception e) {
-            log.debug(e.getMessage(), e);
+            log.warn("Delete request for Thing with type '{}' and URN '{}' by user {} failed: {}",
+                     type,
+                     urn,
+                     user,
+                     e.toString());
+            log.debug(e.toString(), e);
             response.setErrorResult(e);
         }
     }
