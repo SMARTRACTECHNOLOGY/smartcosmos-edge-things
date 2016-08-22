@@ -25,6 +25,8 @@ import net.smartcosmos.edge.things.service.local.metadata.GetMetadataRestService
 import net.smartcosmos.edge.things.service.local.things.GetThingRestService;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
+import static net.smartcosmos.edge.things.utility.ResponseBuilderUtility.buildForwardingResponse;
+
 @Service
 public class GetThingEdgeServiceDefault implements GetThingEdgeService {
 
@@ -54,7 +56,7 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
 
         ResponseEntity thingResponse = getThingService.findByTypeAndUrn(type, urn, user);
         if (!thingResponse.getStatusCode().is2xxSuccessful()) {
-            return thingResponse;
+            return buildForwardingResponse(thingResponse);
         }
 
         Map<String, Object> resultMap = new LinkedHashMap<>();
@@ -93,7 +95,7 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
 
         ResponseEntity thingResponse = getThingService.findByType(type, page, size, sortOrder, sortBy, user);
         if (!thingResponse.getStatusCode().is2xxSuccessful()) {
-            return thingResponse;
+            return buildForwardingResponse(thingResponse);
         }
 
         if (thingResponse.hasBody() && thingResponse.getBody() instanceof RestPagedThingResponse) {
@@ -115,7 +117,7 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
             }
         }
 
-        return thingResponse;
+        return buildForwardingResponse(thingResponse);
     }
 
     private ResponseEntity<?> getMetadataOwnerMergeThings(String type, Set<String> metadataKeys, Integer page, Integer size, String sortOrder, String sortBy, SmartCosmosUser user) {

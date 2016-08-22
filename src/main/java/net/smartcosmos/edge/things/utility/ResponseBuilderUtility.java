@@ -23,4 +23,16 @@ public class ResponseBuilderUtility {
                       .build());
     }
 
+    /**
+     * Builds a {@link ResponseEntity} based on the HTTP status code and body of another response.
+     *
+     * @param response the existing response
+     * @return a new response with the same HTTP status code and body
+     */
+    public static ResponseEntity<?> buildForwardingResponse(ResponseEntity<?> response) {
+
+        return ResponseEntity.status(response.getStatusCode())
+            .body(response.getBody());
+    }
+
 }
