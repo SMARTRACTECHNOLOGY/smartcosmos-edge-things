@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResour
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import net.smartcosmos.edge.things.rest.errorhandler.ConflictOauth2ErrorHandler;
+import net.smartcosmos.edge.things.rest.errorhandler.ProxyOauth2ErrorHandler;
 
 /**
  * Factory class creating new {@link RestTemplate} instances for calls to other services in the roundRock.
@@ -24,14 +24,14 @@ public class RestTemplateFactory {
     private final RibbonClientHttpRequestFactory ribbonClientHttpRequestFactory;
 
     private final OAuth2TokenProvider tokenProvider;
-    private final ConflictOauth2ErrorHandler errorHandler;
+    private final ProxyOauth2ErrorHandler errorHandler;
 
     @Autowired
     public RestTemplateFactory(
         SpringClientFactory clientFactory,
         OAuth2ProtectedResourceDetails resourceDetails,
         OAuth2TokenProvider tokenProvider,
-        ConflictOauth2ErrorHandler errorHandler) {
+        ProxyOauth2ErrorHandler errorHandler) {
 
         this.ribbonClientHttpRequestFactory = new RibbonClientHttpRequestFactory(clientFactory);
 

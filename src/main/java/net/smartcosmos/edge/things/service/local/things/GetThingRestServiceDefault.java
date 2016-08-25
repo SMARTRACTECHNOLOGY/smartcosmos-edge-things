@@ -36,15 +36,8 @@ public class GetThingRestServiceDefault implements GetThingRestService {
 
         RequestEntity<Void> requestEntity = requestFactory.findSpecificRequest(type, urn);
 
-        try {
-            return restTemplateFactory.getRestTemplate()
-                .exchange(requestEntity, RestThingResponse.class);
-        } catch (HttpClientErrorException e) {
-            // if something goes wrong, forward the response
-            return ResponseEntity.status(e.getStatusCode())
-                .headers(e.getResponseHeaders())
-                .body(e.getResponseBodyAsString());
-        }
+        return restTemplateFactory.getRestTemplate()
+            .exchange(requestEntity, RestThingResponse.class);
     }
 
     @Override

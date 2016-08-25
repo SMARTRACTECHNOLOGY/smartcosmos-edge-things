@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 import net.smartcosmos.edge.things.domain.local.things.RestThingUpdate;
 import net.smartcosmos.edge.things.rest.RestTemplateFactory;
@@ -35,15 +34,7 @@ public class UpdateThingRestServiceDefault implements UpdateThingRestService {
 
         RequestEntity<RestThingUpdate> requestEntity = requestFactory.updateRequest(type, urn, thingUpdate);
 
-        try {
-            return restTemplateFactory.getRestTemplate()
-                .exchange(requestEntity, Void.class);
-        } catch (HttpClientErrorException e) {
-            // if something goes wrong, forward the response
-            return ResponseEntity
-                .status(e.getStatusCode())
-                .headers(e.getResponseHeaders())
-                .body(e.getResponseBodyAsString());
-        }
+        return restTemplateFactory.getRestTemplate()
+            .exchange(requestEntity, Void.class);
     }
 }

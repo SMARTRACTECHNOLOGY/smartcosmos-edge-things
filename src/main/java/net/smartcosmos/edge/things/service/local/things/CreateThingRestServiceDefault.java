@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 import net.smartcosmos.edge.things.domain.local.things.RestThingCreate;
 import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
@@ -36,15 +35,8 @@ public class CreateThingRestServiceDefault implements CreateThingRestService {
 
         RequestEntity<RestThingCreate> requestEntity = requestFactory.createRequest(type, thingCreate);
 
-        try {
-            return restTemplateFactory.getRestTemplate()
-                .exchange(requestEntity, RestThingCreateResponseDto.class);
-        } catch (HttpClientErrorException e) {
-            // if something goes wrong, forward the response
-            return ResponseEntity.status(e.getStatusCode())
-                .headers(e.getResponseHeaders())
-                .body(e.getResponseBodyAsString());
-        }
+        return restTemplateFactory.getRestTemplate()
+            .exchange(requestEntity, RestThingCreateResponseDto.class);
     }
 
     @Override
