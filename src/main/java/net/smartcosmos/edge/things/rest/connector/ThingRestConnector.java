@@ -17,6 +17,7 @@ import net.smartcosmos.edge.things.rest.request.ThingRequestFactory;
 
 @Component
 @Slf4j
+@Deprecated
 public class ThingRestConnector {
 
     private final RestTemplateFactory restTemplateFactory;

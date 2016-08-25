@@ -16,6 +16,7 @@ import net.smartcosmos.edge.things.rest.request.MetadataRequestFactory;
 
 @Component
 @Slf4j
+@Deprecated
 public class MetadataRestConnector {
 
     private final RestTemplateFactory restTemplateFactory;
