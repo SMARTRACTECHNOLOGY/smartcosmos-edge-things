@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @SpringApplicationConfiguration(classes = { ThingEdgeService.class, SpringfoxDocumentationConfig.class })
-@ActiveProfiles("test")
+@ActiveProfiles({ "test", "docs" })
 public class GenerateDocumentationTest {
 
     public static final String GENERATED_DOCS_ROOT_LOCATION = "target/generated/api-docs";
