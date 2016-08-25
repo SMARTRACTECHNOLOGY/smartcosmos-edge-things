@@ -11,6 +11,8 @@ import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResour
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import net.smartcosmos.edge.things.rest.errorhandler.ConflictOauth2ErrorHandler;
+
 /**
  * Factory class creating new {@link RestTemplate} instances for calls to other services in the roundRock.
  */
