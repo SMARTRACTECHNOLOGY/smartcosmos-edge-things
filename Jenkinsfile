@@ -1,3 +1,3 @@
 smartcosmosMavenBuild {
-  ignoreMissingTests = true
+  isPublicArtifact = true
 }
