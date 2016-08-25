@@ -48,6 +48,9 @@ public class MetadataRequestFactory {
         Boolean force,
         Map<String, Object> keyValuePairs) {
 
+        Assert.isTrue(StringUtils.isNotBlank(ownerType), "owner type may not be empty");
+        Assert.isTrue(StringUtils.isNotBlank(ownerUrn), "owner URN may not be empty");
+
         String url = UriComponentsBuilder.fromPath(encode(ownerType))
             .pathSegment(encode(ownerUrn))
             .queryParam("force", BooleanUtils.isTrue(force) ? String.valueOf(force) : "")
