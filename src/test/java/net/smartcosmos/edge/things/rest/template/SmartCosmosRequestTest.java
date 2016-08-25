@@ -6,6 +6,8 @@ import org.junit.*;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
 
+import net.smartcosmos.edge.things.rest.request.SmartCosmosRequest;
+
 import static org.junit.Assert.*;
 
 public class SmartCosmosRequestTest {
