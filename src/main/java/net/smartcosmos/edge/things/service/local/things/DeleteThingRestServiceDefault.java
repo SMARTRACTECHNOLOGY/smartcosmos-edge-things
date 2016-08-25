@@ -24,9 +24,7 @@ public class DeleteThingRestServiceDefault implements DeleteThingRestService {
     private final ThingRequestFactory requestFactory;
 
     @Autowired
-    public DeleteThingRestServiceDefault(
-        RestTemplateFactory restTemplateFactory,
-        ThingRequestFactory requestFactory) {
+    public DeleteThingRestServiceDefault(RestTemplateFactory restTemplateFactory, ThingRequestFactory requestFactory) {
 
         this.restTemplateFactory = restTemplateFactory;
         this.requestFactory = requestFactory;

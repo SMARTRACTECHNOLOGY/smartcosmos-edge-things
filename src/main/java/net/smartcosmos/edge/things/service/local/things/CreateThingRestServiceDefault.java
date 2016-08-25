@@ -25,9 +25,7 @@ public class CreateThingRestServiceDefault implements CreateThingRestService {
     private final ThingRequestFactory requestFactory;
 
     @Autowired
-    public CreateThingRestServiceDefault(
-        RestTemplateFactory restTemplateFactory,
-        ThingRequestFactory requestFactory) {
+    public CreateThingRestServiceDefault(RestTemplateFactory restTemplateFactory, ThingRequestFactory requestFactory) {
 
         this.restTemplateFactory = restTemplateFactory;
         this.requestFactory = requestFactory;

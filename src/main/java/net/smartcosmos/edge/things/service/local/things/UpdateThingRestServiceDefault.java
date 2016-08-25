@@ -24,9 +24,7 @@ public class UpdateThingRestServiceDefault implements UpdateThingRestService {
     private final ThingRequestFactory requestFactory;
 
     @Autowired
-    public UpdateThingRestServiceDefault(
-        RestTemplateFactory restTemplateFactory,
-        ThingRequestFactory requestFactory) {
+    public UpdateThingRestServiceDefault(RestTemplateFactory restTemplateFactory, ThingRequestFactory requestFactory) {
 
         this.restTemplateFactory = restTemplateFactory;
         this.requestFactory = requestFactory;

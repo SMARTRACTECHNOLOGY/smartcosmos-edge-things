@@ -3,12 +3,13 @@ package net.smartcosmos.edge.things.service.local.metadata;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionService;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
-import net.smartcosmos.edge.things.rest.connector.MetadataRestConnector;
+import net.smartcosmos.edge.things.rest.RestTemplateFactory;
+import net.smartcosmos.edge.things.rest.request.MetadataRequestFactory;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
@@ -18,23 +19,29 @@ import net.smartcosmos.security.user.SmartCosmosUser;
 @Service
 public class DeleteMetadataRestServiceDefault implements DeleteMetadataRestService {
 
-    private final ConversionService conversionService;
-    private final MetadataRestConnector restTemplate;
+    private final RestTemplateFactory restTemplateFactory;
+    private final MetadataRequestFactory requestFactory;
 
     @Autowired
-    public DeleteMetadataRestServiceDefault(ConversionService conversionService, MetadataRestConnector restTemplate) {
-        this.conversionService = conversionService;
-        this.restTemplate = restTemplate;
+    public DeleteMetadataRestServiceDefault(RestTemplateFactory restTemplateFactory, MetadataRequestFactory requestFactory) {
+
+        this.restTemplateFactory = restTemplateFactory;
+        this.requestFactory = requestFactory;
     }
 
     @Override
     public ResponseEntity<?> delete(String ownerType, String ownerUrn, SmartCosmosUser user) {
+
+        RequestEntity<?> requestEntity = requestFactory.deleteAllForOwnerRequest(ownerType, ownerUrn);
+
         try {
-            return restTemplate.delete(ownerType, ownerUrn);
-        }
-        catch (HttpClientErrorException e) {
+            return restTemplateFactory.getRestTemplate()
+                .exchange(requestEntity, Void.class);
+        } catch (HttpClientErrorException e) {
             // if something goes wrong, forward the response
-            return ResponseEntity.status(e.getStatusCode()).headers(e.getResponseHeaders()).body(e.getResponseBodyAsString());
+            return ResponseEntity.status(e.getStatusCode())
+                .headers(e.getResponseHeaders())
+                .body(e.getResponseBodyAsString());
         }
     }
 }

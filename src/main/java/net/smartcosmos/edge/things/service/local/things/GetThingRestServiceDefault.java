@@ -25,9 +25,7 @@ public class GetThingRestServiceDefault implements GetThingRestService {
     private final ThingRequestFactory requestFactory;
 
     @Autowired
-    public GetThingRestServiceDefault(
-        RestTemplateFactory restTemplateFactory,
-        ThingRequestFactory requestFactory) {
+    public GetThingRestServiceDefault(RestTemplateFactory restTemplateFactory, ThingRequestFactory requestFactory) {
 
         this.restTemplateFactory = restTemplateFactory;
         this.requestFactory = requestFactory;

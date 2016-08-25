@@ -29,6 +29,7 @@ public class MetadataRestConnector {
         this.requestFactory = requestFactory;
     }
 
+    @Deprecated
     public ResponseEntity<?> create(String ownerType, String ownerUrn, Boolean force, Map<String, Object> metadataMap) {
 
         RequestEntity<Map<String, Object>> requestEntity = requestFactory.createOrUpsertRequest(ownerType, ownerUrn, force, metadataMap);
@@ -37,16 +38,19 @@ public class MetadataRestConnector {
             .exchange(requestEntity, RestMetadataCreateResponseDto.class);
     }
 
+    @Deprecated
     public ResponseEntity<?> create(String ownerType, String ownerUrn, Map<String, Object> metadataMap) {
 
         return create(ownerType, ownerUrn, false, metadataMap);
     }
 
+    @Deprecated
     public ResponseEntity<?> upsert(String ownerType, String ownerUrn, Map<String, Object> metadataMap) {
 
         return create(ownerType, ownerUrn, true, metadataMap);
     }
 
+    @Deprecated
     public ResponseEntity<?> findByTypeAndUrn(String ownerType, String ownerUrn, Set<String> keyNames) {
 
         RequestEntity<Void> requestEntity = requestFactory.findByOwnerRequest(ownerType, ownerUrn, keyNames);
@@ -55,6 +59,7 @@ public class MetadataRestConnector {
             .exchange(requestEntity, Map.class);
     }
 
+    @Deprecated
     public ResponseEntity<?> delete(String ownerType, String ownerUrn) {
 
         RequestEntity<?> requestEntity = requestFactory.deleteAllForOwnerRequest(ownerType, ownerUrn);
