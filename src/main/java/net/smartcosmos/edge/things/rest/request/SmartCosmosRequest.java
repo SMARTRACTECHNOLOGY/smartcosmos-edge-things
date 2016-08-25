@@ -1,4 +1,4 @@
-package net.smartcosmos.edge.things.rest.template;
+package net.smartcosmos.edge.things.rest.request;
 
 import java.net.URI;
 
@@ -84,7 +84,7 @@ public class SmartCosmosRequest<T> {
         }
 
         public String toString() {
-            return "net.smartcosmos.edge.things.rest.template.SmartCosmosRequest.SmartCosmosRequestBuilder(serviceName=" + this.serviceName +
+            return "net.smartcosmos.edge.things.rest.request.SmartCosmosRequest.SmartCosmosRequestBuilder(serviceName=" + this.serviceName +
                    ", url=" +
                    this.url + ", requestBody=" + this.requestBody + ", httpMethod=" + this.httpMethod + ")";
         }

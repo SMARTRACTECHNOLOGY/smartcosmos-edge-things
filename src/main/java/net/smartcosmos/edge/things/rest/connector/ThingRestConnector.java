@@ -15,7 +15,7 @@ import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDt
 import net.smartcosmos.edge.things.domain.local.things.RestThingResponse;
 import net.smartcosmos.edge.things.domain.local.things.RestThingUpdate;
 import net.smartcosmos.edge.things.rest.RestTemplateFactory;
-import net.smartcosmos.edge.things.rest.template.SmartCosmosRequest;
+import net.smartcosmos.edge.things.rest.request.SmartCosmosRequest;
 
 @Component
 @Slf4j
