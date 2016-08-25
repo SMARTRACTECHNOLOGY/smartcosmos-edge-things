@@ -1,4 +1,4 @@
-package net.smartcosmos.edge.things.rest.template.thing;
+package net.smartcosmos.edge.things.rest.connector;
 
 import lombok.extern.slf4j.Slf4j;
 

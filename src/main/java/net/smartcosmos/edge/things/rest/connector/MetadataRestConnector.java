@@ -1,4 +1,4 @@
-package net.smartcosmos.edge.things.rest.template.metadata;
+package net.smartcosmos.edge.things.rest.connector;
 
 import java.util.Map;
 import java.util.Set;
