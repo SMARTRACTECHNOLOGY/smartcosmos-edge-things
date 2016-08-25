@@ -3,12 +3,14 @@ package net.smartcosmos.edge.things.service.local.things;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import net.smartcosmos.edge.things.domain.local.things.RestThingUpdate;
-import net.smartcosmos.edge.things.rest.connector.ThingRestConnector;
+import net.smartcosmos.edge.things.rest.RestTemplateFactory;
+import net.smartcosmos.edge.things.rest.request.ThingRequestFactory;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
@@ -18,17 +20,26 @@ import net.smartcosmos.security.user.SmartCosmosUser;
 @Service
 public class UpdateThingRestServiceDefault implements UpdateThingRestService {
 
-    private final ThingRestConnector restTemplate;
+    private final RestTemplateFactory restTemplateFactory;
+    private final ThingRequestFactory requestFactory;
 
     @Autowired
-    public UpdateThingRestServiceDefault(ThingRestConnector restTemplate) {
-        this.restTemplate = restTemplate;
+    public UpdateThingRestServiceDefault(
+        RestTemplateFactory restTemplateFactory,
+        ThingRequestFactory requestFactory) {
+
+        this.restTemplateFactory = restTemplateFactory;
+        this.requestFactory = requestFactory;
     }
 
     @Override
     public ResponseEntity<?> update(String type, String urn, RestThingUpdate thingUpdate, SmartCosmosUser user) {
+
+        RequestEntity<RestThingUpdate> requestEntity = requestFactory.updateRequest(type, urn, thingUpdate);
+
         try {
-            return restTemplate.update(type, urn, thingUpdate);
+            return restTemplateFactory.getRestTemplate()
+                .exchange(requestEntity, Void.class);
         } catch (HttpClientErrorException e) {
             // if something goes wrong, forward the response
             return ResponseEntity

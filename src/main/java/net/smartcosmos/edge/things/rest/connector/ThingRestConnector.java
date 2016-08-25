@@ -30,6 +30,7 @@ public class ThingRestConnector {
         this.requestFactory = requestFactory;
     }
 
+    @Deprecated
     public ResponseEntity<?> create(String type, RestThingCreate body) {
 
         RequestEntity<RestThingCreate> requestEntity = requestFactory.createRequest(type, body);
@@ -38,6 +39,7 @@ public class ThingRestConnector {
             .exchange(requestEntity, RestThingCreateResponseDto.class);
     }
 
+    @Deprecated
     public ResponseEntity<?> update(String type, String urn, RestThingUpdate body) {
 
         RequestEntity<RestThingUpdate> requestEntity = requestFactory.updateRequest(type, urn, body);
@@ -46,6 +48,7 @@ public class ThingRestConnector {
             .exchange(requestEntity, Void.class);
     }
 
+    @Deprecated
     public ResponseEntity<?> findByTypeAndUrn(String type, String urn) {
 
         RequestEntity<Void> requestEntity = requestFactory.findSpecificRequest(type, urn);
@@ -54,6 +57,7 @@ public class ThingRestConnector {
             .exchange(requestEntity, RestThingResponse.class);
     }
 
+    @Deprecated
     public ResponseEntity<?> findByType(String type, Integer page, Integer size) {
 
         RequestEntity<Void> requestEntity = requestFactory.findByTypeRequest(type, page, size);
@@ -62,6 +66,7 @@ public class ThingRestConnector {
             .exchange(requestEntity, RestPagedThingResponse.class);
     }
 
+    @Deprecated
     public ResponseEntity<?> delete(String ownerType, String ownerUrn) {
 
         RequestEntity<?> requestEntity = requestFactory.deleteRequest(ownerType, ownerUrn);

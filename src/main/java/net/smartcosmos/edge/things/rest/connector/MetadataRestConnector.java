@@ -27,7 +27,6 @@ public class MetadataRestConnector {
 
         this.restTemplateFactory = restTemplateFactory;
         this.requestFactory = requestFactory;
-
     }
 
     public ResponseEntity<?> create(String ownerType, String ownerUrn, Boolean force, Map<String, Object> metadataMap) {
