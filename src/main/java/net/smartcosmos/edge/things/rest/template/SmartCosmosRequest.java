@@ -1,13 +1,12 @@
 package net.smartcosmos.edge.things.rest.template;
 
-import java.net.URI;
-
 import lombok.Data;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
+
+import java.net.URI;
 
 @Data
 public class SmartCosmosRequest<T> {
