@@ -1,14 +1,15 @@
 package net.smartcosmos.edge.things.service.local.things;
 
 import lombok.extern.slf4j.Slf4j;
-import net.smartcosmos.edge.things.domain.local.things.RestPagedThingResponse;
-import net.smartcosmos.edge.things.rest.RestTemplateFactory;
-import net.smartcosmos.edge.things.rest.request.ThingRequestFactory;
-import net.smartcosmos.security.user.SmartCosmosUser;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import net.smartcosmos.edge.things.rest.RestTemplateFactory;
+import net.smartcosmos.edge.things.rest.request.ThingRequestFactory;
+import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
  * The default implementation to call the REST things endpoint to delete a thing.
@@ -33,6 +34,6 @@ public class DeleteThingRestServiceDefault implements DeleteThingRestService {
         RequestEntity<?> requestEntity = requestFactory.deleteRequest(type, urn);
 
         return restTemplateFactory.getRestTemplate()
-            .exchange(requestEntity, RestPagedThingResponse.class);
+            .exchange(requestEntity, Void.class);
     }
 }
