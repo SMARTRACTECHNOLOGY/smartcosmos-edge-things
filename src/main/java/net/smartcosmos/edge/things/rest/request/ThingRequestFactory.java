@@ -1,5 +1,9 @@
 package net.smartcosmos.edge.things.rest.request;
 
+import net.smartcosmos.edge.things.config.SmartCosmosEdgeThingsProperties;
+import net.smartcosmos.edge.things.domain.local.things.RestThingCreate;
+import net.smartcosmos.edge.things.domain.local.things.RestThingUpdate;
+import net.smartcosmos.edge.things.rest.template.SmartCosmosRequest;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -7,10 +11,6 @@ import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import net.smartcosmos.edge.things.config.SmartCosmosEdgeThingsProperties;
-import net.smartcosmos.edge.things.domain.local.things.RestThingCreate;
-import net.smartcosmos.edge.things.domain.local.things.RestThingUpdate;
 
 import static net.smartcosmos.edge.things.utility.UrlEncodingUtil.encode;
 

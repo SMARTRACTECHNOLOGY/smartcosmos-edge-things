@@ -1,14 +1,12 @@
 package net.smartcosmos.edge.things.rest.template;
 
-import java.net.URI;
-
-import org.junit.*;
+import org.junit.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
 
-import net.smartcosmos.edge.things.rest.request.SmartCosmosRequest;
+import java.net.URI;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class SmartCosmosRequestTest {
 
