@@ -26,7 +26,6 @@ import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDt
 import net.smartcosmos.edge.things.rest.RestTemplateFactory;
 import net.smartcosmos.edge.things.rest.request.MetadataRequestFactory;
 import net.smartcosmos.edge.things.rest.request.ThingRequestFactory;
-import net.smartcosmos.edge.things.testutil.Testutility;
 import net.smartcosmos.test.config.ThingsEdgeTestConfig;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 
@@ -48,6 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.ENDPOINT_TYPE;
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.PARAM_FORCE;
+import static net.smartcosmos.test.util.TestUtil.json;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -130,7 +130,7 @@ public class CreateThingResourceTest {
         willReturn(metadataResponseEntity).given(restTemplate)
             .exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
 
-        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
             post(ENDPOINT_TYPE, "someType")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -180,7 +180,7 @@ public class CreateThingResourceTest {
         willReturn(thingResponseEntity).given(restTemplate)
             .exchange(any(RequestEntity.class), eq(RestThingCreateResponseDto.class));
 
-        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
             post(ENDPOINT_TYPE, "someType")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -227,7 +227,7 @@ public class CreateThingResourceTest {
         HashMap<String, Object> requestBody = new HashMap<>();
         requestBody.put("urn", expectedUrn);
 
-        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
             post(ENDPOINT_TYPE, "someType")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -273,7 +273,7 @@ public class CreateThingResourceTest {
         requestBody.put("urn", expectedUrn);
         requestBody.put("name", "someName");
 
-        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
             post(ENDPOINT_TYPE, "someType")
                 .param(PARAM_FORCE, "true")
@@ -313,7 +313,7 @@ public class CreateThingResourceTest {
         requestBody.put("urn", expectedUrn);
         requestBody.put("name", "someName");
 
-        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
             post(ENDPOINT_TYPE, "someType")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)

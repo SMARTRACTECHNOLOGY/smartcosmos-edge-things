@@ -25,7 +25,6 @@ import net.smartcosmos.edge.things.domain.local.metadata.RestMetadataCreateRespo
 import net.smartcosmos.edge.things.rest.RestTemplateFactory;
 import net.smartcosmos.edge.things.rest.request.MetadataRequestFactory;
 import net.smartcosmos.edge.things.rest.request.ThingRequestFactory;
-import net.smartcosmos.edge.things.testutil.Testutility;
 import net.smartcosmos.test.config.ThingsEdgeTestConfig;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 
@@ -43,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.ENDPOINT_TYPE_URN;
+import static net.smartcosmos.test.util.TestUtil.json;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -112,7 +112,7 @@ public class UpdateThingResourceTest {
         willReturn(metadataResponseEntity).given(restTemplate)
             .exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
 
-        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
             put(ENDPOINT_TYPE_URN, type, urn)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -154,7 +154,7 @@ public class UpdateThingResourceTest {
         willReturn(metadataResponseEntity).given(restTemplate)
             .exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
 
-        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
             put(ENDPOINT_TYPE_URN, type, urn)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -195,7 +195,7 @@ public class UpdateThingResourceTest {
         willReturn(metadataResponseEntity).given(restTemplate)
             .exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
 
-        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
             put(ENDPOINT_TYPE_URN, type, urn)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
