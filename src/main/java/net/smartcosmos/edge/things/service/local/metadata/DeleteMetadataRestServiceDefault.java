@@ -1,15 +1,13 @@
 package net.smartcosmos.edge.things.service.local.metadata;
 
 import lombok.extern.slf4j.Slf4j;
-
+import net.smartcosmos.edge.things.rest.RestTemplateFactory;
+import net.smartcosmos.edge.things.rest.request.MetadataRequestFactory;
+import net.smartcosmos.security.user.SmartCosmosUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import net.smartcosmos.edge.things.rest.RestTemplateFactory;
-import net.smartcosmos.edge.things.rest.request.MetadataRequestFactory;
-import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
  * The default implementation to call the REST metadata endpoint to delete a metadata by owner.

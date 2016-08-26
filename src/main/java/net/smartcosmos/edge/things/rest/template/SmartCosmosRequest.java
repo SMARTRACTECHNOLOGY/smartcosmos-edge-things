@@ -1,17 +1,15 @@
-package net.smartcosmos.edge.things.rest.request;
-
-import java.net.URI;
+package net.smartcosmos.edge.things.rest.template;
 
 import lombok.Data;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 
+import java.net.URI;
+
 @Data
 public class SmartCosmosRequest<T> {
-
     private String serviceName;
     private String url;
     private T requestBody;
@@ -19,7 +17,6 @@ public class SmartCosmosRequest<T> {
 
     @java.beans.ConstructorProperties({ "serviceName", "url", "requestBody", "httpMethod" })
     SmartCosmosRequest(String serviceName, String url, T requestBody, HttpMethod httpMethod) {
-
         this.serviceName = serviceName;
         this.url = url;
         this.requestBody = requestBody;
@@ -54,7 +51,6 @@ public class SmartCosmosRequest<T> {
      */
 
     public static class SmartCosmosRequestBuilder<T> {
-
         private String serviceName;
         private String url;
         private T requestBody;
@@ -63,37 +59,31 @@ public class SmartCosmosRequest<T> {
         SmartCosmosRequestBuilder() {}
 
         public SmartCosmosRequest.SmartCosmosRequestBuilder<T> serviceName(String serviceName) {
-
             this.serviceName = serviceName;
             return this;
         }
 
         public SmartCosmosRequest.SmartCosmosRequestBuilder<T> url(String url) {
-
             this.url = url;
             return this;
         }
 
         public SmartCosmosRequest.SmartCosmosRequestBuilder<T> requestBody(T requestBody) {
-
             this.requestBody = requestBody;
             return this;
         }
 
         public SmartCosmosRequest.SmartCosmosRequestBuilder<T> httpMethod(HttpMethod httpMethod) {
-
             this.httpMethod = httpMethod;
             return this;
         }
 
         public SmartCosmosRequest<T> build() {
-
             return new SmartCosmosRequest<>(serviceName, url, requestBody, httpMethod);
         }
 
         public String toString() {
-
-            return "net.smartcosmos.edge.things.rest.request.SmartCosmosRequest.SmartCosmosRequestBuilder(serviceName=" + this.serviceName +
+            return "net.smartcosmos.edge.things.rest.template.SmartCosmosRequest.SmartCosmosRequestBuilder(serviceName=" + this.serviceName +
                    ", url=" +
                    this.url + ", requestBody=" + this.requestBody + ", httpMethod=" + this.httpMethod + ")";
         }

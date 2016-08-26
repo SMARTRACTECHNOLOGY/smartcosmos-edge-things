@@ -19,8 +19,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import net.smartcosmos.edge.things.ThingEdgeService;
 import net.smartcosmos.edge.things.config.ThingsEdgeTestConfig;
-import net.smartcosmos.edge.things.rest.connector.MetadataRestConnector;
-import net.smartcosmos.edge.things.rest.connector.ThingRestConnector;
+import net.smartcosmos.edge.things.rest.template.metadata.MetadataRestConnector;
+import net.smartcosmos.edge.things.rest.template.thing.ThingRestConnector;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 import static org.mockito.Mockito.*;

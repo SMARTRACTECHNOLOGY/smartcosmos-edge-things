@@ -1,18 +1,15 @@
 package net.smartcosmos.edge.things.service.local.things;
 
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-
 import net.smartcosmos.edge.things.domain.local.things.RestPagedThingResponse;
 import net.smartcosmos.edge.things.domain.local.things.RestThingResponse;
 import net.smartcosmos.edge.things.rest.RestTemplateFactory;
 import net.smartcosmos.edge.things.rest.request.ThingRequestFactory;
 import net.smartcosmos.security.user.SmartCosmosUser;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 /**
  * The default implementation to call the REST thing endpoint to get a Thing.
@@ -45,14 +42,7 @@ public class GetThingRestServiceDefault implements GetThingRestService {
 
         RequestEntity<Void> requestEntity = requestFactory.findByTypeRequest(type, page, size);
 
-        try {
-            return restTemplateFactory.getRestTemplate()
-                .exchange(requestEntity, RestPagedThingResponse.class);
-        } catch (HttpClientErrorException e) {
-            // if something goes wrong, forward the response
-            return ResponseEntity.status(e.getStatusCode())
-                .headers(e.getResponseHeaders())
-                .body(e.getResponseBodyAsString());
-        }
+        return restTemplateFactory.getRestTemplate()
+            .exchange(requestEntity, RestPagedThingResponse.class);
     }
 }

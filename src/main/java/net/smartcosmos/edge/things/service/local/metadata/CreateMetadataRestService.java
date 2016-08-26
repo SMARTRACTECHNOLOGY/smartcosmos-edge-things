@@ -1,16 +1,15 @@
 package net.smartcosmos.edge.things.service.local.metadata;
 
-import java.util.Map;
-
+import net.smartcosmos.security.user.SmartCosmosUser;
 import org.springframework.http.ResponseEntity;
 
-import net.smartcosmos.security.user.SmartCosmosUser;
+import java.util.Map;
 
 /**
  * Defines the service for calling the REST endpoint used for creating metadata.
  */
 public interface CreateMetadataRestService {
-    
+
     /**
      * Send request to REST endpoint to create metadata.
      *
