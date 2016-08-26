@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import net.smartcosmos.edge.things.domain.local.things.RestThingUpdate;
-import net.smartcosmos.edge.things.rest.connector.ThingRestConnector;
+import net.smartcosmos.edge.things.rest.template.thing.ThingRestConnector;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**

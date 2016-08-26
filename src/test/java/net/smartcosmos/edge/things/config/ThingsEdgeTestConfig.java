@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 
-import net.smartcosmos.edge.things.rest.connector.MetadataRestConnector;
-import net.smartcosmos.edge.things.rest.connector.ThingRestConnector;
+import net.smartcosmos.edge.things.rest.template.metadata.MetadataRestConnector;
+import net.smartcosmos.edge.things.rest.template.thing.ThingRestConnector;
 
 @Configuration
 public class ThingsEdgeTestConfig {

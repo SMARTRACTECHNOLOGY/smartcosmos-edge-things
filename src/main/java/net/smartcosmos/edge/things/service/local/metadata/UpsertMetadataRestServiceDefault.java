@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
-import net.smartcosmos.edge.things.rest.connector.MetadataRestConnector;
+import net.smartcosmos.edge.things.rest.template.metadata.MetadataRestConnector;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
