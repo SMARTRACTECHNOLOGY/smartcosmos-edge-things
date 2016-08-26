@@ -23,7 +23,7 @@ public class UrlEncodingUtil {
         try {
             return UriUtils.encode(value, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            log.error("UTF-8 encoding is not supported");
+            log.warn("UTF-8 encoding is not supported");
         }
 
         // If we can't encode with UTF-8, return the original value
