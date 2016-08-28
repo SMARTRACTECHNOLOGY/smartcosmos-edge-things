@@ -1,4 +1,4 @@
-package net.smartcosmos.edge.things.testutil;
+package net.smartcosmos.test.util;
 
 import java.io.IOException;
 
@@ -8,9 +8,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Utility methods for unit tests.
  */
-public class Testutility {
+public class TestUtil {
 
-    public static byte[] convertObjectToJsonBytes(Object object) throws IOException {
+    public static byte[] json(Object object) throws IOException {
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);

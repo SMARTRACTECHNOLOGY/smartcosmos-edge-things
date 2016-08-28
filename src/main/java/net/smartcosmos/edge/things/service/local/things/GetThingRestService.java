@@ -1,8 +1,7 @@
 package net.smartcosmos.edge.things.service.local.things;
 
-import org.springframework.http.ResponseEntity;
-
 import net.smartcosmos.security.user.SmartCosmosUser;
+import org.springframework.http.ResponseEntity;
 
 /**
  * Defines the service for the REST endpoint used to get Things.

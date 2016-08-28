@@ -3,26 +3,88 @@ package net.smartcosmos.edge.things.resource;
 import java.util.HashMap;
 
 import org.junit.*;
+import org.junit.runner.RunWith;
+import org.mockito.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.WebApplicationContext;
 
+import net.smartcosmos.edge.things.ThingEdgeService;
 import net.smartcosmos.edge.things.domain.local.metadata.RestMetadataCreateResponseDto;
-import net.smartcosmos.edge.things.testutil.Testutility;
+import net.smartcosmos.edge.things.rest.RestTemplateFactory;
+import net.smartcosmos.edge.things.rest.request.MetadataRequestFactory;
+import net.smartcosmos.edge.things.rest.request.ThingRequestFactory;
+import net.smartcosmos.test.config.ThingsEdgeTestConfig;
+import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 
-import static org.mockito.BDDMockito.anyMap;
-import static org.mockito.BDDMockito.*;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.eq;
+import static org.mockito.BDDMockito.willReturn;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.ENDPOINT_TYPE_URN;
+import static net.smartcosmos.test.util.TestUtil.json;
 
-public class UpdateThingResourceTest extends AbstractTestResource {
+@RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
+@SpringApplicationConfiguration(classes = { ThingEdgeService.class, ThingsEdgeTestConfig.class })
+@ActiveProfiles("test")
+@WithMockSmartCosmosUser
+public class UpdateThingResourceTest {
+
+    @Autowired
+    RestTemplateFactory restTemplateFactory;
+
+    @Autowired
+    ThingRequestFactory thingRequestFactory;
+
+    @Autowired
+    MetadataRequestFactory metadataRequestFactory;
+
+    @Mock
+    RestTemplate restTemplate;
+
+    @Autowired
+    WebApplicationContext webApplicationContext;
+    MockMvc mockMvc;
+
+    @Before
+    public void setUp() throws Exception {
+
+        MockitoAnnotations.initMocks(this);
+
+        when(restTemplateFactory.getRestTemplate()).thenReturn(restTemplate);
+
+        this.mockMvc = MockMvcBuilders
+            .webAppContextSetup(webApplicationContext)
+            .apply(springSecurity())
+            .build();
+    }
+
+    @After
+    public void tearDown() {
+
+        Mockito.reset(restTemplate);
+    }
 
     @Test
     public void testThatUpdateThingSucceeds() throws Exception {
@@ -45,12 +107,12 @@ public class UpdateThingResourceTest extends AbstractTestResource {
         requestBody.put("name", "someName");
         requestBody.put("someKey", "someValue");
 
-        willReturn(thingResponseEntity).given(thingRestConnector)
-            .update(anyString(), anyString(), anyObject());
-        willReturn(metadataResponseEntity).given(metadataRestConnector)
-            .upsert(anyString(), anyString(), anyMap());
+        willReturn(thingResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(Void.class));
+        willReturn(metadataResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
 
-        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
             put(ENDPOINT_TYPE_URN, type, urn)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -63,11 +125,10 @@ public class UpdateThingResourceTest extends AbstractTestResource {
             .andExpect(status().isNoContent())
             .andReturn();
 
-        verify(thingRestConnector, times(1)).update(anyString(), anyString(), anyObject());
-        verifyNoMoreInteractions(thingRestConnector);
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Void.class));
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
 
-        verify(metadataRestConnector, times(1)).upsert(anyString(), anyString(), anyMap());
-        verifyNoMoreInteractions(metadataRestConnector);
+        verifyNoMoreInteractions(restTemplate);
     }
 
     @Test
@@ -88,12 +149,12 @@ public class UpdateThingResourceTest extends AbstractTestResource {
         requestBody.put("name", "someName");
         requestBody.put("someKey", "someValue");
 
-        willReturn(thingResponseEntity).given(thingRestConnector)
-            .update(anyString(), anyString(), anyObject());
-        willReturn(metadataResponseEntity).given(metadataRestConnector)
-            .upsert(anyString(), anyString(), anyMap());
+        willReturn(thingResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(Void.class));
+        willReturn(metadataResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
 
-        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
             put(ENDPOINT_TYPE_URN, type, urn)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -106,10 +167,9 @@ public class UpdateThingResourceTest extends AbstractTestResource {
             .andExpect(status().isNotFound())
             .andReturn();
 
-        verify(thingRestConnector, times(1)).update(anyString(), anyString(), anyObject());
-        verifyNoMoreInteractions(thingRestConnector);
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Void.class));
 
-        verifyNoMoreInteractions(metadataRestConnector);
+        verifyNoMoreInteractions(restTemplate);
     }
 
     @Test
@@ -130,12 +190,12 @@ public class UpdateThingResourceTest extends AbstractTestResource {
         requestBody.put("name", "someName");
         requestBody.put("someKey", "someValue");
 
-        willReturn(thingResponseEntity).given(thingRestConnector)
-            .update(anyString(), anyString(), anyObject());
-        willReturn(metadataResponseEntity).given(metadataRestConnector)
-            .upsert(anyString(), anyString(), anyMap());
+        willReturn(thingResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(Void.class));
+        willReturn(metadataResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
 
-        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
             put(ENDPOINT_TYPE_URN, type, urn)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -148,10 +208,9 @@ public class UpdateThingResourceTest extends AbstractTestResource {
             .andExpect(status().isBadRequest())
             .andReturn();
 
-        verify(thingRestConnector, times(1)).update(anyString(), anyString(), anyObject());
-        verifyNoMoreInteractions(thingRestConnector);
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Void.class));
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
 
-        verify(metadataRestConnector, times(1)).upsert(anyString(), anyString(), anyMap());
-        verifyNoMoreInteractions(metadataRestConnector);
+        verifyNoMoreInteractions(restTemplate);
     }
 }

@@ -3,7 +3,6 @@
 src
 pom.xml
 README.adoc
-pom.xml
 .editorconfig
 
 target/*.jar.original

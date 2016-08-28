@@ -3,24 +3,41 @@ package net.smartcosmos.edge.things.resource;
 import java.util.HashMap;
 
 import org.junit.*;
+import org.junit.runner.RunWith;
+import org.mockito.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.WebApplicationContext;
 
+import net.smartcosmos.edge.things.ThingEdgeService;
 import net.smartcosmos.edge.things.domain.local.metadata.RestMetadataCreateResponseDto;
 import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
-import net.smartcosmos.edge.things.testutil.Testutility;
+import net.smartcosmos.edge.things.rest.RestTemplateFactory;
+import net.smartcosmos.edge.things.rest.request.MetadataRequestFactory;
+import net.smartcosmos.edge.things.rest.request.ThingRequestFactory;
+import net.smartcosmos.test.config.ThingsEdgeTestConfig;
+import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.BDDMockito.anyMap;
-import static org.mockito.BDDMockito.times;
-import static org.mockito.BDDMockito.verify;
-import static org.mockito.BDDMockito.verifyNoMoreInteractions;
-import static org.mockito.BDDMockito.*;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.anyBoolean;
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.eq;
+import static org.mockito.BDDMockito.willReturn;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -30,8 +47,49 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.ENDPOINT_TYPE;
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.PARAM_FORCE;
+import static net.smartcosmos.test.util.TestUtil.json;
 
-public class CreateThingResourceTest extends AbstractTestResource {
+@RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
+@SpringApplicationConfiguration(classes = { ThingEdgeService.class, ThingsEdgeTestConfig.class })
+@ActiveProfiles("test")
+@WithMockSmartCosmosUser
+public class CreateThingResourceTest {
+
+    @Autowired
+    RestTemplateFactory restTemplateFactory;
+
+    @Autowired
+    ThingRequestFactory thingRequestFactory;
+
+    @Autowired
+    MetadataRequestFactory metadataRequestFactory;
+
+    @Mock
+    RestTemplate restTemplate;
+
+    @Autowired
+    WebApplicationContext webApplicationContext;
+    MockMvc mockMvc;
+
+    @Before
+    public void setUp() throws Exception {
+
+        MockitoAnnotations.initMocks(this);
+
+        when(restTemplateFactory.getRestTemplate()).thenReturn(restTemplate);
+
+        this.mockMvc = MockMvcBuilders
+            .webAppContextSetup(webApplicationContext)
+            .apply(springSecurity())
+            .build();
+    }
+
+    @After
+    public void tearDown() {
+
+        Mockito.reset(restTemplate);
+    }
 
     /**
      * Test that creating a Thing is successful.
@@ -67,13 +125,12 @@ public class CreateThingResourceTest extends AbstractTestResource {
         HashMap<String, Object> metadataMap = new HashMap<>();
         requestBody.put("name", "someName");
 
-        willReturn(thingResponseEntity).given(thingRestConnector)
-            .create(anyString(), anyObject());
-        willReturn(metadataResponseEntity)
-            .given(metadataRestConnector)
-            .create(anyString(), anyString(), anyBoolean(), anyMap());
+        willReturn(thingResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestThingCreateResponseDto.class));
+        willReturn(metadataResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
 
-        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
             post(ENDPOINT_TYPE, "someType")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -89,6 +146,10 @@ public class CreateThingResourceTest extends AbstractTestResource {
             .andExpect(jsonPath("$.type", is(expectedType)))
             .andExpect(jsonPath("$.tenantUrn", is(expectedTenantUrn)))
             .andExpect(jsonPath("$.active", is(expectedActive)));
+
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestThingCreateResponseDto.class));
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
+        verifyNoMoreInteractions(restTemplate);
     }
 
     /**
@@ -116,10 +177,10 @@ public class CreateThingResourceTest extends AbstractTestResource {
         requestBody.put("urn", expectedUrn);
         requestBody.put("active", expectedActive);
 
-        willReturn(thingResponseEntity).given(thingRestConnector)
-            .create(anyString(), anyObject());
+        willReturn(thingResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestThingCreateResponseDto.class));
 
-        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
             post(ENDPOINT_TYPE, "someType")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -136,7 +197,8 @@ public class CreateThingResourceTest extends AbstractTestResource {
             .andExpect(jsonPath("$.tenantUrn", is(expectedTenantUrn)))
             .andExpect(jsonPath("$.active", is(expectedActive)));
 
-        verifyNoMoreInteractions(metadataRestConnector);
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestThingCreateResponseDto.class));
+        verifyNoMoreInteractions(restTemplate);
     }
 
     /**
@@ -159,13 +221,13 @@ public class CreateThingResourceTest extends AbstractTestResource {
         final ResponseEntity<?> thingResponseEntity = ResponseEntity.status(HttpStatus.CONFLICT)
             .body(thingResponseBody);
 
-        willReturn(thingResponseEntity).given(thingRestConnector)
-            .create(anyString(), anyObject());
+        willReturn(thingResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestThingCreateResponseDto.class));
 
         HashMap<String, Object> requestBody = new HashMap<>();
         requestBody.put("urn", expectedUrn);
 
-        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
             post(ENDPOINT_TYPE, "someType")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -177,7 +239,8 @@ public class CreateThingResourceTest extends AbstractTestResource {
         this.mockMvc.perform(asyncDispatch(mvcResult))
             .andExpect(status().isConflict());
 
-        verifyNoMoreInteractions(metadataRestConnector);
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestThingCreateResponseDto.class));
+        verifyNoMoreInteractions(restTemplate);
     }
 
     @Test
@@ -195,23 +258,22 @@ public class CreateThingResourceTest extends AbstractTestResource {
         final ResponseEntity<?> thingResponseEntity = ResponseEntity.status(HttpStatus.CONFLICT)
             .body(thingResponseBody);
 
-        willReturn(thingResponseEntity).given(thingRestConnector)
-            .create(anyString(), anyObject());
+        willReturn(thingResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestThingCreateResponseDto.class));
 
         final RestMetadataCreateResponseDto metadataResponseBody = RestMetadataCreateResponseDto.builder()
             .uri("/" + expectedType + "/" + expectedUrn)
             .build();
         final ResponseEntity<?> metadataResponseEntity = new ResponseEntity<>(metadataResponseBody, HttpStatus.OK);
 
-        willReturn(metadataResponseEntity)
-            .given(metadataRestConnector)
-            .create(anyString(), anyString(), anyBoolean(), anyMap());
+        willReturn(metadataResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
 
         HashMap<String, Object> requestBody = new HashMap<>();
         requestBody.put("urn", expectedUrn);
         requestBody.put("name", "someName");
 
-        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
             post(ENDPOINT_TYPE, "someType")
                 .param(PARAM_FORCE, "true")
@@ -224,8 +286,9 @@ public class CreateThingResourceTest extends AbstractTestResource {
         this.mockMvc.perform(asyncDispatch(mvcResult))
             .andExpect(status().isConflict());
 
-        verify(metadataRestConnector, times(1)).create(anyString(), anyString(), anyBoolean(), anyMap());
-        verifyNoMoreInteractions(metadataRestConnector);
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestThingCreateResponseDto.class));
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
+        verifyNoMoreInteractions(restTemplate);
     }
 
     @Test
@@ -243,14 +306,14 @@ public class CreateThingResourceTest extends AbstractTestResource {
         final ResponseEntity<?> thingResponseEntity = ResponseEntity.status(HttpStatus.CONFLICT)
             .body(thingResponseBody);
 
-        willReturn(thingResponseEntity).given(thingRestConnector)
-            .create(anyString(), anyObject());
+        willReturn(thingResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestThingCreateResponseDto.class));
 
         HashMap<String, Object> requestBody = new HashMap<>();
         requestBody.put("urn", expectedUrn);
         requestBody.put("name", "someName");
 
-        byte[] jsonDto = Testutility.convertObjectToJsonBytes(requestBody);
+        byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
             post(ENDPOINT_TYPE, "someType")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -262,6 +325,7 @@ public class CreateThingResourceTest extends AbstractTestResource {
         this.mockMvc.perform(asyncDispatch(mvcResult))
             .andExpect(status().isConflict());
 
-        verifyNoMoreInteractions(metadataRestConnector);
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestThingCreateResponseDto.class));
+        verifyNoMoreInteractions(restTemplate);
     }
 }

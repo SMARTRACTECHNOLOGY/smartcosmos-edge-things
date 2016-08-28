@@ -7,22 +7,42 @@ import java.util.Map;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.junit.*;
+import org.junit.runner.RunWith;
+import org.mockito.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.WebApplicationContext;
 
+import net.smartcosmos.edge.things.ThingEdgeService;
 import net.smartcosmos.edge.things.domain.RestPageInformationDto;
 import net.smartcosmos.edge.things.domain.local.things.RestPagedThingResponse;
 import net.smartcosmos.edge.things.domain.local.things.RestThingResponse;
+import net.smartcosmos.edge.things.rest.RestTemplateFactory;
+import net.smartcosmos.edge.things.rest.request.MetadataRequestFactory;
+import net.smartcosmos.edge.things.rest.request.ThingRequestFactory;
+import net.smartcosmos.test.config.ThingsEdgeTestConfig;
+import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.BDDMockito.anySet;
-import static org.mockito.BDDMockito.*;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.eq;
+import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -32,7 +52,47 @@ import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.EN
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.ENDPOINT_TYPE_URN;
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.PARAM_FIELDS;
 
-public class GetThingResourceTest extends AbstractTestResource {
+@RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
+@SpringApplicationConfiguration(classes = { ThingEdgeService.class, ThingsEdgeTestConfig.class })
+@ActiveProfiles("test")
+@WithMockSmartCosmosUser
+public class GetThingResourceTest {
+
+    @Autowired
+    RestTemplateFactory restTemplateFactory;
+
+    @Autowired
+    ThingRequestFactory thingRequestFactory;
+
+    @Autowired
+    MetadataRequestFactory metadataRequestFactory;
+
+    @Mock
+    RestTemplate restTemplate;
+
+    @Autowired
+    WebApplicationContext webApplicationContext;
+    MockMvc mockMvc;
+
+    @Before
+    public void setUp() throws Exception {
+
+        MockitoAnnotations.initMocks(this);
+
+        when(restTemplateFactory.getRestTemplate()).thenReturn(restTemplate);
+
+        this.mockMvc = MockMvcBuilders
+            .webAppContextSetup(webApplicationContext)
+            .apply(springSecurity())
+            .build();
+    }
+
+    @After
+    public void tearDown() {
+
+        Mockito.reset(restTemplate);
+    }
 
     @Test
     public void thatLookUpSpecificSucceeds() throws Exception {
@@ -55,10 +115,10 @@ public class GetThingResourceTest extends AbstractTestResource {
         metadataResponseBody.put("description", "someDescription");
         ResponseEntity<Map<String, Object>> metadataResponseEntity = new ResponseEntity<>(metadataResponseBody, HttpStatus.OK);
 
-        willReturn(thingResponseEntity).given(thingRestConnector)
-            .findByTypeAndUrn(anyString(), anyString());
-        willReturn(metadataResponseEntity).given(metadataRestConnector)
-            .findByTypeAndUrn(anyString(), anyString(), anySet());
+        willReturn(thingResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestThingResponse.class));
+        willReturn(metadataResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(Map.class));
 
         mockMvc.perform(
             get(ENDPOINT_TYPE_URN, type, urn)
@@ -74,11 +134,10 @@ public class GetThingResourceTest extends AbstractTestResource {
             .andExpect(jsonPath("$.active", is(active)))
             .andReturn();
 
-        verify(thingRestConnector, times(1)).findByTypeAndUrn(anyString(), anyString());
-        verify(metadataRestConnector, times(1)).findByTypeAndUrn(anyString(), anyString(), anySet());
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestThingResponse.class));
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Map.class));
 
-        verifyNoMoreInteractions(metadataRestConnector);
-        verifyNoMoreInteractions(thingRestConnector);
+        verifyNoMoreInteractions(restTemplate);
     }
 
     @Test
@@ -100,10 +159,10 @@ public class GetThingResourceTest extends AbstractTestResource {
         ResponseEntity<?> metadataResponseEntity = ResponseEntity.notFound()
             .build();
 
-        willReturn(thingResponseEntity).given(thingRestConnector)
-            .findByTypeAndUrn(anyString(), anyString());
-        willReturn(metadataResponseEntity).given(metadataRestConnector)
-            .findByTypeAndUrn(anyString(), anyString(), anySet());
+        willReturn(thingResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestThingResponse.class));
+        willReturn(metadataResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(Map.class));
 
         mockMvc.perform(
             get(ENDPOINT_TYPE_URN, type, urn)
@@ -117,11 +176,10 @@ public class GetThingResourceTest extends AbstractTestResource {
             .andExpect(jsonPath("$.active", is(active)))
             .andReturn();
 
-        verify(thingRestConnector, times(1)).findByTypeAndUrn(anyString(), anyString());
-        verify(metadataRestConnector, times(1)).findByTypeAndUrn(anyString(), anyString(), anySet());
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestThingResponse.class));
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Map.class));
 
-        verifyNoMoreInteractions(metadataRestConnector);
-        verifyNoMoreInteractions(thingRestConnector);
+        verifyNoMoreInteractions(restTemplate);
     }
 
     @Test
@@ -135,10 +193,10 @@ public class GetThingResourceTest extends AbstractTestResource {
         ResponseEntity<?> metadataResponseEntity = ResponseEntity.notFound()
             .build();
 
-        willReturn(thingResponseEntity).given(thingRestConnector)
-            .findByTypeAndUrn(anyString(), anyString());
-        willReturn(metadataResponseEntity).given(metadataRestConnector)
-            .findByTypeAndUrn(anyString(), anyString(), anySet());
+        willReturn(thingResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestThingResponse.class));
+        willReturn(metadataResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(Map.class));
 
         mockMvc.perform(
             get(ENDPOINT_TYPE_URN, type, urn)
@@ -147,10 +205,9 @@ public class GetThingResourceTest extends AbstractTestResource {
             .andExpect(status().isNotFound())
             .andReturn();
 
-        verify(thingRestConnector, times(1)).findByTypeAndUrn(anyString(), anyString());
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestThingResponse.class));
 
-        verifyNoMoreInteractions(metadataRestConnector);
-        verifyNoMoreInteractions(thingRestConnector);
+        verifyNoMoreInteractions(restTemplate);
     }
 
     @Test
@@ -187,10 +244,10 @@ public class GetThingResourceTest extends AbstractTestResource {
         metadataResponseBody.put("description", "someDescription");
         ResponseEntity<Map<String, Object>> metadataResponseEntity = new ResponseEntity<>(metadataResponseBody, HttpStatus.OK);
 
-        willReturn(thingResponseEntity).given(thingRestConnector)
-            .findByType(anyString(), anyInt(), anyInt());
-        willReturn(metadataResponseEntity).given(metadataRestConnector)
-            .findByTypeAndUrn(anyString(), anyString(), anySet());
+        willReturn(thingResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestPagedThingResponse.class));
+        willReturn(metadataResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(Map.class));
 
         mockMvc.perform(
             get(ENDPOINT_TYPE, type)
@@ -211,11 +268,10 @@ public class GetThingResourceTest extends AbstractTestResource {
             .andExpect(jsonPath("$.page.totalElements", is(10)))
             .andReturn();
 
-        verify(thingRestConnector, times(1)).findByType(anyString(), anyInt(), anyInt());
-        verify(metadataRestConnector, times(10)).findByTypeAndUrn(anyString(), anyString(), anySet());
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestPagedThingResponse.class));
+        verify(restTemplate, times(10)).exchange(any(RequestEntity.class), eq(Map.class));
 
-        verifyNoMoreInteractions(metadataRestConnector);
-        verifyNoMoreInteractions(thingRestConnector);
+        verifyNoMoreInteractions(restTemplate);
     }
 
     @Test
@@ -224,8 +280,8 @@ public class GetThingResourceTest extends AbstractTestResource {
         String type = "ownerType";
 
         ResponseEntity<?> thingResponseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        willReturn(thingResponseEntity).given(thingRestConnector)
-            .findByType(anyString(), anyInt(), anyInt());
+        willReturn(thingResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestPagedThingResponse.class));
 
         mockMvc.perform(
             get(ENDPOINT_TYPE, type)
@@ -234,10 +290,9 @@ public class GetThingResourceTest extends AbstractTestResource {
             .andExpect(status().isNotFound())
             .andReturn();
 
-        verify(thingRestConnector, times(1)).findByType(anyString(), anyInt(), anyInt());
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestPagedThingResponse.class));
 
-        verifyZeroInteractions(metadataRestConnector);
-        verifyNoMoreInteractions(thingRestConnector);
+        verifyNoMoreInteractions(restTemplate);
     }
 
     @Test
@@ -271,10 +326,10 @@ public class GetThingResourceTest extends AbstractTestResource {
 
         ResponseEntity<Map<String, Object>> metadataResponseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        willReturn(thingResponseEntity).given(thingRestConnector)
-            .findByType(anyString(), anyInt(), anyInt());
-        willReturn(metadataResponseEntity).given(metadataRestConnector)
-            .findByTypeAndUrn(anyString(), anyString(), anySet());
+        willReturn(thingResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestPagedThingResponse.class));
+        willReturn(metadataResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(Map.class));
 
         mockMvc.perform(
             get(ENDPOINT_TYPE, type)
@@ -295,11 +350,10 @@ public class GetThingResourceTest extends AbstractTestResource {
             .andExpect(jsonPath("$.page.totalElements", is(10)))
             .andReturn();
 
-        verify(thingRestConnector, times(1)).findByType(anyString(), anyInt(), anyInt());
-        verify(metadataRestConnector, times(10)).findByTypeAndUrn(anyString(), anyString(), anySet());
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestPagedThingResponse.class));
+        verify(restTemplate, times(10)).exchange(any(RequestEntity.class), eq(Map.class));
 
-        verifyNoMoreInteractions(metadataRestConnector);
-        verifyNoMoreInteractions(thingRestConnector);
+        verifyNoMoreInteractions(restTemplate);
     }
 
     @Test
@@ -333,10 +387,10 @@ public class GetThingResourceTest extends AbstractTestResource {
 
         ResponseEntity<Map<String, Object>> metadataResponseEntity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        willReturn(thingResponseEntity).given(thingRestConnector)
-            .findByType(anyString(), anyInt(), anyInt());
-        willReturn(metadataResponseEntity).given(metadataRestConnector)
-            .findByTypeAndUrn(anyString(), anyString(), anySet());
+        willReturn(thingResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestPagedThingResponse.class));
+        willReturn(metadataResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(Map.class));
 
         mockMvc.perform(
             get(ENDPOINT_TYPE, type)
@@ -345,11 +399,10 @@ public class GetThingResourceTest extends AbstractTestResource {
             .andExpect(status().isBadRequest())
             .andReturn();
 
-        verify(thingRestConnector, times(1)).findByType(anyString(), anyInt(), anyInt());
-        verify(metadataRestConnector, times(1)).findByTypeAndUrn(anyString(), anyString(), anySet());
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestPagedThingResponse.class));
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Map.class));
 
-        verifyNoMoreInteractions(metadataRestConnector);
-        verifyNoMoreInteractions(thingRestConnector);
+        verifyNoMoreInteractions(restTemplate);
     }
 
     @Test
@@ -359,8 +412,8 @@ public class GetThingResourceTest extends AbstractTestResource {
 
         ResponseEntity<?> thingResponseEntity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        willReturn(thingResponseEntity).given(thingRestConnector)
-            .findByType(anyString(), anyInt(), anyInt());
+        willReturn(thingResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestPagedThingResponse.class));
 
         mockMvc.perform(
             get(ENDPOINT_TYPE, type)
@@ -369,9 +422,8 @@ public class GetThingResourceTest extends AbstractTestResource {
             .andExpect(status().isBadRequest())
             .andReturn();
 
-        verify(thingRestConnector, times(1)).findByType(anyString(), anyInt(), anyInt());
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestPagedThingResponse.class));
 
-        verifyZeroInteractions(metadataRestConnector);
-        verifyNoMoreInteractions(thingRestConnector);
+        verifyNoMoreInteractions(restTemplate);
     }
 }
