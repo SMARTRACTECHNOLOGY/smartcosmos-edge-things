@@ -1,4 +1,4 @@
-package net.smartcosmos.edge.things.rest;
+package net.smartcosmos.edge.things.rest.errorhandler;
 
 import java.io.IOException;
 

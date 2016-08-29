@@ -11,7 +11,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import net.smartcosmos.edge.things.config.SmartCosmosEdgeThingsProperties;
 import net.smartcosmos.edge.things.domain.things.RestThingCreate;
 import net.smartcosmos.edge.things.domain.things.RestThingUpdate;
-import net.smartcosmos.edge.things.rest.template.SmartCosmosRequest;
 
 import static net.smartcosmos.edge.things.utility.UrlEncodingUtil.encode;
 
