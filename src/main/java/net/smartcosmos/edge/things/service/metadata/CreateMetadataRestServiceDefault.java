@@ -1,16 +1,18 @@
-package net.smartcosmos.edge.things.service.local.metadata;
+package net.smartcosmos.edge.things.service.metadata;
+
+import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
-import net.smartcosmos.edge.things.domain.local.metadata.RestMetadataCreateResponseDto;
-import net.smartcosmos.edge.things.rest.RestTemplateFactory;
-import net.smartcosmos.edge.things.rest.request.MetadataRequestFactory;
-import net.smartcosmos.security.user.SmartCosmosUser;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import net.smartcosmos.edge.things.domain.metadata.RestMetadataCreateResponseDto;
+import net.smartcosmos.edge.things.rest.RestTemplateFactory;
+import net.smartcosmos.edge.things.rest.request.MetadataRequestFactory;
+import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
  * Default implementation of the metadata service.

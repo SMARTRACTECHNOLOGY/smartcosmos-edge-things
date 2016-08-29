@@ -1,15 +1,15 @@
 package net.smartcosmos.edge.things.rest.request;
 
 import org.junit.*;
-import org.junit.runner.*;
+import org.junit.runner.RunWith;
 import org.mockito.*;
-import org.mockito.runners.*;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
 
 import net.smartcosmos.edge.things.config.SmartCosmosEdgeThingsProperties;
-import net.smartcosmos.edge.things.domain.local.things.RestThingCreate;
-import net.smartcosmos.edge.things.domain.local.things.RestThingUpdate;
+import net.smartcosmos.edge.things.domain.things.RestThingCreate;
+import net.smartcosmos.edge.things.domain.things.RestThingUpdate;
 
 import static org.junit.Assert.*;
 

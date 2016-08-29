@@ -1,4 +1,4 @@
-package net.smartcosmos.edge.things.service;
+package net.smartcosmos.edge.things.service.event;
 
 import net.smartcosmos.edge.things.utility.ThingEdgeEventType;
 import net.smartcosmos.security.user.SmartCosmosUser;

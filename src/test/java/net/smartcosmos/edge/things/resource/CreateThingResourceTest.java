@@ -21,8 +21,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import net.smartcosmos.edge.things.ThingEdgeService;
-import net.smartcosmos.edge.things.domain.local.metadata.RestMetadataCreateResponseDto;
-import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
+import net.smartcosmos.edge.things.domain.metadata.RestMetadataCreateResponseDto;
+import net.smartcosmos.edge.things.domain.things.RestThingCreateResponseDto;
 import net.smartcosmos.edge.things.rest.RestTemplateFactory;
 import net.smartcosmos.edge.things.rest.request.MetadataRequestFactory;
 import net.smartcosmos.edge.things.rest.request.ThingRequestFactory;

@@ -1,7 +1,8 @@
-package net.smartcosmos.edge.things.service.local.metadata;
+package net.smartcosmos.edge.things.service.metadata;
+
+import org.springframework.http.ResponseEntity;
 
 import net.smartcosmos.security.user.SmartCosmosUser;
-import org.springframework.http.ResponseEntity;
 
 /**
  * Defines the service for the REST endpoint used to delete Metadata associated to a Thing.

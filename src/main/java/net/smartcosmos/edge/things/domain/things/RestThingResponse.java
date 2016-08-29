@@ -1,10 +1,9 @@
-package net.smartcosmos.edge.things.domain.local.things;
+package net.smartcosmos.edge.things.domain.things;
 
 import java.beans.ConstructorProperties;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;

@@ -1,9 +1,10 @@
-package net.smartcosmos.edge.things.service.local.metadata;
-
-import net.smartcosmos.security.user.SmartCosmosUser;
-import org.springframework.http.ResponseEntity;
+package net.smartcosmos.edge.things.service.metadata;
 
 import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+
+import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
  * Defines the service for the REST endpoint used to upsert Metadata associated to a Thing.

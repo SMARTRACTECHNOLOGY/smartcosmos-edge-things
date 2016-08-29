@@ -1,4 +1,4 @@
-package net.smartcosmos.edge.things.domain.local.things;
+package net.smartcosmos.edge.things.domain.things;
 
 import java.util.ArrayList;
 import java.util.Collection;

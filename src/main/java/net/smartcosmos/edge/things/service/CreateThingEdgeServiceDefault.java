@@ -12,9 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import net.smartcosmos.edge.things.domain.RestThingMetadataCreateContainer;
-import net.smartcosmos.edge.things.domain.local.things.RestThingCreateResponseDto;
-import net.smartcosmos.edge.things.service.local.metadata.CreateMetadataRestService;
-import net.smartcosmos.edge.things.service.local.things.CreateThingRestService;
+import net.smartcosmos.edge.things.domain.things.RestThingCreateResponseDto;
+import net.smartcosmos.edge.things.service.event.EventSendingService;
+import net.smartcosmos.edge.things.service.metadata.CreateMetadataRestService;
+import net.smartcosmos.edge.things.service.things.CreateThingRestService;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 import static net.smartcosmos.edge.things.utility.ResponseBuilderUtility.buildForwardingResponse;

@@ -1,4 +1,4 @@
-package net.smartcosmos.edge.things.domain.local.things;
+package net.smartcosmos.edge.things.domain.things;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
