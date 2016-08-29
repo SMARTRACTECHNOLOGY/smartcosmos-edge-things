@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
-@JsonIgnoreProperties({"version"})
+@JsonIgnoreProperties({ "version" })
 public class RestMetadataCreateResponseDto {
 
     private static final int VERSION_1 = 1;

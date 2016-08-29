@@ -16,24 +16,27 @@ import net.smartcosmos.security.user.SmartCosmosUser;
 @Slf4j
 @Service
 public class ThingEdgeEventSendingService implements EventSendingService {
+
     private final SmartCosmosEventTemplate smartCosmosEventTemplate;
 
     @Autowired
     public ThingEdgeEventSendingService(SmartCosmosEventTemplate smartCosmosEventTemplate) {
+
         this.smartCosmosEventTemplate = smartCosmosEventTemplate;
     }
 
     @Override
     public void sendEvent(SmartCosmosUser user, ThingEdgeEventType eventType, Object entity) {
+
         sendEvent(user, eventType.getEventName(), entity);
     }
 
     @Override
     public void sendEvent(SmartCosmosUser user, String eventType, Object entity) {
+
         try {
             smartCosmosEventTemplate.sendEvent(entity, eventType, user);
-        }
-        catch (SmartCosmosEventException e) {
+        } catch (SmartCosmosEventException e) {
             String msg = String.format("Exception processing metadata event '%s', entity: '%s', cause: '%s'.", eventType, entity, e.toString());
             log.error(msg);
             log.debug(msg, e);

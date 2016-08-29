@@ -10,7 +10,7 @@ import springfox.documentation.staticdocs.SwaggerResultHandler;
 import springfox.documentation.swagger2.web.Swagger2Controller;
 
 import org.junit.*;
-import org.junit.runner.*;
+import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;

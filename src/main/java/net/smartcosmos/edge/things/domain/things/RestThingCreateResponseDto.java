@@ -19,6 +19,7 @@ import org.apache.commons.lang.BooleanUtils;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 public class RestThingCreateResponseDto {
+
     private static final int VERSION_1 = 1;
     @JsonIgnore
     @Setter(AccessLevel.NONE)
@@ -30,8 +31,9 @@ public class RestThingCreateResponseDto {
     private Boolean active;
 
     @Builder
-    @ConstructorProperties({ "urn", "type", "tenantUrn", "active"})
+    @ConstructorProperties({ "urn", "type", "tenantUrn", "active" })
     public RestThingCreateResponseDto(String urn, String type, String tenantUrn, Boolean active) {
+
         this.urn = urn;
         this.type = type;
         this.tenantUrn = tenantUrn;
