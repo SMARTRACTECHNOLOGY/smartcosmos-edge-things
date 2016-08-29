@@ -9,11 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import net.smartcosmos.edge.things.service.local.metadata.DeleteMetadataRestService;
-import net.smartcosmos.edge.things.service.local.things.DeleteThingRestService;
+import net.smartcosmos.edge.things.service.event.EventSendingService;
+import net.smartcosmos.edge.things.service.metadata.DeleteMetadataRestService;
+import net.smartcosmos.edge.things.service.things.DeleteThingRestService;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
-import static net.smartcosmos.edge.things.utility.ResponseBuilderUtility.buildForwardingResponse;
+import static net.smartcosmos.edge.things.util.ResponseBuilderUtility.buildForwardingResponse;
 
 /**
  * Default implementation for {@link net.smartcosmos.edge.things.service.DeleteThingEdgeService}

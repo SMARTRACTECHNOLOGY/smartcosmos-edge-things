@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import net.smartcosmos.edge.things.domain.local.things.RestThingResponse;
+import net.smartcosmos.edge.things.domain.things.RestThingResponse;
 
 @Component
 public class RestThingResponseToMapConverter implements Converter<RestThingResponse, Map<String, Object>> {

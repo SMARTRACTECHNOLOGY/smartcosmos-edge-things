@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import net.smartcosmos.edge.things.domain.RestThingMetadataCreateContainer;
-import net.smartcosmos.edge.things.domain.local.things.RestThingCreate;
+import net.smartcosmos.edge.things.domain.things.RestThingCreate;
 
 @Component
 public class MapToRestThingMetadataCreateContainerConverter implements Converter<Map<String, Object>, RestThingMetadataCreateContainer> {
@@ -29,8 +29,9 @@ public class MapToRestThingMetadataCreateContainerConverter implements Converter
 
         if (metadataMap.containsKey(URN_FIELD_NAME)) {
             Object urnObject = metadataMap.remove(URN_FIELD_NAME);
-            if (urnObject instanceof String)
-            thingCreate.setUrn(String.valueOf(urnObject));
+            if (urnObject instanceof String) {
+                thingCreate.setUrn(String.valueOf(urnObject));
+            }
         }
 
         if (metadataMap.containsKey(ACTIVE_FIELD_NAME)) {

@@ -1,5 +1,25 @@
 package net.smartcosmos.edge.things.resource;
 
+import java.util.Set;
+import javax.validation.Valid;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import net.smartcosmos.annotation.SmartCosmosRdao;
+import net.smartcosmos.edge.things.service.GetThingEdgeService;
+import net.smartcosmos.security.user.SmartCosmosUser;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.ENDPOINT_ENABLEMENT_PROPERTY_ENABLED;
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.ENDPOINT_ENABLEMENT_THINGS;
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.ENDPOINT_ENABLEMENT_THINGS_READ_TYPE;
@@ -14,27 +34,6 @@ import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.PA
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.TYPE;
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.URN;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-
-import java.util.Set;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import lombok.extern.slf4j.Slf4j;
-
-import net.smartcosmos.annotation.SmartCosmosRdao;
-import net.smartcosmos.edge.things.service.GetThingEdgeService;
-import net.smartcosmos.security.user.SmartCosmosUser;
-
 @SmartCosmosRdao
 @Slf4j
 @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_THINGS, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
@@ -44,6 +43,7 @@ public class GetThingResource {
 
     @Autowired
     public GetThingResource(GetThingEdgeService getThingService) {
+
         this.getThingService = getThingService;
     }
 

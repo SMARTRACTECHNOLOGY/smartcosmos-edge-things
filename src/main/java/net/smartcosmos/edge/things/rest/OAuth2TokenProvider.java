@@ -3,6 +3,8 @@ package net.smartcosmos.edge.things.rest;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.ribbon.RibbonClientHttpRequestFactory;
@@ -16,8 +18,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Utility class to provide OAuth 2 Access Tokens for requests to other services.
@@ -61,7 +61,8 @@ public class OAuth2TokenProvider {
 
         if (apiClientContexts.containsKey(username)) {
             OAuth2ClientContext clientContext = apiClientContexts.get(username);
-            if (clientContext != null && clientContext.getAccessToken() != null && !clientContext.getAccessToken().isExpired()) {
+            if (clientContext != null && clientContext.getAccessToken() != null && !clientContext.getAccessToken()
+                .isExpired()) {
                 return clientContext;
             }
         }
@@ -73,11 +74,12 @@ public class OAuth2TokenProvider {
     }
 
     private String getRequestContextOAuth2Token() {
+
         try {
-            return String.valueOf(RequestContextHolder.currentRequestAttributes().getAttribute(OAuth2AuthenticationDetails.ACCESS_TOKEN_VALUE,
-                    RequestAttributes.SCOPE_REQUEST));
-        }
-        catch (Exception e) {
+            return String.valueOf(RequestContextHolder.currentRequestAttributes()
+                                      .getAttribute(OAuth2AuthenticationDetails.ACCESS_TOKEN_VALUE,
+                                                    RequestAttributes.SCOPE_REQUEST));
+        } catch (Exception e) {
             return "";
         }
     }

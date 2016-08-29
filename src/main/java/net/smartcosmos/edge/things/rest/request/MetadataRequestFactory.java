@@ -1,8 +1,8 @@
 package net.smartcosmos.edge.things.rest.request;
 
-import net.smartcosmos.edge.things.config.SmartCosmosEdgeThingsProperties;
-import net.smartcosmos.edge.things.domain.local.things.RestThingCreate;
-import net.smartcosmos.edge.things.rest.template.SmartCosmosRequest;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Map;
-import java.util.Set;
+import net.smartcosmos.edge.things.config.SmartCosmosEdgeThingsProperties;
+import net.smartcosmos.edge.things.domain.things.RestThingCreate;
 
-import static net.smartcosmos.edge.things.utility.UrlEncodingUtil.encode;
+import static net.smartcosmos.edge.things.util.UrlEncodingUtil.encode;
 
 /**
  * Utility component for creating requests for the Metadata service.

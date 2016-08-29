@@ -38,11 +38,13 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
 @Configuration
 @EnableSwagger2
 public class SpringfoxDocumentationConfig {
+
     @Autowired
     private TypeResolver typeResolver;
 
     @Bean
     public Docket objectsExtenstionApi() {
+
         return new Docket(DocumentationType.SWAGGER_2)
             // @formatter:off
             .select()
@@ -69,10 +71,12 @@ public class SpringfoxDocumentationConfig {
     }
 
     private ApiKey apiKey() {
+
         return new ApiKey("basic_auth", "api_key", "header");
     }
 
     private SecurityContext securityContext() {
+
         return SecurityContext.builder()
             .securityReferences(defaultAuth())
             .forPaths(PathSelectors.regex("/v2/.*"))
@@ -80,6 +84,7 @@ public class SpringfoxDocumentationConfig {
     }
 
     List<SecurityReference> defaultAuth() {
+
         AuthorizationScope authorizationScope
             = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
@@ -89,10 +94,12 @@ public class SpringfoxDocumentationConfig {
 
     @Bean
     UiConfiguration uiConfig() {
+
         return UiConfiguration.DEFAULT;
     }
 
     private ApiInfo apiInfo() {
+
         return new ApiInfoBuilder()
             .title("Objects Server Metadata Endpoints")
             .description("The endpoints that support the operations for working with Metadata.")
@@ -102,6 +109,7 @@ public class SpringfoxDocumentationConfig {
     }
 
     private List<SecurityScheme> securitySchemes() {
+
         SecurityScheme[] schemes = { new BasicAuth("basic") };
         return Arrays.asList(schemes);
     }

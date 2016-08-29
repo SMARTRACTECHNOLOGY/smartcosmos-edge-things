@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.*;
-import org.junit.runner.*;
+import org.junit.runner.RunWith;
 import org.mockito.*;
-import org.mockito.runners.*;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.RequestEntity;
 
 import net.smartcosmos.edge.things.config.SmartCosmosEdgeThingsProperties;

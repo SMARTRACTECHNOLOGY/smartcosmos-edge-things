@@ -11,13 +11,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import net.smartcosmos.edge.things.domain.RestThingMetadataUpdateContainer;
-import net.smartcosmos.edge.things.domain.local.things.RestThingUpdate;
-import net.smartcosmos.edge.things.service.local.metadata.UpsertMetadataRestService;
-import net.smartcosmos.edge.things.service.local.things.UpdateThingRestService;
+import net.smartcosmos.edge.things.domain.things.RestThingUpdate;
+import net.smartcosmos.edge.things.service.event.EventSendingService;
+import net.smartcosmos.edge.things.service.metadata.UpsertMetadataRestService;
+import net.smartcosmos.edge.things.service.things.UpdateThingRestService;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
-import static net.smartcosmos.edge.things.utility.ResponseBuilderUtility.buildBadRequestResponse;
-import static net.smartcosmos.edge.things.utility.ResponseBuilderUtility.buildForwardingResponse;
+import static net.smartcosmos.edge.things.util.ResponseBuilderUtility.buildBadRequestResponse;
+import static net.smartcosmos.edge.things.util.ResponseBuilderUtility.buildForwardingResponse;
 
 /**
  * Default implementation for {@link net.smartcosmos.edge.things.service.UpdateThingEdgeService}

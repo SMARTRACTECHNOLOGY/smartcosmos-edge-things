@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import net.smartcosmos.edge.things.domain.RestThingMetadataUpdateContainer;
-import net.smartcosmos.edge.things.domain.local.things.RestThingUpdate;
+import net.smartcosmos.edge.things.domain.things.RestThingUpdate;
 
 @Component
 public class MapToRestThingMetadataUpdateContainerConverter implements Converter<Map<String, Object>, RestThingMetadataUpdateContainer> {
