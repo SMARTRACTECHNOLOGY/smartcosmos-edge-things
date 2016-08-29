@@ -1,12 +1,13 @@
 package net.smartcosmos.edge.things.rest.request;
 
+import java.net.URI;
+
 import lombok.Data;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
-
-import java.net.URI;
 
 @Data
 public class SmartCosmosRequest<T> {
@@ -83,6 +84,7 @@ public class SmartCosmosRequest<T> {
         }
 
         public String toString() {
+
             return "net.smartcosmos.edge.things.rest.request.SmartCosmosRequest.SmartCosmosRequestBuilder(serviceName=" + this.serviceName +
                    ", url=" +
                    this.url + ", requestBody=" + this.requestBody + ", httpMethod=" + this.httpMethod + ")";

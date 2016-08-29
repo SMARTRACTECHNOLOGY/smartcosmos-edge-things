@@ -1,4 +1,4 @@
-package net.smartcosmos.edge.things.utility;
+package net.smartcosmos.edge.things.util;
 
 import java.io.UnsupportedEncodingException;
 

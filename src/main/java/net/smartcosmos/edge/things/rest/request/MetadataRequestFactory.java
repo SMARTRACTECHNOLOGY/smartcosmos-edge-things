@@ -15,7 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import net.smartcosmos.edge.things.config.SmartCosmosEdgeThingsProperties;
 import net.smartcosmos.edge.things.domain.things.RestThingCreate;
 
-import static net.smartcosmos.edge.things.utility.UrlEncodingUtil.encode;
+import static net.smartcosmos.edge.things.util.UrlEncodingUtil.encode;
 
 /**
  * Utility component for creating requests for the Metadata service.

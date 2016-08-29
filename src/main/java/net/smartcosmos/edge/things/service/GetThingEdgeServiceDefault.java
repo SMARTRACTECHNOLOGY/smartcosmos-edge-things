@@ -25,7 +25,7 @@ import net.smartcosmos.edge.things.service.metadata.GetMetadataRestService;
 import net.smartcosmos.edge.things.service.things.GetThingRestService;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
-import static net.smartcosmos.edge.things.utility.ResponseBuilderUtility.buildForwardingResponse;
+import static net.smartcosmos.edge.things.util.ResponseBuilderUtility.buildForwardingResponse;
 
 @Service
 public class GetThingEdgeServiceDefault implements GetThingEdgeService {

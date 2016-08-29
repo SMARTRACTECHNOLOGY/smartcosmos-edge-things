@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import net.smartcosmos.edge.things.utility.ThingEdgeEventType;
+import net.smartcosmos.edge.things.util.ThingEdgeEventType;
 import net.smartcosmos.events.SmartCosmosEventException;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.security.user.SmartCosmosUser;
