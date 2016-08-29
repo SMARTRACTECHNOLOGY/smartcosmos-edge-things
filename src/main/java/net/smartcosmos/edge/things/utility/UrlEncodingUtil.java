@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.codec.CharEncoding;
 import org.springframework.web.util.UriUtils;
 
 /**
@@ -21,7 +22,7 @@ public class UrlEncodingUtil {
     public static String encode(String value) {
 
         try {
-            return UriUtils.encode(value, "UTF-8");
+            return UriUtils.encode(value, CharEncoding.UTF_8);
         } catch (UnsupportedEncodingException e) {
             log.warn("UTF-8 encoding is not supported");
         }
