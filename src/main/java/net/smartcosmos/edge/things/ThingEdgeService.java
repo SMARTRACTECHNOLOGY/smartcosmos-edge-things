@@ -7,11 +7,13 @@ import org.springframework.context.annotation.Import;
 
 import net.smartcosmos.annotation.EnableSmartCosmosEvents;
 import net.smartcosmos.annotation.EnableSmartCosmosExtension;
+import net.smartcosmos.annotation.EnableSmartCosmosMonitoring;
 import net.smartcosmos.annotation.EnableSmartCosmosSecurity;
 import net.smartcosmos.edge.things.config.ThingsEdgeConfiguration;
 
 @EnableSmartCosmosExtension
 @EnableSmartCosmosEvents
+@EnableSmartCosmosMonitoring
 @EnableSmartCosmosSecurity
 @EnableSwagger2
 @Import(ThingsEdgeConfiguration.class)
