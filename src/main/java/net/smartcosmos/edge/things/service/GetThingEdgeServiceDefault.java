@@ -74,8 +74,9 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
             Map<String, Object> metadaResponseMap = getMetadataForThing(type, urn, metadataKeys, user);
             resultMap.putAll(metadaResponseMap);
         } catch (RestException e) {
-            log.error(getByTypeAndUrnLogMessage(type, urn, user, e.toString()));
-            log.debug(getByTypeAndUrnLogMessage(type, urn, user, e.toString()), e);
+            String msg = getByTypeAndUrnLogMessage(type, urn, user, e.toString());
+            log.error(msg);
+            log.debug(msg, e);
             return e.getResponseEntity();
         }
 
@@ -128,8 +129,9 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .body(responsePage);
             } catch (RestException e) {
-                log.error(getByTypeLogMessage(type, user, e.toString()));
-                log.debug(getByTypeLogMessage(type, user, e.toString()), e);
+                String msg = getByTypeLogMessage(type, user, e.toString());
+                log.error(msg);
+                log.debug(msg, e);
                 return e.getResponseEntity();
             }
         }
