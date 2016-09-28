@@ -192,14 +192,14 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
     }
 
     private String getByTypeLogMessage(String type, SmartCosmosUser user, String message) {
-        return String.format("Read request for Thing with type '%s' by user '%S' failed: %s",
+        return String.format("Read request for Thing with type '%s' by user '%s' failed: %s",
                              type,
                              user,
                              message);
     }
 
     private String getByTypeAndUrnLogMessage(String type, String urn, SmartCosmosUser user, String message) {
-        return String.format("Read request for Thing with type '%s' and urn '%s' by user '%S' failed: %s",
+        return String.format("Read request for Thing with type '%s' and urn '%s' by user '%s' failed: %s",
                              type,
                              urn,
                              user,
