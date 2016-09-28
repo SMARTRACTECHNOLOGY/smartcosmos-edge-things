@@ -13,7 +13,6 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import net.smartcosmos.edge.things.domain.RestThingMetadataCreateContainer;
 import net.smartcosmos.edge.things.domain.things.RestThingCreateResponseDto;
-import net.smartcosmos.edge.things.service.event.EventSendingService;
 import net.smartcosmos.edge.things.service.metadata.CreateMetadataRestService;
 import net.smartcosmos.edge.things.service.things.CreateThingRestService;
 import net.smartcosmos.security.user.SmartCosmosUser;
@@ -27,17 +26,14 @@ import static net.smartcosmos.edge.things.util.ResponseBuilderUtility.buildForwa
 @Slf4j
 public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
 
-    private final EventSendingService eventSendingService;
     private final ConversionService conversionService;
     private final CreateMetadataRestService createMetadataService;
     private final CreateThingRestService createThingService;
 
     @Autowired
     public CreateThingEdgeServiceDefault(
-        EventSendingService eventSendingService, ConversionService conversionService,
-        CreateMetadataRestService createMetadataService, CreateThingRestService createThingService) {
+        ConversionService conversionService, CreateMetadataRestService createMetadataService, CreateThingRestService createThingService) {
 
-        this.eventSendingService = eventSendingService;
         this.conversionService = conversionService;
         this.createMetadataService = createMetadataService;
         this.createThingService = createThingService;
@@ -49,13 +45,8 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
         try {
             response.setResult(createWorker(type, metadataMap, force, user));
         } catch (Exception e) {
-            log.warn("Create request for Thing with type '{}' by user {} failed: {}\nRequest (force = {}): {}",
-                     type,
-                     user,
-                     e.toString(),
-                     force,
-                     metadataMap);
-            log.debug(e.toString(), e);
+            log.error(createByTypeLogMessage(type, user, e.toString(), force, metadataMap.toString()));
+            log.debug(createByTypeLogMessage(type, user, e.toString(), force, metadataMap.toString()), e);
             response.setErrorResult(e);
         }
     }
@@ -79,11 +70,23 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
             if (!metadataResponse.getStatusCode()
                 .is2xxSuccessful()) {
                 // if there was a problem with the metadata creation, we return that
+                log.warn(createByTypeLogMessage(type, user, "create core metadata = " + metadataResponse.toString(), force, metadataMap.toString()));
                 return buildForwardingResponse(metadataResponse);
             }
+        } else {
+            log.warn(createByTypeLogMessage(type, user, "create core thing = " + thingResponse.toString(), force, metadataMap.toString()));
         }
 
         // usually we just return the Thing creation response
         return buildForwardingResponse(thingResponse);
+    }
+
+    private String createByTypeLogMessage(String type, SmartCosmosUser user, String message, Boolean force, String requestBody) {
+        return String.format("Update request for Thing with type '%s' by user '%s' failed: %s\nRequest: (force = %s): %s",
+                             type,
+                             user,
+                             message,
+                             force.toString(),
+                             requestBody);
     }
 }
