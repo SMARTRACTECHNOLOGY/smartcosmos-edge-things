@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import net.smartcosmos.security.user.SmartCosmosUser;
 import static net.smartcosmos.edge.things.util.ResponseBuilderUtility.buildForwardingResponse;
 
 @Service
+@Slf4j
 public class GetThingEdgeServiceDefault implements GetThingEdgeService {
 
     private final EventSendingService eventSendingService;
@@ -56,6 +59,7 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
         ResponseEntity thingResponse = getThingService.findByTypeAndUrn(type, urn, user);
         if (!thingResponse.getStatusCode()
             .is2xxSuccessful()) {
+            log.warn(getByTypeAndUrnLogMessage(type, urn, user, thingResponse.toString()));
             return buildForwardingResponse(thingResponse);
         }
 
@@ -70,6 +74,8 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
             Map<String, Object> metadaResponseMap = getMetadataForThing(type, urn, metadataKeys, user);
             resultMap.putAll(metadaResponseMap);
         } catch (RestException e) {
+            log.error(getByTypeAndUrnLogMessage(type, urn, user, e.toString()));
+            log.debug(getByTypeAndUrnLogMessage(type, urn, user, e.toString()), e);
             return e.getResponseEntity();
         }
 
@@ -103,6 +109,7 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
         ResponseEntity thingResponse = getThingService.findByType(type, page, size, sortOrder, sortBy, user);
         if (!thingResponse.getStatusCode()
             .is2xxSuccessful()) {
+            log.warn(getByTypeLogMessage(type, user, thingResponse.toString()));
             return buildForwardingResponse(thingResponse);
         }
 
@@ -121,6 +128,8 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .body(responsePage);
             } catch (RestException e) {
+                log.error(getByTypeLogMessage(type, user, e.toString()));
+                log.debug(getByTypeLogMessage(type, user, e.toString()), e);
                 return e.getResponseEntity();
             }
         }
@@ -180,6 +189,21 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
         }
 
         return resultMap;
+    }
+
+    private String getByTypeLogMessage(String type, SmartCosmosUser user, String message) {
+        return String.format("Read request for Thing with type '%s' by user '%S' failed: %s",
+                             type,
+                             user,
+                             message);
+    }
+
+    private String getByTypeAndUrnLogMessage(String type, String urn, SmartCosmosUser user, String message) {
+        return String.format("Read request for Thing with type '%s' and urn '%s' by user '%S' failed: %s",
+                             type,
+                             urn,
+                             user,
+                             message);
     }
 
 }
