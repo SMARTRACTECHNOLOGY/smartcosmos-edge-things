@@ -49,13 +49,8 @@ public class UpdateThingEdgeServiceDefault implements UpdateThingEdgeService {
         try {
             response.setResult(updateWorker(type, urn, requestBody, user));
         } catch (Exception e) {
-            log.warn("Update request for Thing with type '{}' and URN '{}' by user {} failed: {}\nRequest: {}",
-                     type,
-                     urn,
-                     user,
-                     e.toString(),
-                     requestBody);
-            log.debug(e.toString(), e);
+            log.warn(updateByTypeAndUrnLogMessage(type, urn, user, e.toString(), requestBody.toString()));
+            log.debug(updateByTypeAndUrnLogMessage(type, urn, user, e.toString(), requestBody.toString()), e);
             response.setErrorResult(e);
         }
     }
@@ -69,6 +64,7 @@ public class UpdateThingEdgeServiceDefault implements UpdateThingEdgeService {
 
         if (thingUpdate == null && reducedMetadataMap.isEmpty()) {
             // if there is nothing to update, we return 400 Bad Request
+            log.warn(updateByTypeAndUrnLogMessage(type, urn, user, "Nothing to update", requestBody.toString()));
             return buildBadRequestResponse(1, "Nothing to update");
         }
 
@@ -77,6 +73,7 @@ public class UpdateThingEdgeServiceDefault implements UpdateThingEdgeService {
             if (!thingResponse.getStatusCode()
                 .is2xxSuccessful()) {
                 // if there was a problem with the thing update, we return that
+                log.warn(updateByTypeAndUrnLogMessage(type, urn, user, "update core thing = " + thingResponse.toString(), requestBody.toString()));
                 return buildForwardingResponse(thingResponse);
             }
         }
@@ -86,6 +83,7 @@ public class UpdateThingEdgeServiceDefault implements UpdateThingEdgeService {
             if (!metadataResponse.getStatusCode()
                 .is2xxSuccessful()) {
                 // if there was a problem with the metadata update, we return that
+                log.warn(updateByTypeAndUrnLogMessage(type, urn, user, "update core metadata = " + metadataResponse.toString(), requestBody.toString()));
                 return buildForwardingResponse(metadataResponse);
             }
         }
@@ -93,5 +91,14 @@ public class UpdateThingEdgeServiceDefault implements UpdateThingEdgeService {
         // usually we just return 204 No Content
         return ResponseEntity.noContent()
             .build();
+    }
+
+    private String updateByTypeAndUrnLogMessage(String type, String urn, SmartCosmosUser user, String message, String requestBody) {
+        return String.format("Update request for Thing with type '%s' and urn '%s' by user '%s' failed: %s\nRequest: %s",
+                             type,
+                             urn,
+                             user,
+                             message,
+                             requestBody);
     }
 }
