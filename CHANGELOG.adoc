@@ -13,6 +13,7 @@
 * OBJECTS-996 Response Forwarding in intermediate services may have unwanted side effects
 * OBJECTS-997 URL parameter aren't encoded
 * OBJECTS-1006 Refactor inter-service calls and remove RestConnector classes
+* OBJECTS-1035 Improve logging for smartcosmos-edge-things
 * PROFILES-667: add zipkin starter for distributed tracing
 
 == Release 3.0.0 (August 12, 2016)
