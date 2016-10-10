@@ -58,24 +58,23 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
         ResponseEntity thingResponse = createThingService.create(type, container.getThingRequestBody(), user);
         Map<String, Object> reducedMetadataMap = container.getMetadataRequestBody();
 
-        HttpStatus status = thingResponse.getStatusCode();
-        if ((status.is2xxSuccessful() || (force && HttpStatus.CONFLICT.equals(status)))
-            && thingResponse.hasBody()
-            && thingResponse.getBody() instanceof RestThingCreateResponseDto
-            && !reducedMetadataMap.isEmpty()) {
+        if (!successfullyCreatedThing(thingResponse, force)) {
+            log.warn(createByTypeLogMessage(type, user, "create core thing = " + thingResponse.toString(), force, metadataMap.toString()));
+            // forward the error response right away
+            return buildForwardingResponse(thingResponse);
+        }
+
+        if (hasMetadataToCreate(reducedMetadataMap)) {
             RestThingCreateResponseDto thingResponseBody = (RestThingCreateResponseDto) thingResponse.getBody();
             String urn = thingResponseBody.getUrn();
 
             ResponseEntity metadataResponse = createMetadataService.create(type, urn, force, reducedMetadataMap, user);
 
-            if (!metadataResponse.getStatusCode()
-                .is2xxSuccessful()) {
+            if (!successfullyCreatedMetadata(metadataResponse)) {
                 // if there was a problem with the metadata creation, we return that
                 log.warn(createByTypeLogMessage(type, user, "create core metadata = " + metadataResponse.toString(), force, metadataMap.toString()));
                 return buildForwardingResponse(metadataResponse);
             }
-        } else {
-            log.warn(createByTypeLogMessage(type, user, "create core thing = " + thingResponse.toString(), force, metadataMap.toString()));
         }
 
         // usually we just return the Thing creation response
@@ -83,11 +82,36 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
     }
 
     private String createByTypeLogMessage(String type, SmartCosmosUser user, String message, Boolean force, String requestBody) {
-        return String.format("Update request for Thing with type '%s' by user '%s' failed: %s\nRequest: (force = %s): %s",
+
+        return String.format("Create request for Thing with type '%s' by user '%s' failed: %s\nRequest: (force = %s): %s",
                              type,
                              user,
                              message,
                              force.toString(),
                              requestBody);
     }
+
+    // region Boolean helpers
+
+    protected static boolean hasMetadataToCreate(Map<String, Object> metadataMap) {
+
+        return !metadataMap.isEmpty();
+    }
+
+    protected static boolean successfullyCreatedThing(ResponseEntity thingResponse, Boolean force) {
+
+        HttpStatus status = thingResponse.getStatusCode();
+
+        return (status.is2xxSuccessful() || (force && HttpStatus.CONFLICT.equals(status)))
+               && thingResponse.hasBody()
+               && thingResponse.getBody() instanceof RestThingCreateResponseDto;
+    }
+
+    protected static boolean successfullyCreatedMetadata(ResponseEntity metadataResponse) {
+
+        return metadataResponse.getStatusCode()
+            .is2xxSuccessful();
+    }
+
+    // endregion
 }
