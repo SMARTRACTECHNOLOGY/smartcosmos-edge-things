@@ -17,7 +17,7 @@ public class OAuthSecurityConfiguration {
 
     @Bean
     @Autowired
-    public OAuth2RestTemplate oAuth2RestTemplate(
+    public OAuth2RestTemplate userRestTemplate(
         OAuth2ProtectedResourceDetails resourceDetails,
         SpringClientFactory clientFactory,
         ProxyOauth2ErrorHandler errorHandler) {

@@ -3,6 +3,7 @@ package net.smartcosmos.edge.things.rest;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
@@ -21,7 +22,7 @@ public class RestTemplateFactory {
     private final OAuth2RestTemplate oAuth2RestTemplate;
 
     @Autowired
-    public RestTemplateFactory(OAuth2RestTemplate oAuth2RestTemplate) {
+    public RestTemplateFactory(@Qualifier("userRestTemplate") OAuth2RestTemplate oAuth2RestTemplate) {
 
         this.oAuth2RestTemplate = oAuth2RestTemplate;
     }
