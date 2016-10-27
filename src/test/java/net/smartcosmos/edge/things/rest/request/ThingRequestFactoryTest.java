@@ -38,7 +38,7 @@ public class ThingRequestFactoryTest {
         final RestThingCreate restThingCreate = RestThingCreate.builder()
             .build();
 
-        final String expectedUrl = "http://" + serviceName + "/" + type;
+        final String expectedUrl = serviceName + "/" + type;
 
         RequestEntity requestEntity = thingRequestFactory.createRequest(type, restThingCreate);
         assertNotNull(requestEntity);
@@ -58,7 +58,7 @@ public class ThingRequestFactoryTest {
 
         final String type = "myType";
 
-        final String expectedUrl = "http://" + serviceName + "/" + type + "?page=&size=";
+        final String expectedUrl = serviceName + "/" + type + "?page=&size=";
 
         RequestEntity requestEntity = thingRequestFactory.findByTypeRequest(type, null, null);
         assertNotNull(requestEntity);
@@ -78,7 +78,7 @@ public class ThingRequestFactoryTest {
         final String type = "myType";
         final String urn = "myUrn";
 
-        final String expectedUrl = "http://" + serviceName + "/" + type + "/" + urn;
+        final String expectedUrl = serviceName + "/" + type + "/" + urn;
 
         RequestEntity requestEntity = thingRequestFactory.findSpecificRequest(type, urn);
         assertNotNull(requestEntity);
@@ -100,7 +100,7 @@ public class ThingRequestFactoryTest {
         final RestThingUpdate body = RestThingUpdate.builder()
             .build();
 
-        final String expectedUrl = "http://" + serviceName + "/" + type + "/" + urn;
+        final String expectedUrl = serviceName + "/" + type + "/" + urn;
 
         RequestEntity requestEntity = thingRequestFactory.updateRequest(type, urn, body);
         assertNotNull(requestEntity);
@@ -121,7 +121,7 @@ public class ThingRequestFactoryTest {
         final String type = "myType";
         final String urn = "myUrn";
 
-        final String expectedUrl = "http://" + serviceName + "/" + type + "/" + urn;
+        final String expectedUrl = serviceName + "/" + type + "/" + urn;
 
         RequestEntity requestEntity = thingRequestFactory.deleteRequest(type, urn);
         assertNotNull(requestEntity);
