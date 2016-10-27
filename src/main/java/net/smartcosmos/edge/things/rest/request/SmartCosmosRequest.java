@@ -36,7 +36,7 @@ public class SmartCosmosRequest<T> {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        URI uri = URI.create("http://" + serviceName + "/" + url);
+        URI uri = URI.create(serviceName + "/" + url);
 
         return new RequestEntity<>(requestBody, headers, httpMethod, uri);
     }
