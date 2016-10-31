@@ -41,7 +41,7 @@ public class MetadataRequestFactoryTest {
         final Boolean force = true;
         Map<String, Object> body = new HashMap<>();
 
-        final String expectedUrl = "http://" + serviceName + "/" + ownerType + "/" + ownerUrn + "?force=true";
+        final String expectedUrl = serviceName + "/" + ownerType + "/" + ownerUrn + "?force=true";
 
         RequestEntity requestEntity = metadataRequestFactory.createOrUpsertRequest(ownerType, ownerUrn, force, body);
         assertNotNull(requestEntity);
@@ -60,7 +60,7 @@ public class MetadataRequestFactoryTest {
         final Boolean force = false;
         Map<String, Object> body = new HashMap<>();
 
-        final String expectedUrl = "http://" + serviceName + "/" + ownerType + "/" + ownerUrn + "?force=";
+        final String expectedUrl = serviceName + "/" + ownerType + "/" + ownerUrn + "?force=";
 
         RequestEntity requestEntity = metadataRequestFactory.createOrUpsertRequest(ownerType, ownerUrn, force, body);
         assertNotNull(requestEntity);
@@ -80,7 +80,7 @@ public class MetadataRequestFactoryTest {
         keyNames.add("name");
         keyNames.add("description");
 
-        final String expectedUrl = "http://" + serviceName + "/" + ownerType + "/" + ownerUrn + "?keys=name,description";
+        final String expectedUrl = serviceName + "/" + ownerType + "/" + ownerUrn + "?keys=name,description";
 
         RequestEntity requestEntity = metadataRequestFactory.findByOwnerRequest(ownerType, ownerUrn, keyNames);
         assertNotNull(requestEntity);
@@ -98,7 +98,7 @@ public class MetadataRequestFactoryTest {
         final String ownerUrn = "ownerUrn";
         Set<String> keyNames = new HashSet<>();
 
-        final String expectedUrl = "http://" + serviceName + "/" + ownerType + "/" + ownerUrn + "?keys=";
+        final String expectedUrl = serviceName + "/" + ownerType + "/" + ownerUrn + "?keys=";
 
         RequestEntity requestEntity = metadataRequestFactory.findByOwnerRequest(ownerType, ownerUrn, keyNames);
         assertNotNull(requestEntity);
@@ -116,7 +116,7 @@ public class MetadataRequestFactoryTest {
         final String ownerUrn = "ownerUrn";
         Set<String> keyNames = null;
 
-        final String expectedUrl = "http://" + serviceName + "/" + ownerType + "/" + ownerUrn + "?keys=";
+        final String expectedUrl = serviceName + "/" + ownerType + "/" + ownerUrn + "?keys=";
 
         RequestEntity requestEntity = metadataRequestFactory.findByOwnerRequest(ownerType, ownerUrn, keyNames);
         assertNotNull(requestEntity);

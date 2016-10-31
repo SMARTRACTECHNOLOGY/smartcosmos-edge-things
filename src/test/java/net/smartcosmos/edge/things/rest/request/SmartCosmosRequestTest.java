@@ -18,7 +18,7 @@ public class SmartCosmosRequestTest {
         final String serviceName = "serviceName";
         final String url = "url";
 
-        String uriString = String.format("http://%s/%s", serviceName, url);
+        String uriString = String.format("%s/%s", serviceName, url);
         final URI expectedUri = URI.create(uriString);
 
         SmartCosmosRequest<String> request = SmartCosmosRequest.builder()
@@ -43,7 +43,7 @@ public class SmartCosmosRequestTest {
         final String serviceName = "serviceName";
         final String url = "url";
 
-        String uriString = String.format("http://%s/%s", serviceName, url);
+        String uriString = String.format("%s/%s", serviceName, url);
         final URI expectedUri = URI.create(uriString);
 
         SmartCosmosRequest<String> request = SmartCosmosRequest.builder()
