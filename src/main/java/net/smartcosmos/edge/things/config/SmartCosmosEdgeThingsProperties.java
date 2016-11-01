@@ -17,7 +17,7 @@ public class SmartCosmosEdgeThingsProperties {
     @AllArgsConstructor
     public static class LocalServiceProperties {
 
-        private String things = "http://smartcosmos-ext-things:8080";
-        private String metadata = "http://smartcosmos-ext-metadata:8080";
+        private String things = "http://ext-things:8080";
+        private String metadata = "http://ext-metadata:8080";
     }
 }
