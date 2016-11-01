@@ -320,6 +320,6 @@ smartcosmos:
   edge:
     things:
       local:
-        things: smartcosmos-ext-things
-        metadata: smartcosmos-ext-metadata
+        things: http://smartcosmos-ext-things:8080
+        metadata: http://smartcosmos-ext-metadata:8080
 ----
