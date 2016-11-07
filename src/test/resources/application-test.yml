@@ -1,12 +1,8 @@
-eureka:
-  client:
-    enabled: false
 logging:
   pattern:
     console: "%d %-5level %logger : %msg%n"
   level:
-    ROOT: WARN
-    #net.smartcosmos: TRACE
-    org.springframework: WARN
-    #org.springframework.beans: TRACE
-    com.netflix.eureka.registry: WARN
+    ROOT: INFO
+    org.springframework.security: WARN
+    org.springframework.web: WARN
+    springfox: WARN
