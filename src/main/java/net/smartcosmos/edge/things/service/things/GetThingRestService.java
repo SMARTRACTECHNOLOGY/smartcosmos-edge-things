@@ -1,6 +1,7 @@
 package net.smartcosmos.edge.things.service.things;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.annotation.Retryable;
 
 import net.smartcosmos.security.user.SmartCosmosUser;
 
@@ -10,17 +11,20 @@ import net.smartcosmos.security.user.SmartCosmosUser;
 public interface GetThingRestService {
 
     /**
-     * Look up a Thing by Type and URN.
+     * <p>Look up a Thing by Type and URN.</p>
+     * <p>If the request fails, it is retried 3 times.</p>
      *
      * @param type the type of the Thing
      * @param urn the URN of the Thing
      * @param user the user making the request
      * @return the response entity
      */
+    @Retryable
     ResponseEntity<?> findByTypeAndUrn(String type, String urn, SmartCosmosUser user);
 
     /**
-     * Look up Things by Type.
+     * <p>Look up Things by Type.</p>
+     * <p>If the request fails, it is retried 3 times.</p>
      *
      * @param type the type of the Things
      * @param page the number of the results page
@@ -30,5 +34,6 @@ public interface GetThingRestService {
      * @param user the user making the request
      * @return the response entity with the paged response
      */
+    @Retryable
     ResponseEntity findByType(String type, Integer page, Integer size, String sortOrder, String sortBy, SmartCosmosUser user);
 }

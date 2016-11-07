@@ -5,6 +5,7 @@
 === New Features
 
 * OBJECTS-980 Add Prometheus-compatible `/metrics` endpoint
+* OBJECTS-1063 Implement Retry into Requests
 
 === Bugfixes & Improvements
 

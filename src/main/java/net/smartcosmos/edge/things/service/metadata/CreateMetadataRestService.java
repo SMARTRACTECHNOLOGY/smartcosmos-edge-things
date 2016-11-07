@@ -3,6 +3,7 @@ package net.smartcosmos.edge.things.service.metadata;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.annotation.Retryable;
 
 import net.smartcosmos.security.user.SmartCosmosUser;
 
@@ -12,7 +13,8 @@ import net.smartcosmos.security.user.SmartCosmosUser;
 public interface CreateMetadataRestService {
 
     /**
-     * Send request to REST endpoint to create metadata.
+     * <p>Send request to REST endpoint to create metadata.</p>
+     * <p>If the request fails, it is retried 3 times.</p>
      *
      * @param ownerType the type of the owner
      * @param ownerUrn the URN for the owner of the metadata, what the metadata is attached to
@@ -21,5 +23,6 @@ public interface CreateMetadataRestService {
      * @param user the user making the request
      * @return the ResponseEntity
      */
+    @Retryable
     ResponseEntity<?> create(String ownerType, String ownerUrn, Boolean force, Map<String, Object> metadataMap, SmartCosmosUser user);
 }

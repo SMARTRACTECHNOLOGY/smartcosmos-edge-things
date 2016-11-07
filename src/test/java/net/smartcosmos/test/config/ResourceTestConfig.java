@@ -11,7 +11,7 @@ import net.smartcosmos.edge.things.rest.request.ThingRequestFactory;
 import static org.mockito.Mockito.mock;
 
 @Configuration
-public class ThingsEdgeTestConfig {
+public class ResourceTestConfig {
 
     @Bean
     public OAuth2ProtectedResourceDetails oAuth2ProtectedResourceDetails() {

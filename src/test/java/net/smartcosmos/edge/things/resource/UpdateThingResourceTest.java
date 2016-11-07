@@ -25,7 +25,7 @@ import net.smartcosmos.edge.things.domain.metadata.RestMetadataCreateResponseDto
 import net.smartcosmos.edge.things.rest.RestTemplateFactory;
 import net.smartcosmos.edge.things.rest.request.MetadataRequestFactory;
 import net.smartcosmos.edge.things.rest.request.ThingRequestFactory;
-import net.smartcosmos.test.config.ThingsEdgeTestConfig;
+import net.smartcosmos.test.config.ResourceTestConfig;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 
 import static org.mockito.BDDMockito.any;
@@ -46,7 +46,7 @@ import static net.smartcosmos.test.util.TestUtil.json;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@SpringApplicationConfiguration(classes = { ThingEdgeService.class, ThingsEdgeTestConfig.class })
+@SpringApplicationConfiguration(classes = { ThingEdgeService.class, ResourceTestConfig.class })
 @ActiveProfiles("test")
 @WithMockSmartCosmosUser
 public class UpdateThingResourceTest {

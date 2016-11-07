@@ -1,5 +1,5 @@
 server:
-  port: 45336
+  port: 0
 
 security:
   user:
@@ -10,16 +10,6 @@ spring:
 smartcosmos:
   security:
     enabled: false
-
-logging:
-  level:
-    ROOT: INFO
-    net.smartcosmos: TRACE
-    org.springframework.security: TRACE
-    org.springframework.web: TRACE
-    #org.springframework.beans: TRACE
-    com.netflix.eureka.registry: WARN
-    springfox: TRACE
 
 # springfox:
 #    documentation:
