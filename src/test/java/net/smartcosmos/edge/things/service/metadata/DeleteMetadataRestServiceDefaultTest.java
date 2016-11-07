@@ -1,4 +1,4 @@
-package net.smartcosmos.edge.things.service.things;
+package net.smartcosmos.edge.things.service.metadata;
 
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -11,7 +11,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import net.smartcosmos.edge.things.ThingEdgeService;
-import net.smartcosmos.edge.things.domain.things.RestThingCreate;
 import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.test.config.RetryTestConfig;
 
@@ -33,7 +32,7 @@ import static net.smartcosmos.test.util.TestUtil.unwrapAndVerify;
 @WebAppConfiguration
 @SpringApplicationConfiguration(classes = { ThingEdgeService.class, RetryTestConfig.class })
 @ActiveProfiles("test")
-public class CreateThingRestServiceDefaultTest {
+public class DeleteMetadataRestServiceDefaultTest {
 
     /*
      * TODO: 07/11/16 Update test after upgrading to Spring Boot 1.4
@@ -48,7 +47,7 @@ public class CreateThingRestServiceDefaultTest {
 
     // @MockBean // requires at least Spring Boot 1.4.0-RELEASE
     @Autowired
-    private CreateThingRestService service;
+    private DeleteMetadataRestService service;
 
     final ResponseEntity expectedResponse = ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT)
         .build();
@@ -58,12 +57,7 @@ public class CreateThingRestServiceDefaultTest {
 
         initMocks(this);
 
-        when(service.create(anyString(), any(SmartCosmosUser.class)))
-            .thenThrow(new RuntimeException("Remote Exception 1"))
-            .thenThrow(new RuntimeException("Remote Exception 2"))
-            .thenReturn(expectedResponse);
-
-        when(service.create(anyString(), any(RestThingCreate.class), any(SmartCosmosUser.class)))
+        when(service.delete(anyString(), anyString(), any(SmartCosmosUser.class)))
             .thenThrow(new RuntimeException("Remote Exception 1"))
             .thenThrow(new RuntimeException("Remote Exception 2"))
             .thenReturn(expectedResponse);
@@ -83,30 +77,16 @@ public class CreateThingRestServiceDefaultTest {
     }
 
     @Test
-    public void thatCreateThingWithBodyRetries() {
+    public void thatDeleteMetadataRetries() {
 
-        final String type = "someType";
-        final RestThingCreate body = mock(RestThingCreate.class);
+        final String ownerType = "someOwnerType";
+        final String ownerUrn = "someOwnerUrn";
         final SmartCosmosUser user = mock(SmartCosmosUser.class);
 
-        ResponseEntity response = service.create(type, body, user);
+        ResponseEntity response = service.delete(ownerType, ownerUrn, user);
 
         assertEquals(expectedResponse, response);
-        unwrapAndVerify(service, times(3)).create(eq(type), eq(body), eq(user));
+        unwrapAndVerify(service, times(3)).delete(eq(ownerType), eq(ownerUrn), eq(user));
         verifyNoMoreInteractions(service);
     }
-
-    @Test
-    public void thatCreateThingWithoutBodyRetries() {
-
-        final String type = "someType";
-        final SmartCosmosUser user = mock(SmartCosmosUser.class);
-
-        ResponseEntity response = service.create(type, user);
-
-        assertEquals(expectedResponse, response);
-        unwrapAndVerify(service, times(3)).create(eq(type), eq(user));
-        verifyNoMoreInteractions(service);
-    }
-
 }
