@@ -19,5 +19,6 @@ public class SmartCosmosEdgeThingsProperties {
 
         private String things = "http://ext-things:8080";
         private String metadata = "http://ext-metadata:8080";
+        private String authServer = "http://auth-server:8080";
     }
 }

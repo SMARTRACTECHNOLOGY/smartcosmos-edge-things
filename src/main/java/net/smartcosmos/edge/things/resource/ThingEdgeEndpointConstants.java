@@ -34,6 +34,7 @@ public interface ThingEdgeEndpointConstants {
     String ENDPOINT_BASE = "/";
     String ENDPOINT_TYPE = ENDPOINT_BASE + "{" + TYPE + "}";
     String ENDPOINT_TYPE_URN = ENDPOINT_TYPE + "/{" + URN + "}";
+    String ENDPOINT_SIGN = ENDPOINT_TYPE_URN + "/sign";
 
     // endregion
 
@@ -48,6 +49,8 @@ public interface ThingEdgeEndpointConstants {
     String ENDPOINT_ENABLEMENT_THINGS_READ_URN = ENDPOINT_ENABLEMENT_THINGS_READ + "." + URN;
 
     String ENDPOINT_ENABLEMENT_THINGS_UPDATE = ENDPOINT_ENABLEMENT_THINGS + ".update";
+
+    String ENDPOINT_ENABLEMENT_THINGS_SIGN = ENDPOINT_ENABLEMENT_THINGS + ".sign";
 
     // endregion
 }

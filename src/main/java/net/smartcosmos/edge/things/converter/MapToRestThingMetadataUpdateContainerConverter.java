@@ -11,7 +11,7 @@ import net.smartcosmos.edge.things.domain.RestThingMetadataUpdateContainer;
 import net.smartcosmos.edge.things.domain.things.RestThingUpdate;
 
 @Component
-public class MapToRestThingMetadataUpdateContainerConverter implements Converter<Map<String, Object>, RestThingMetadataUpdateContainer> {
+public class  MapToRestThingMetadataUpdateContainerConverter implements Converter<Map<String, Object>, RestThingMetadataUpdateContainer> {
 
     private final String ACTIVE_FIELD_NAME = "active";
 
