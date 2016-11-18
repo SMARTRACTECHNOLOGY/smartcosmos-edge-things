@@ -1,6 +1,6 @@
 = SMART COSMOS Edge Things Release Notes
 
-== UNRELEASED
+== Release 3.1.0 (November 18, 2016)
 
 === New Features
 
