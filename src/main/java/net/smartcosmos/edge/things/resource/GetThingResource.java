@@ -1,5 +1,6 @@
 package net.smartcosmos.edge.things.resource;
 
+import java.util.Map;
 import java.util.Set;
 import javax.validation.Valid;
 
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +28,7 @@ import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.EN
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.ENDPOINT_ENABLEMENT_THINGS_READ_URN;
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.ENDPOINT_TYPE;
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.ENDPOINT_TYPE_URN;
+import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.ENDPOINT_TYPE_URNS;
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.PARAM_FIELDS;
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.PARAM_PAGE;
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.PARAM_SIZE;
@@ -70,5 +73,18 @@ public class GetThingResource {
         SmartCosmosUser user) { // @formatter:on
 
         return getThingService.getByType(type, fields, page, size, sortOrder, sortBy, user);
+    }
+
+    @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_THINGS_READ_TYPE, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
+    @RequestMapping(value = ENDPOINT_TYPE_URNS,
+                    method = RequestMethod.POST,
+                    produces = APPLICATION_JSON_UTF8_VALUE,
+                    consumes = APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> findByTypeAndUrns( // @formatter:off
+        @PathVariable(TYPE) String type,
+        @RequestBody @Valid Map<String, Set<String>> urns,
+        SmartCosmosUser user) { // @formatter:on
+
+        return getThingService.getByTypeAndUrns(type, urns, user);
     }
 }

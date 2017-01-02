@@ -1,17 +1,22 @@
 package net.smartcosmos.edge.things.rest.request;
 
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import net.smartcosmos.edge.things.config.SmartCosmosEdgeThingsProperties;
 import net.smartcosmos.edge.things.domain.things.RestThingCreate;
 import net.smartcosmos.edge.things.domain.things.RestThingUpdate;
 
+import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.FIND_BY_URNS;
 import static net.smartcosmos.edge.things.util.UrlEncodingUtil.encode;
 
 /**
@@ -77,6 +82,33 @@ public class ThingRequestFactory {
             .serviceName(serviceName)
             .httpMethod(HttpMethod.GET)
             .url(url)
+            .build()
+            .buildRequest();
+    }
+
+    /**
+     * Creates a request to find Things of a given type.
+     *
+     * @param type the Thing type
+     * @param urns the number of the page to return
+     * @return the request
+     */
+    @SuppressWarnings("unchecked")
+    public RequestEntity<Void> findByTypeAndUrnsRequest(String type, Map<String, Set<String>> urns) {
+
+        Assert.isTrue(StringUtils.isNotBlank(type), "type may not be empty");
+        Assert.isTrue(!CollectionUtils.isEmpty(urns), "urns may not be empty");
+        Assert.isTrue(!CollectionUtils.isEmpty(urns.get("urns")), "urns may not be empty");
+
+        String url = UriComponentsBuilder.fromPath(encode(type) + FIND_BY_URNS)
+            .build()
+            .toUriString();
+
+        return SmartCosmosRequest.<RestThingUpdate>builder()
+            .serviceName(serviceName)
+            .httpMethod(HttpMethod.POST)
+            .url(url)
+            .requestBody(urns)
             .build()
             .buildRequest();
     }

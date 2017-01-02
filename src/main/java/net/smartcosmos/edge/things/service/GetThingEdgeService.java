@@ -1,5 +1,6 @@
 package net.smartcosmos.edge.things.service;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,16 @@ public interface GetThingEdgeService {
      * @return the response entity
      */
     ResponseEntity<?> getByTypeAndUrn(String type, String urn, Set<String> metadataKeys, SmartCosmosUser user);
+
+    /**
+     * Look up a specific Thing and its Metadata.
+     *
+     * @param type the type of the things being sought
+     * @param urnMap the map (urn->["urn1", "urn2", ...] of the things being sought
+     * @param user the Spring embedded {@link SmartCosmosUser}
+     * @return the response entity
+     */
+    ResponseEntity<?> getByTypeAndUrns(String type, Map<String, Set<String>> urnMap, SmartCosmosUser user);
 
     /**
      * Look up all Things of a given type and their Metadata in the realm of the authenticated user.

@@ -1,5 +1,11 @@
 package net.smartcosmos.edge.things.rest.request;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -12,6 +18,8 @@ import net.smartcosmos.edge.things.domain.things.RestThingCreate;
 import net.smartcosmos.edge.things.domain.things.RestThingUpdate;
 
 import static org.junit.Assert.*;
+
+import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.FIND_BY_URNS;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ThingRequestFactoryTest {
@@ -65,6 +73,28 @@ public class ThingRequestFactoryTest {
 
         assertEquals(HttpMethod.GET, requestEntity.getMethod());
         assertFalse(requestEntity.hasBody());
+
+        String url = requestEntity.getUrl()
+            .toString();
+
+        assertEquals(expectedUrl, url);
+    }
+
+    @Test
+    public void findByTypeAndUrnsRequest() throws Exception {
+
+        final String type = "myType";
+
+        final String expectedUrl = serviceName + "/" + type + FIND_BY_URNS;
+
+        Set<String> urnStrings = new HashSet<>(Arrays.asList("urn1", "urn2"));
+        Map<String, Set<String>> urns = new HashMap<>();
+        urns.put("urns", urnStrings);
+        RequestEntity requestEntity = thingRequestFactory.findByTypeAndUrnsRequest(type,urns);
+        assertNotNull(requestEntity);
+
+        assertEquals(HttpMethod.POST, requestEntity.getMethod());
+        assertTrue(requestEntity.hasBody());
 
         String url = requestEntity.getUrl()
             .toString();
