@@ -36,9 +36,6 @@ import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.EN
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.PARAM_FORCE;
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.TYPE;
 
-/**
- * REST endpoints for creating things with embedded metadata.
- */
 @SmartCosmosRdao
 @Api
 @Slf4j
@@ -53,14 +50,6 @@ public class CreateThingResource {
         this.createThingService = createThingService;
     }
 
-    /**
-     * REST endpoint for Thing upsertion with embedded metadata.
-     *
-     * @param type the programmer/user defined type of the thing
-     * @param metadataMap
-     * @param user the {@Link SmartCosmosUser} injected by Spring
-     * @return
-     */
     @ApiOperation(value = "Create (or upsert) a new thing with an embedded set of metadata",
                   notes = "This endpoint is idempotent and will respond with an appropriate HTTP status code to indicate the actual result, "
                           + "ONLY when used without the force URL parameter, or when ?force=false. When the URL parameter ?force=true is set, this "
