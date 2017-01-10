@@ -328,4 +328,59 @@ public class CreateThingResourceTest {
         verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestThingCreateResponseDto.class));
         verifyNoMoreInteractions(restTemplate);
     }
+
+    @Test
+    public void thatCreateThingWithInvalidMetadataReturnsErrorMessage() throws Exception {
+
+        final String expectedUrn = "urn";
+        final String expectedType = "someType";
+        final String expectedTenantUrn = "tenantUrn";
+        final Boolean expectedActive = false;
+
+        final int errorCode = -1;
+        final String errorMessage = "some error message";
+
+        final RestThingCreateResponseDto thingResponseBody = RestThingCreateResponseDto.builder()
+            .urn(expectedUrn)
+            .type(expectedType)
+            .tenantUrn(expectedTenantUrn)
+            .active(expectedActive)
+            .build();
+        final ResponseEntity<?> thingResponseEntity = new ResponseEntity<>(thingResponseBody, HttpStatus.CREATED);
+
+        final RestMetadataCreateResponseDto metadataResponseBody = RestMetadataCreateResponseDto.builder()
+            .code(errorCode)
+            .message(errorMessage)
+            .build();
+        final ResponseEntity<?> metadataResponseEntity = new ResponseEntity<>(metadataResponseBody, HttpStatus.BAD_REQUEST);
+
+        HashMap<String, Object> requestBody = new HashMap<>();
+        requestBody.put("urn", expectedUrn);
+        requestBody.put("active", expectedActive);
+        requestBody.put("invalid", "someInvalid");
+
+        willReturn(thingResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestThingCreateResponseDto.class));
+        willReturn(metadataResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
+
+        byte[] jsonDto = json(requestBody);
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(ENDPOINT_TYPE, "someType")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(jsonDto))
+            .andExpect(status().isOk())
+            .andExpect(request().asyncStarted())
+            .andReturn();
+
+        this.mockMvc.perform(asyncDispatch(mvcResult))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(jsonPath("$.code", is(errorCode)))
+            .andExpect(jsonPath("$.message", is(errorMessage)));
+
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestThingCreateResponseDto.class));
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
+        verifyNoMoreInteractions(restTemplate);
+    }
 }

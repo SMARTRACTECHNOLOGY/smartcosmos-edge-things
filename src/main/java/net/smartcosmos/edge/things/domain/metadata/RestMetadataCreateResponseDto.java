@@ -1,6 +1,7 @@
 package net.smartcosmos.edge.things.domain.metadata;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 @JsonIgnoreProperties({ "version" })
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RestMetadataCreateResponseDto {
 
     private static final int VERSION_1 = 1;
@@ -19,4 +21,8 @@ public class RestMetadataCreateResponseDto {
     private final int version = VERSION_1;
 
     private String uri;
+
+    private int code;
+
+    private String message;
 }
