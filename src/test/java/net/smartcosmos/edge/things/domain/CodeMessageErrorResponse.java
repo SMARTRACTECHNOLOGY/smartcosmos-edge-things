@@ -12,7 +12,7 @@ package net.smartcosmos.edge.things.domain;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 @JsonIgnoreProperties({ "version" })
-public class RestMetadataCreateErrorResponseTest {
+public class CodeMessageErrorResponse {
 
     private static final int VERSION_1 = 1;
 

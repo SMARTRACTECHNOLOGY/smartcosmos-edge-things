@@ -21,7 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import net.smartcosmos.edge.things.ThingEdgeService;
-import net.smartcosmos.edge.things.domain.RestMetadataCreateErrorResponseTest;
+import net.smartcosmos.edge.things.domain.CodeMessageErrorResponse;
 import net.smartcosmos.edge.things.domain.metadata.RestMetadataCreateResponseDto;
 import net.smartcosmos.edge.things.domain.things.RestThingCreateResponseDto;
 import net.smartcosmos.edge.things.rest.RestTemplateFactory;
@@ -349,7 +349,7 @@ public class CreateThingResourceTest {
             .build();
         final ResponseEntity<?> thingResponseEntity = new ResponseEntity<>(thingResponseBody, HttpStatus.CREATED);
 
-        final RestMetadataCreateErrorResponseTest metadataResponseBody = RestMetadataCreateErrorResponseTest.builder()
+        final CodeMessageErrorResponse metadataResponseBody = CodeMessageErrorResponse.builder()
             .code(errorCode)
             .message(errorMessage)
             .build();
