@@ -21,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import net.smartcosmos.edge.things.ThingEdgeService;
+import net.smartcosmos.edge.things.domain.RestMetadataCreateErrorResponseTest;
 import net.smartcosmos.edge.things.domain.metadata.RestMetadataCreateResponseDto;
 import net.smartcosmos.edge.things.domain.things.RestThingCreateResponseDto;
 import net.smartcosmos.edge.things.rest.RestTemplateFactory;
@@ -128,7 +129,7 @@ public class CreateThingResourceTest {
         willReturn(thingResponseEntity).given(restTemplate)
             .exchange(any(RequestEntity.class), eq(RestThingCreateResponseDto.class));
         willReturn(metadataResponseEntity).given(restTemplate)
-            .exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
+            .exchange(any(RequestEntity.class), eq(Object.class));
 
         byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
@@ -148,7 +149,7 @@ public class CreateThingResourceTest {
             .andExpect(jsonPath("$.active", is(expectedActive)));
 
         verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestThingCreateResponseDto.class));
-        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Object.class));
         verifyNoMoreInteractions(restTemplate);
     }
 
@@ -267,7 +268,7 @@ public class CreateThingResourceTest {
         final ResponseEntity<?> metadataResponseEntity = new ResponseEntity<>(metadataResponseBody, HttpStatus.OK);
 
         willReturn(metadataResponseEntity).given(restTemplate)
-            .exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
+            .exchange(any(RequestEntity.class), eq(Object.class));
 
         HashMap<String, Object> requestBody = new HashMap<>();
         requestBody.put("urn", expectedUrn);
@@ -287,7 +288,7 @@ public class CreateThingResourceTest {
             .andExpect(status().isConflict());
 
         verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestThingCreateResponseDto.class));
-        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Object.class));
         verifyNoMoreInteractions(restTemplate);
     }
 
@@ -348,7 +349,7 @@ public class CreateThingResourceTest {
             .build();
         final ResponseEntity<?> thingResponseEntity = new ResponseEntity<>(thingResponseBody, HttpStatus.CREATED);
 
-        final RestMetadataCreateResponseDto metadataResponseBody = RestMetadataCreateResponseDto.builder()
+        final RestMetadataCreateErrorResponseTest metadataResponseBody = RestMetadataCreateErrorResponseTest.builder()
             .code(errorCode)
             .message(errorMessage)
             .build();
@@ -362,7 +363,7 @@ public class CreateThingResourceTest {
         willReturn(thingResponseEntity).given(restTemplate)
             .exchange(any(RequestEntity.class), eq(RestThingCreateResponseDto.class));
         willReturn(metadataResponseEntity).given(restTemplate)
-            .exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
+            .exchange(any(RequestEntity.class), eq(Object.class));
 
         byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
@@ -380,7 +381,7 @@ public class CreateThingResourceTest {
             .andExpect(jsonPath("$.message", is(errorMessage)));
 
         verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestThingCreateResponseDto.class));
-        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Object.class));
         verifyNoMoreInteractions(restTemplate);
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import net.smartcosmos.edge.things.domain.metadata.RestMetadataCreateResponseDto;
 import net.smartcosmos.edge.things.rest.RestTemplateFactory;
 import net.smartcosmos.edge.things.rest.request.MetadataRequestFactory;
 import net.smartcosmos.security.user.SmartCosmosUser;
@@ -37,6 +36,6 @@ public class CreateMetadataRestServiceDefault implements CreateMetadataRestServi
         RequestEntity<Map<String, Object>> requestEntity = requestFactory.createOrUpsertRequest(ownerType, ownerUrn, force, metadataMap);
 
         return restTemplateFactory.getRestTemplate()
-            .exchange(requestEntity, RestMetadataCreateResponseDto.class);
+            .exchange(requestEntity, Object.class);
     }
 }
