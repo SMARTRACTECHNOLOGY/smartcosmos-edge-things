@@ -21,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import net.smartcosmos.edge.things.ThingEdgeService;
+import net.smartcosmos.edge.things.domain.CodeMessageErrorResponse;
 import net.smartcosmos.edge.things.domain.metadata.RestMetadataCreateResponseDto;
 import net.smartcosmos.edge.things.rest.RestTemplateFactory;
 import net.smartcosmos.edge.things.rest.request.MetadataRequestFactory;
@@ -28,6 +29,7 @@ import net.smartcosmos.edge.things.rest.request.ThingRequestFactory;
 import net.smartcosmos.test.config.ResourceTestConfig;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 
+import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.eq;
 import static org.mockito.BDDMockito.willReturn;
@@ -38,6 +40,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -110,7 +114,7 @@ public class UpdateThingResourceTest {
         willReturn(thingResponseEntity).given(restTemplate)
             .exchange(any(RequestEntity.class), eq(Void.class));
         willReturn(metadataResponseEntity).given(restTemplate)
-            .exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
+            .exchange(any(RequestEntity.class), eq(Object.class));
 
         byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
@@ -126,7 +130,7 @@ public class UpdateThingResourceTest {
             .andReturn();
 
         verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Void.class));
-        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Object.class));
 
         verifyNoMoreInteractions(restTemplate);
     }
@@ -140,8 +144,6 @@ public class UpdateThingResourceTest {
 
         final ResponseEntity<?> thingResponseEntity = ResponseEntity.notFound()
             .build();
-        final ResponseEntity<?> metadataResponseEntity = ResponseEntity.notFound()
-            .build();
 
         HashMap<String, Object> requestBody = new HashMap<>();
         requestBody.put("urn", urn);
@@ -151,8 +153,6 @@ public class UpdateThingResourceTest {
 
         willReturn(thingResponseEntity).given(restTemplate)
             .exchange(any(RequestEntity.class), eq(Void.class));
-        willReturn(metadataResponseEntity).given(restTemplate)
-            .exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
 
         byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
@@ -193,7 +193,7 @@ public class UpdateThingResourceTest {
         willReturn(thingResponseEntity).given(restTemplate)
             .exchange(any(RequestEntity.class), eq(Void.class));
         willReturn(metadataResponseEntity).given(restTemplate)
-            .exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
+            .exchange(any(RequestEntity.class), eq(Object.class));
 
         byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
@@ -209,7 +209,58 @@ public class UpdateThingResourceTest {
             .andReturn();
 
         verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Void.class));
-        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Object.class));
+
+        verifyNoMoreInteractions(restTemplate);
+    }
+
+    @Test
+    public void testThatUpdateThingWithInvalidMetadataReturnsErrorMessage() throws Exception {
+
+        final String urn = "urn";
+        final String type = "someType";
+        final Boolean expectedActive = false;
+
+        final int errorCode = -1;
+        final String errorMessage = "some error message";
+
+        final ResponseEntity<?> thingResponseEntity = ResponseEntity.noContent()
+            .build();
+
+        final CodeMessageErrorResponse metadataResponseBody = CodeMessageErrorResponse.builder()
+            .code(errorCode)
+            .message(errorMessage)
+            .build();
+        final ResponseEntity<?> metadataResponseEntity = new ResponseEntity<>(metadataResponseBody, HttpStatus.BAD_REQUEST);
+
+        HashMap<String, Object> requestBody = new HashMap<>();
+        requestBody.put("urn", urn);
+        requestBody.put("active", expectedActive);
+        requestBody.put("name", "someName");
+        requestBody.put("someKey", "someValue");
+
+        willReturn(thingResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(Void.class));
+        willReturn(metadataResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(Object.class));
+
+        byte[] jsonDto = json(requestBody);
+        MvcResult mvcResult = this.mockMvc.perform(
+            put(ENDPOINT_TYPE_URN, type, urn)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(jsonDto))
+            .andExpect(status().isOk())
+            .andExpect(request().asyncStarted())
+            .andReturn();
+
+        this.mockMvc.perform(asyncDispatch(mvcResult))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(jsonPath("$.code", is(errorCode)))
+            .andExpect(jsonPath("$.message", is(errorMessage)));
+
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Void.class));
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Object.class));
 
         verifyNoMoreInteractions(restTemplate);
     }
