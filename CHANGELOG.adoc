@@ -8,6 +8,9 @@ No new features are added in this release.
 
 === Bugfixes & Improvements
 
+* OBJECTS-1193 Remove Swagger from Relationships service
+* OBJECTS-1166 Updated README.adoc, API references split out into separate API.adoc file
+
 == Release 3.1.0 (November 18, 2016)
 
 === New Features
