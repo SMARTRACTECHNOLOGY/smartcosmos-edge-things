@@ -6,319 +6,39 @@ ifdef::env-github[:BRANCH: master]
 
 image::https://jenkins.smartcosmos.net/buildStatus/icon?job={USER}/{REPO}/{BRANCH}[Build Status, link=https://jenkins.smartcosmos.net/job/{USER}/job/{REPO}/job/{BRANCH}/]
 
-Microservice which provides extended Things logic, like "Create a thing with metadata with one API call
+The Things Edge service provides an API for conveniently performing CRUD operations
+on Things and their associated Metadata in single operations. Things and Metadata
+are elements of the SMART COSMOS core metaphor, and more information on these elements
+can be found here:
+
+* https://api.smartcosmos.net/microservices/smartcosmos-ext-things-rdao/index.html[Things]
+* https://api.smartcosmos.net/microservices/smartcosmos-ext-metadata-rdao/index.html[Metadata]
+
+=== A Note About Tenants, Users, Roles, and Authorities
+
+SMART COSMOS Objects has been designed from the outset to support multi-tenancy.
+A Tenant has one or more Users (a default user with the Admin Role is created as part
+of any Tenant creation), and a User has one or more Roles. Each Role contains zero
+or more Authorities, and these are the Authorities referred to below.
+
+The SMART COSMOS DevKit creates two Roles by default: Admin and User. Both Roles
+contain all of the authorities listed below; the difference between the two Roles
+is that a User with the Admin Role can create and edit Users. More information on
+these elements can be found here:
+
+* https://api.smartcosmos.net/microservices/smartcosmos-edge-user-devkit/index.html[User Management]
+
+The developer can customize Roles and Authorities as needed, but the Authorities
+listed in the API documentation are absolutely required by any User to execute the
+relevant CRUD operations.
+
+=== API Documentation
+
+For detailed information on the SMART COSMOS Metadata API, please consult the link:API.adoc[API document].
+
+=== Next Steps
+
+To learn more about SMART COSMOS, have a look at link:https://github.com/SMARTRACTECHNOLOGY/smartcosmos-devkit#smart-cosmos-getting-started-guide[SMART COSMOS Getting Started Guide].
 
 == Copyright and License
 Code and documentation copyright 2016 Smartrac Technology Fletcher, Inc.  Code released under link:LICENSE[Apache 2.0 License].
-
-== REST API
-
-*Available methods*
-
-* <<create1, Create - `POST /{type}`>>
-* <<update1, Update - `PUT /{type}/{urn}`>>
-* <<read1, Read - `GET /{type}?fields={keyNames}&page={pageNumber}&size={pageSize}`>>
-* <<read2, Read - `GET /{type}/{urn}?fields={keyNames}`>>
-* <<read3, Read - `POST /{type}/findByUrns?fields={keyNames}`>>
-* <<read4, Read - `POST /{type}/findByKeyValuePairs?page={pageNumber}&size={pageSize}`>>
-* <<delete1, Delete - `DELETE /{type}/{urn}`>>
-
-=== JSON Fields
-[width="100%",options="header"]
-|====================
-| Field | Format | Default | Required | Description
-| `urn` | String representation of a thing identifier in a common scheme, e.g. `urn:thing:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated if not provided
-| `type` | String | | yes |
-| `active` | boolean |  true | no |
-| `tenantUrn` | String representation of the tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>` |  generated | generated | only in returned JSON Objects
-| [JSON metadata] | JSON |  | false | Metadata for the thing, e.g. `name`, `description`, ..
-|====================
-
-.**URN Scheme**
-Note that the illustrated scheme for URNs is only for documentation purposes. There must not be any assumptions or expectations on the scheme in the REST layer. All URNs or identifiers are just `String` values in the scope of REST modules!
-
-=== URL parameters
-[width="100%",options="header"]
-|====================
-| Parameter | Format | Default | Description
-| `fields` | Comma-separated String list  |  query parameter, not set by default | Metadata to include in the response (all if not set)
-| `page` | String representation long  |  query parameter, defaults to 0 | page number of multi-element returns, starting at 0
-| `size` | String representation of Integer  |  query parameter, defaults 20 | number of elements per page in multi-element returns
-|====================
-
-
-=== API Endpoints
-
-[[create1]]
-==== Create - `POST /{type}`
-
-----
-POST /Building
-----
-
-The fields `name`, `description` and `large` will be added as metadata for this thing.
-
-*Example 1*
-[source,json]
-----
-{
-    "urn": "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
-    "active": true,
-    "name": "My home",
-    "description": "My home in US",
-    "large": true
-}
-----
-
-.Response
-----
-201 CREATED
-----
-[source,json]
-----
-{
-    "urn": "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
-    "type": "Building",
-    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
-    "active": true
-}
-----
-
-*Example 2*
-[source,json]
-----
-{
-}
-----
-
-.Response
-----
-201 CREATED
-----
-[source,json]
-----
-{
-    "urn": "urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d",
-    "type": "Building",
-    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
-    "active": true
-}
-----
-
-[[update1]]
-==== Update - `PUT /{type}/{urn}`
-
-----
-PUT /Building/urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
-----
-[source,json]
-----
-{
-    "active": false,
-    "name": "My home"
-}
-----
-.Response
-----
-204 NO CONTENT
-----
-
-
-[[read1]]
-==== Read - `GET /{type}?fields={keyNames}&page={pageNumber}&size={pageSize}`
-
-----
-GET /Building?fields=name,description,large&page=0&size=100
-----
-.Response
-----
-200 OK
-----
-[source,json]
-----
-{
-    "data": [
-        {
-            "urn": "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
-            "type": "Building",
-            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
-            "active": true,
-            "name": "My home",
-            "description": "My home in US",
-            "large": true
-        },
-        {
-            "urn": "urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d",
-            "type": "Building",
-            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
-            "active": true,
-            "name": "My school",
-            "description": "My school in US"
-        }
-    ],
-    "page" : {
-        "size" : 100,
-        "totalElements" : 2,
-        "totalPages" : 1,
-        "number" : 0
-    }
-}
-----
-
-
-[[read2]]
-==== Read - `GET /{type}/{urn}?fields={keyNames}`
-
-----
-GET /Building/urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
-----
-.Response
-----
-200 OK
-----
-[source,json]
-----
-{
-    "urn": "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
-    "type": "Building",
-    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
-    "active": true,
-    "name": "My home",
-    "description": "My home in US",
-    "large": true
-}
-----
-
-
-[[read3]]
-==== Find by URNs - `POST /{type}/findByUrns?fields={keyNames}`
-
-----
-POST /building/findByUrns
-----
-[source,json]
-----
-{
-    "urns": [
-        "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
-        "urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d",
-        "urn:thing:uuid:62a8d3a2-6aca-49b9-825a-147a8ee3773d"
-    ]
-}
-----
-
-.Response
-----
-200 OK
-----
-[source,json]
-----
-{
-    "data": [
-        {
-            "urn": "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
-            "type": "Building",
-            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
-            "active": true,
-            "name": "My home",
-            "description": "My home in US",
-            "large": true
-        },
-        {
-            "urn": "urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d",
-            "type": "Building",
-            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
-            "active": true,
-            "name": "My school",
-            "description": "My school in US"
-        }
-    ],
-    "notFound": [
-        "urn:thing:uuid:62a8d3a2-6aca-49b9-825a-147a8ee3773d"
-    ]
-}
-----
-
-[[read4]]
-==== Find by Key-Value Pairs - `POST /{type}/findByKeyValuePairs?page={pageNumber}&size={pageSize}`
-
-----
-POST /Building/findByKeyValuePairs?page=1&size=100
-----
-[source,json]
-----
-{
-    "someBoolean": true,
-    "someKey": "someValue",
-    "someString": "String Value"
-}
-----
-.Response
-----
-200 OK
-----
-[source,json]
-----
-{
-    "data": [
-        {
-            "active": true,
-            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
-            "type": "Building",
-            "urn": "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c"
-        },
-        {
-            "active": true,
-            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
-            "type": "Building",
-            "urn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
-        }
-    ],
-    "page" : {
-        "size" : 100,
-        "totalElements" : 2,
-        "totalPages" : 1,
-        "number" : 1
-    }
-}
-----
-
-[[delete1]]
-==== Delete - `DELETE /{type}/{urn}`
-
-----
-DELETE /urn/Building/urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d
-----
-.Response
-----
-204 NO CONTENT
-----
-
-== Configuration
-
-[source,yaml]
-----
-server:
-  port: 50594
-
-smartcosmos:
-  security:
-    enabled: true
-
-  endpoints:
-    edge:
-      things:
-        enabled: true
-        create.enabled: true
-        read:
-          urn.enabled: true
-          type.enabled: true
-        update.enabled: true
-        delete.enabled: true
-
-  edge:
-    things:
-      local:
-        things: http://ext-things:8080
-        metadata: http://ext-metadata:8080
-----

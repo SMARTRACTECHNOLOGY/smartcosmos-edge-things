@@ -1,0 +1,402 @@
+=== SMART COSMOS Things Edge API Documentation
+
+The SMART COSMOS Things Edge API provides a standard set of CRUD methods for
+creating,reading, updating, and deleting a Thing and its associated Metadata
+in a single operation. Each CRUD action requires that the User executing the
+call has at least one Role with the appropriate Authority or Authorities. The
+Authorities relevant to the Things Edge API are listed below.
+
+== Authorities
+
+* https://authorities.smartcosmos.net/metadata/create
+* https://authorities.smartcosmos.net/metadata/update
+* https://authorities.smartcosmos.net/metadata/read
+* https://authorities.smartcosmos.net/metadata/delete
+* https://authorities.smartcosmos.net/things/create
+* https://authorities.smartcosmos.net/things/update
+* https://authorities.smartcosmos.net/things/read
+* https://authorities.smartcosmos.net/things/delete
+
+*Available methods*
+
+* <<create1, Create - `POST /{type}`>>
+* <<update1, Update - `PUT /{type}/{urn}`>>
+* <<read1, Read - `GET /{type}?fields={keyNames}&page={pageNumber}&size={pageSize}`>>
+* <<read2, Read - `GET /{type}/{urn}?fields={keyNames}`>>
+* <<read3, Read - `POST /{type}/findByUrns?fields={keyNames}`>>
+* <<read4, Read - `POST /{type}/findByKeyValuePairs?page={pageNumber}&size={pageSize}`>>
+* <<delete1, Delete - `DELETE /{type}/{urn}`>>
+
+=== JSON Fields
+[width="100%",options="header",cols="1,^1,^1,^1,5"]
+|====================
+| Field | Format | Default | Required | Description
+| `urn` | String | generated, value and format depend on the persistence layer implementation | no default | will be generated if not provided
+| `urn` | String representation of a thing identifier in a common scheme, e.g. `urn:thing:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | no | will be generated if not provided
+| `type` | String | no | yes | the type of the Thing (e.g., "Employee", "Building")
+| `active` | boolean |  true | no |
+| `tenantUrn` | String |  generated | generated | The representation of the tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>`. Only present in returned JSON Objects
+| [JSON metadata] | JSON | no default | false | Metadata for the thing, e.g. `name`, `description`, ..
+|====================
+
+.**URN Scheme**
+NOTE: The illustrated scheme for URNs is only for documentation purposes. There
+must not be any assumptions or expectations on the scheme in the REST layer. All
+URNs or identifiers are just `String` values in the scope of REST modules. The
+scheme must of course be compatible with the underlying data store.
+
+=== Request Parameters
+[width="100%",options="header"]
+|====================
+| Parameter | Parameter Type | Format | Default | Description
+| `type` | url | String | no default | the type of the Thing (e.g., "Employee", "Building")
+| `urn` | url | String | no default | the URN of the Thing
+| `fields` | query | Comma-separated String list  |  query parameter, not set by default | Metadata to include in the response (defaults to all if not set)
+| `page` | query | String representation of Long  | 1 | page number of multi-element paged returns, starting at 1
+| `size` | query | String representation of Long  | 20 | number of elements per page in multi-element paged responses
+| `sortOrder` | query | String of {"asc", "desc"}  | "asc" | sort order for paged responses
+| `sortBy` | query | String | chronological order | paged responses sorted by this JSON field name
+|====================
+
+
+=== API Endpoints
+
+==== Common Error Responses
+
+:grid: rows
+[frame="topbot", cols="2,4", options="header"]
+|====
+| Response| Description
+| 400 BAD REQUEST | There were constraint violations in the request body.
+| 401 UNAUTHORIZED | The User represented by the authentication header could not be authenticated.
+| 403 FORBIDDEN | The User represented by the authentication header lacks the authority to perform this action.
+| 404 NOT FOUND | The Thing or Metadata was not found.
+| 409 CONFLICT | A Thing with this URN already exists.
+|====
+:grid: all
+
+[[create1]]
+==== Create - `POST /{type}`
+
+----
+POST /Building
+----
+
+Create a new Thing belonging to the Tenant of the authenticated User, and its associated
+Metadata. In the first example, the fields `name`, `description` and `large` will be
+added as Metadata for this Thing.
+
+*Example 1*
+[source,json]
+----
+{
+    "urn": "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+    "active": true,
+    "name": "My home",
+    "description": "Where I live right now",
+    "large": true
+}
+----
+
+.Response
+----
+201 CREATED
+----
+[source,json]
+----
+{
+    "urn": "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+    "type": "Building",
+    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
+    "active": true
+}
+----
+
+*Example 2*
+[source,json]
+----
+{
+}
+----
+
+.Response
+----
+201 CREATED
+----
+[source,json]
+----
+{
+    "urn": "urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d",
+    "type": "Building",
+    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
+    "active": true
+}
+----
+
+[[update1]]
+==== Update - `PUT /{type}/{urn}`
+
+Update an already existing Thing belonging to the Tenant of the authenticated User,
+and update its associated Metadata.
+
+NOTE: Type, URN, and Tenant URN are immutable for an existing Thing; this endpoint
+is only useful for turning the _active_ flag off and on for the Thing itself, and
+for updating the Thing's Metadata.
+
+----
+PUT /Building/urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
+----
+[source,json]
+----
+{
+    "active": false,
+    "name": "My previous home"
+}
+----
+.Response
+----
+204 NO CONTENT
+----
+
+
+[[read1]]
+==== Read - `GET /{type}?fields={keyNames}&page={pageNumber}&size={pageSize}`
+
+Get all Things of the specified type belonging to the Tenant of the authenticated
+User, and their associated Metadata. If the `fields` query parameter is set,
+the result will include only the Metadata fields specified. If the `fields`
+query parameter is not set, all Metadata for the returned Things will be included
+in the result. Results are paged.
+
+----
+GET /Building?fields=name,description,large&page=0&size=100
+----
+.Response
+----
+200 OK
+----
+[source,json]
+----
+{
+    "data": [
+        {
+            "urn": "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+            "type": "Building",
+            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
+            "active": true,
+            "name": "My home",
+            "description": "My home in US",
+            "large": true
+        },
+        {
+            "urn": "urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d",
+            "type": "Building",
+            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
+            "active": true,
+            "name": "My school",
+            "description": "My school in US"
+        }
+    ],
+    "page" : {
+        "size" : 100,
+        "totalElements" : 2,
+        "totalPages" : 1,
+        "number" : 0
+    }
+}
+----
+
+
+[[read2]]
+==== Read - `GET /{type}/{urn}?fields={keyNames}`
+
+Get the Thing with the the specified type and URN belonging to the Tenant of the
+authenticated User, and its associated Metadata. If the `fields` query parameter
+is set, the result will include only the Metadata fields specified. If the `fields`
+query parameter is not set, all Metadata for the returned Thing will be included
+in the result.
+
+----
+GET /Building/urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
+----
+.Response
+----
+200 OK
+----
+[source,json]
+----
+{
+    "urn": "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+    "type": "Building",
+    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
+    "active": true,
+    "name": "My home",
+    "description": "My home in US",
+    "large": true
+}
+----
+
+
+[[read3]]
+==== Find by URNs - `POST /{type}/findByUrns?fields={keyNames}`
+
+Find all the Things belonging to the Tenant of the authenticated User with URNs
+specified in the request body and owned by the User's Tenant, and their associated
+Metadata. If the `fields` query parameter is set, the result will include only the
+Metadata fields specified. If the `fields` query parameter is not set, all Metadata
+for the returned Things will be included in the result. Results are not paged.
+
+----
+POST /building/findByUrns
+----
+[source,json]
+----
+{
+    "urns": [
+        "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+        "urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d",
+        "urn:thing:uuid:62a8d3a2-6aca-49b9-825a-147a8ee3773d"
+    ]
+}
+----
+
+.Response
+----
+200 OK
+----
+[source,json]
+----
+{
+    "data": [
+        {
+            "urn": "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+            "type": "Building",
+            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
+            "active": true,
+            "name": "My home",
+            "description": "My home in US",
+            "large": true
+        },
+        {
+            "urn": "urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d",
+            "type": "Building",
+            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
+            "active": true,
+            "name": "My school",
+            "description": "My school in US"
+        }
+    ],
+    "notFound": [
+        "urn:thing:uuid:62a8d3a2-6aca-49b9-825a-147a8ee3773d"
+    ]
+}
+----
+
+[[read4]]
+==== Find by Key-Value Pairs - `POST /{type}/findByKeyValuePairs?page={pageNumber}&size={pageSize}`
+
+Find the Things belonging to the Tenant of the authenticated User with the specified
+Thing type, and for which all of the Metadata keys in the request body exist and
+have values matching those specified in the request body. Results are paged.
+
+NOTE: Only Thing data is returned by this method. Metadata associated with these
+Things is not returned.
+
+----
+POST /Building/findByKeyValuePairs?page=1&size=100
+----
+[source,json]
+----
+{
+    "someBoolean": true,
+    "someKey": "someValue",
+    "someString": "String Value"
+}
+----
+.Response
+----
+200 OK
+----
+[source,json]
+----
+{
+    "data": [
+        {
+            "active": true,
+            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
+            "type": "Building",
+            "urn": "urn:thing:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c"
+        },
+        {
+            "active": true,
+            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a",
+            "type": "Building",
+            "urn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+        }
+    ],
+    "page" : {
+        "size" : 100,
+        "totalElements" : 2,
+        "totalPages" : 1,
+        "number" : 1
+    }
+}
+----
+
+[[delete1]]
+==== Delete - `DELETE /{type}/{urn}`
+
+Delete a Thing belonging to the Tenant of the authenticated User with the specified,
+type and URN, and delete its associated Metadata.
+
+----
+DELETE /urn/Building/urn:thing:uuid:2519a8ba-fadf-4a85-a965-5a59a5b43e7d
+----
+.Response
+----
+204 NO CONTENT
+----
+
+== Configuration
+
+Below is a typical `smartcosmos-edge-things.yml` file, which provides configuration
+for the service.  Individual endpoints can be turned off by setting their respective
+`enabled` flags to false. The default behavior (i.e., in the absence of an `enabled`
+flag for a particular endpoint) is enabled.
+
+For a docker-compose deployment of
+https://github.com/SMARTRACTECHNOLOGY/smartcosmos-devkit[SMART COSMOS DevKit],
+the file is located in
+the `config` directory. For a deployment in which the developer
+is running her own
+https://github.com/SMARTRACTECHNOLOGY/smartcosmos-config-server[SMART COSMOS config-server]
+service, the file is located in the top directory of
+https://github.com/SMARTRACTECHNOLOGY/smartcosmos-cluster-config[smartcosmos-cluster-config].
+
+
+[source,yaml]
+----
+server:
+  port: 50594
+
+smartcosmos:
+  security:
+    enabled: true
+
+  endpoints:
+    edge:
+      things:
+        enabled: true
+        create.enabled: true
+        read:
+          urn.enabled: true
+          type.enabled: true
+        update.enabled: true
+        delete.enabled: true
+
+  edge:
+    things:
+      local:
+        things: http://ext-things:8080
+        metadata: http://ext-metadata:8080
+----
