@@ -6,13 +6,11 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "version" })
-@ApiModel(description = "Paged response received when querying for Things.")
 public class RestEdgePagedThingResponseDto<T> {
 
     private final List<T> data;

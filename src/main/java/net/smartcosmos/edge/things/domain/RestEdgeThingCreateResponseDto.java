@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,7 +16,6 @@ import org.apache.commons.lang.BooleanUtils;
  */
 @Data
 @JsonIgnoreProperties({ "version" })
-@ApiModel(description = "Create a \"Thing\" with embedded metadata in the Objects Server.")
 public class RestEdgeThingCreateResponseDto {
 
     public static final int VERSION_1 = 1;

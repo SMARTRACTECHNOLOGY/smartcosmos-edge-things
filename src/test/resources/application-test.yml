@@ -5,4 +5,3 @@ logging:
     ROOT: INFO
     org.springframework.security: WARN
     org.springframework.web: WARN
-    springfox: WARN
