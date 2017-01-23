@@ -10,9 +10,3 @@ spring:
 smartcosmos:
   security:
     enabled: false
-
-# springfox:
-#    documentation:
-#        swagger:
-#            v2:
-#                path: swagger
