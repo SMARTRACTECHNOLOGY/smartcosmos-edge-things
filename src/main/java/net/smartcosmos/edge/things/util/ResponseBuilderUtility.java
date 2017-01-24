@@ -1,8 +1,5 @@
 package net.smartcosmos.edge.things.util;
 
-import java.net.URI;
-import java.util.Map;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 
 import net.smartcosmos.edge.things.domain.RestBadRequestResponseDto;
 
-import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.URN;
+import static org.springframework.http.HttpStatus.CONFLICT;
 
 /**
  * Utility class for building responses.
@@ -44,18 +41,19 @@ public class ResponseBuilderUtility {
      * Builds a success response with HTTP status code <i>201 Created</i> using the body of another response, usually from the Things core service.
      *
      * @param response the existing response
+     * @param force
      * @return a new response with the same body
      */
-    public static ResponseEntity<?> buildCreatedResponse(ResponseEntity<?> response) {
+    public static ResponseEntity<?> buildCreateSuccessResponse(ResponseEntity<?> response, Boolean force) {
 
-        String urn = "";
-        if (response.hasBody() && response.getBody() instanceof Map && ((Map) response.getBody()).containsKey(URN)
-            && ((Map) response.getBody()).get(URN) instanceof String) {
-            urn = (String) ((Map) response.getBody()).get(URN);
+        if (force && CONFLICT.equals(response.getStatusCode())) {
+            // if we got a 409 CONFLICT from Things Core, but forced Metadata upsertion, this is fine - just make it a 200 OK
+            return ResponseEntity.ok(response.getBody());
         }
 
-        return ResponseEntity.created(URI.create(urn))
-            .body(response.getBody());
+        // if not, we just want to return what we got -- it's usually either a 201 CREATED or 409 CONFLICT
+        // (everything else should have ended up with an exception in the handler)
+        return buildForwardingResponse(response);
     }
 
 }

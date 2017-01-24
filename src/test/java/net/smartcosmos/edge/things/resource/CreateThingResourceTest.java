@@ -285,7 +285,7 @@ public class CreateThingResourceTest {
             .andReturn();
 
         this.mockMvc.perform(asyncDispatch(mvcResult))
-            .andExpect(status().isCreated());
+            .andExpect(status().isOk());
 
         verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestThingCreateResponseDto.class));
         verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));

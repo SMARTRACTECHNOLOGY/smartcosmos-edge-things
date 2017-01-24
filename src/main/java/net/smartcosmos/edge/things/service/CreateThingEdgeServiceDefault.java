@@ -17,7 +17,7 @@ import net.smartcosmos.edge.things.service.metadata.CreateMetadataRestService;
 import net.smartcosmos.edge.things.service.things.CreateThingRestService;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
-import static net.smartcosmos.edge.things.util.ResponseBuilderUtility.buildCreatedResponse;
+import static net.smartcosmos.edge.things.util.ResponseBuilderUtility.buildCreateSuccessResponse;
 import static net.smartcosmos.edge.things.util.ResponseBuilderUtility.buildForwardingResponse;
 
 /**
@@ -79,7 +79,7 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
         }
 
         // usually we just return the Thing creation response body in the success response
-        return buildCreatedResponse(thingResponse);
+        return buildCreateSuccessResponse(thingResponse, force);
     }
 
     private String createByTypeLogMessage(String type, SmartCosmosUser user, String message, Boolean force, String requestBody) {
