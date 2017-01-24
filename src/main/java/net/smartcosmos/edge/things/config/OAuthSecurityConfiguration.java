@@ -7,7 +7,7 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 
-import net.smartcosmos.edge.things.rest.errorhandler.ProxyOauth2ErrorHandler;
+import net.smartcosmos.edge.things.rest.errorhandler.ConflictNotFoundOauth2ErrorHandler;
 
 @Configuration
 @EnableOAuth2Client
@@ -17,7 +17,7 @@ public class OAuthSecurityConfiguration {
     @Autowired
     public OAuth2RestTemplate userRestTemplate(
         OAuth2ProtectedResourceDetails resourceDetails,
-        ProxyOauth2ErrorHandler errorHandler) {
+        ConflictNotFoundOauth2ErrorHandler errorHandler) {
 
         OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(resourceDetails);
         restTemplate.setErrorHandler(errorHandler);
