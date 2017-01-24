@@ -19,7 +19,7 @@ Authorities relevant to the Things Edge API are listed below.
 
 *Available methods*
 
-* <<create1, Create - `POST /{type}?force={force}`>>
+* <<create1, Create - `POST /{type}?force={true|false}`>>
 * <<update1, Update - `PUT /{type}/{urn}`>>
 * <<read1, Read - `GET /{type}?fields={keyNames}&page={pageNumber}&size={pageSize}`>>
 * <<read2, Read - `GET /{type}/{urn}?fields={keyNames}`>>
@@ -76,7 +76,7 @@ scheme must of course be compatible with the underlying data store.
 :grid: all
 
 [[create1]]
-==== Create - `POST /{type}?force={force}`
+==== Create - `POST /{type}?force={true|false}`
 
 NOTE: The `force` parameter is not required, and defaults to *false* when not set.
 It can one of have two values: *false* (default): create will fail with a *409 Conflict* status
