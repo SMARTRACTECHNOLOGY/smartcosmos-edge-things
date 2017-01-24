@@ -47,7 +47,7 @@ public class CreateThingEdgeServiceDefault implements CreateThingEdgeService {
             response.setResult(createWorker(type, metadataMap, force, user));
         } catch (Exception e) {
             String msg = createByTypeLogMessage(type, user, e.toString(), force, metadataMap.toString());
-            log.error(msg);
+            log.warn(msg);
             log.debug(msg, e);
             response.setErrorResult(e);
         }
