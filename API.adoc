@@ -31,10 +31,10 @@ Authorities relevant to the Things Edge API are listed below.
 [width="100%",options="header",cols="1,^2,^2,^1,3"]
 |====================
 | Field | Format | Default | Required | Description
-| `urn` | String representation of a thing identifier in a common scheme, e.g. `urn:thing:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | no | will be generated if not provided
-| `type` | String | no | yes | the type of the Thing (e.g., "Employee", "Building")
+| `urn` | String | generated | no | representation of a thing identifier in a common scheme, e.g. `urn:thing:uuid:<UUID>`, will be generated if not provided
+| `type` | String | no default | yes | the type of the Thing (e.g., "Employee", "Building")
 | `active` | boolean |  true | no |
-| `tenantUrn` | String |  generated | generated | The representation of the tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>`. Only present in returned JSON Objects
+| `tenantUrn` | String |  generated | no | representation of the tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>`. Only present in returned JSON Objects
 | `JSON metadata` | JSON | no default | false | Metadata for the thing, e.g. `name`, `description`, ..
 |====================
 
@@ -45,7 +45,7 @@ URNs or identifiers are just `String` values in the scope of REST modules. The
 scheme must of course be compatible with the underlying data store.
 
 === Request Parameters
-[width="100%",options="header"cols="1,^1,1,1,5"]
+[width="100%",options="header",cols="1,^1,1,1,5"]
 |====================
 | Parameter | Parameter Type | Format | Default | Description
 | `type` | url | String | no default | the type of the Thing (e.g., "Employee", "Building")
@@ -84,11 +84,11 @@ if any of the input keys already exist (default create), and will return a *201 
 if successful. *true*: create will insert all keys from the JSON body, overwriting  any existing
 keys with the new value ("upsert"), and return a *200 OK* status if successful.
 
+Create a new Thing and its associated Metadata in the Tenant of the authenticated User.
+
 ----
 POST /Building
 ----
-
-Create a new Thing and its associated Metadata in the Tenant of the authenticated User.
 
 *Example 1*
 
