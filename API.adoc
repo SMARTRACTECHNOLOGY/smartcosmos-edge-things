@@ -45,7 +45,7 @@ URNs or identifiers are just `String` values in the scope of REST modules. The
 scheme must of course be compatible with the underlying data store.
 
 === Request Parameters
-[width="100%",options="header"cols="1,^1,1,1,5"]
+[width="100%",options="header",cols="1,^1,1,1,5"]
 |====================
 | Parameter | Parameter Type | Format | Default | Description
 | `type` | url | String | no default | the type of the Thing (e.g., "Employee", "Building")
