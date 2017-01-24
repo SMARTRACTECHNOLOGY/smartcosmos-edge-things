@@ -2,6 +2,7 @@ package net.smartcosmos.edge.things.service.things;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.web.client.HttpClientErrorException;
 
 import net.smartcosmos.edge.things.domain.things.RestThingUpdate;
 import net.smartcosmos.security.user.SmartCosmosUser;
@@ -21,6 +22,6 @@ public interface UpdateThingRestService {
      * @param user the user making the request
      * @return the ResponseEntity
      */
-    @Retryable
+    @Retryable(exclude = { HttpClientErrorException.class }, include = { Throwable.class })
     ResponseEntity<?> update(String type, String urn, RestThingUpdate thingUpdate, SmartCosmosUser user);
 }

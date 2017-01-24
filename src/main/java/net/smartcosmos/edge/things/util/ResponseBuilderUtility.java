@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 
 import net.smartcosmos.edge.things.domain.RestBadRequestResponseDto;
 
+import static org.springframework.http.HttpStatus.CONFLICT;
+
 /**
  * Utility class for building responses.
  */
@@ -33,6 +35,25 @@ public class ResponseBuilderUtility {
 
         return ResponseEntity.status(response.getStatusCode())
             .body(response.getBody());
+    }
+
+    /**
+     * Builds a success response with HTTP status code <i>201 Created</i> using the body of another response, usually from the Things core service.
+     *
+     * @param response the existing response
+     * @param force
+     * @return a new response with the same body
+     */
+    public static ResponseEntity<?> buildCreateSuccessResponse(ResponseEntity<?> response, Boolean force) {
+
+        if (force && CONFLICT.equals(response.getStatusCode())) {
+            // if we got a 409 CONFLICT from Things Core, but forced Metadata upsertion, this is fine - just make it a 200 OK
+            return ResponseEntity.ok(response.getBody());
+        }
+
+        // if not, we just want to return what we got -- it's usually either a 201 CREATED or 409 CONFLICT
+        // (everything else should have ended up with an exception in the handler)
+        return buildForwardingResponse(response);
     }
 
 }

@@ -20,6 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -38,6 +39,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.eq;
 import static org.mockito.BDDMockito.willReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -385,11 +387,9 @@ public class GetThingResourceTest {
             .build();
         ResponseEntity<?> thingResponseEntity = new ResponseEntity<>(thingResponsePage, HttpStatus.OK);
 
-        ResponseEntity<Map<String, Object>> metadataResponseEntity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
         willReturn(thingResponseEntity).given(restTemplate)
             .exchange(any(RequestEntity.class), eq(RestPagedThingResponse.class));
-        willReturn(metadataResponseEntity).given(restTemplate)
+        doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST, "some client error occurred")).when(restTemplate)
             .exchange(any(RequestEntity.class), eq(Map.class));
 
         mockMvc.perform(

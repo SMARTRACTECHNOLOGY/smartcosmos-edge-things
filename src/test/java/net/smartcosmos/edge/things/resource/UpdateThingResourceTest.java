@@ -114,7 +114,7 @@ public class UpdateThingResourceTest {
         willReturn(thingResponseEntity).given(restTemplate)
             .exchange(any(RequestEntity.class), eq(Void.class));
         willReturn(metadataResponseEntity).given(restTemplate)
-            .exchange(any(RequestEntity.class), eq(Object.class));
+            .exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
 
         byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
@@ -130,7 +130,7 @@ public class UpdateThingResourceTest {
             .andReturn();
 
         verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Void.class));
-        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Object.class));
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
 
         verifyNoMoreInteractions(restTemplate);
     }
@@ -193,7 +193,7 @@ public class UpdateThingResourceTest {
         willReturn(thingResponseEntity).given(restTemplate)
             .exchange(any(RequestEntity.class), eq(Void.class));
         willReturn(metadataResponseEntity).given(restTemplate)
-            .exchange(any(RequestEntity.class), eq(Object.class));
+            .exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
 
         byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
@@ -209,7 +209,7 @@ public class UpdateThingResourceTest {
             .andReturn();
 
         verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Void.class));
-        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Object.class));
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
 
         verifyNoMoreInteractions(restTemplate);
     }
@@ -242,7 +242,7 @@ public class UpdateThingResourceTest {
         willReturn(thingResponseEntity).given(restTemplate)
             .exchange(any(RequestEntity.class), eq(Void.class));
         willReturn(metadataResponseEntity).given(restTemplate)
-            .exchange(any(RequestEntity.class), eq(Object.class));
+            .exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
 
         byte[] jsonDto = json(requestBody);
         MvcResult mvcResult = this.mockMvc.perform(
@@ -260,7 +260,7 @@ public class UpdateThingResourceTest {
             .andExpect(jsonPath("$.message", is(errorMessage)));
 
         verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Void.class));
-        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(Object.class));
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestMetadataCreateResponseDto.class));
 
         verifyNoMoreInteractions(restTemplate);
     }

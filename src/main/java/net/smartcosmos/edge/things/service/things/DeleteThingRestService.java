@@ -2,6 +2,7 @@ package net.smartcosmos.edge.things.service.things;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.web.client.HttpClientErrorException;
 
 import net.smartcosmos.security.user.SmartCosmosUser;
 
@@ -19,6 +20,6 @@ public interface DeleteThingRestService {
      * @param user the user making the request
      * @return the ResponseEntity
      */
-    @Retryable
+    @Retryable(exclude = { HttpClientErrorException.class }, include = { Throwable.class })
     ResponseEntity<?> delete(String type, String urn, SmartCosmosUser user);
 }

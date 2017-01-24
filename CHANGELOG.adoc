@@ -10,6 +10,7 @@ No new features are added in this release.
 
 * OBJECTS-1193 Remove Swagger from Relationships service
 * OBJECTS-1166 Updated README.adoc, API references split out into separate API.adoc file
+* OBJECTS-1219 Edge Things only supports success response models
 
 == Release 3.1.0 (November 18, 2016)
 

@@ -21,8 +21,6 @@ import org.springframework.stereotype.Service;
 import net.smartcosmos.edge.things.domain.RestEdgePagedThingResponseDto;
 import net.smartcosmos.edge.things.domain.things.RestPagedThingResponse;
 import net.smartcosmos.edge.things.domain.things.RestThingResponse;
-import net.smartcosmos.edge.things.exception.RestException;
-import net.smartcosmos.edge.things.service.event.EventSendingService;
 import net.smartcosmos.edge.things.service.metadata.GetMetadataRestService;
 import net.smartcosmos.edge.things.service.things.GetThingRestService;
 import net.smartcosmos.security.user.SmartCosmosUser;
@@ -33,7 +31,6 @@ import static net.smartcosmos.edge.things.util.ResponseBuilderUtility.buildForwa
 @Slf4j
 public class GetThingEdgeServiceDefault implements GetThingEdgeService {
 
-    private final EventSendingService eventSendingService;
     private final ConversionService conversionService;
     private final GetMetadataRestService getMetadataService;
     private final GetThingRestService getThingService;
@@ -42,12 +39,10 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
 
     @Autowired
     public GetThingEdgeServiceDefault(
-        EventSendingService eventSendingService,
         ConversionService conversionService,
         GetMetadataRestService getMetadataService,
         GetThingRestService getThingService) {
 
-        this.eventSendingService = eventSendingService;
         this.conversionService = conversionService;
         this.getMetadataService = getMetadataService;
         this.getThingService = getThingService;
@@ -70,15 +65,8 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
             resultMap.putAll(thingResponseMap);
         }
 
-        try {
-            Map<String, Object> metadaResponseMap = getMetadataForThing(type, urn, metadataKeys, user);
-            resultMap.putAll(metadaResponseMap);
-        } catch (RestException e) {
-            String msg = getByTypeAndUrnLogMessage(type, urn, user, e.toString());
-            log.error(msg);
-            log.debug(msg, e);
-            return e.getResponseEntity();
-        }
+        Map<String, Object> metadaResponseMap = getMetadataForThing(type, urn, metadataKeys, user);
+        resultMap.putAll(metadaResponseMap);
 
         return ResponseEntity.ok()
             .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -108,32 +96,20 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
         SmartCosmosUser user) {
 
         ResponseEntity thingResponse = getThingService.findByType(type, page, size, sortOrder, sortBy, user);
-        if (!thingResponse.getStatusCode()
-            .is2xxSuccessful()) {
-            log.warn(getByTypeLogMessage(type, user, thingResponse.toString()));
-            return buildForwardingResponse(thingResponse);
-        }
 
         if (thingResponse.hasBody() && thingResponse.getBody() instanceof RestPagedThingResponse) {
 
             RestPagedThingResponse thingPage = (RestPagedThingResponse) thingResponse.getBody();
-            try {
-                List<Map<String, Object>> data = collectFindByTypeData(thingPage.getData(), metadataKeys, user);
+            List<Map<String, Object>> data = collectFindByTypeData(thingPage.getData(), metadataKeys, user);
 
-                RestEdgePagedThingResponseDto<Map<String, Object>> responsePage = RestEdgePagedThingResponseDto.<Map<String, Object>>builder()
-                    .data(data)
-                    .page(thingPage.getPage())
-                    .build();
+            RestEdgePagedThingResponseDto<Map<String, Object>> responsePage = RestEdgePagedThingResponseDto.<Map<String, Object>>builder()
+                .data(data)
+                .page(thingPage.getPage())
+                .build();
 
-                return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .body(responsePage);
-            } catch (RestException e) {
-                String msg = getByTypeLogMessage(type, user, e.toString());
-                log.error(msg);
-                log.debug(msg, e);
-                return e.getResponseEntity();
-            }
+            return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(responsePage);
         }
 
         return buildForwardingResponse(thingResponse);
@@ -159,7 +135,7 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
     private List<Map<String, Object>> collectFindByTypeData(
         Collection<RestThingResponse> responseList,
         Set<String> metadataKeys,
-        SmartCosmosUser user) throws RestException {
+        SmartCosmosUser user) {
 
         List<Map<String, Object>> data = new ArrayList<>();
 
@@ -174,15 +150,12 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
         return data;
     }
 
-    private Map<String, Object> getMetadataForThing(String type, String urn, Set<String> metadataKeys, SmartCosmosUser user) throws RestException {
+    private Map<String, Object> getMetadataForThing(String type, String urn, Set<String> metadataKeys, SmartCosmosUser user) {
 
         Map<String, Object> resultMap = new LinkedHashMap<>();
 
         ResponseEntity metadataResponse = getMetadataService.findByOwner(type, urn, metadataKeys, user);
         HttpStatus metadataHttpStatus = metadataResponse.getStatusCode();
-        if (!metadataHttpStatus.is2xxSuccessful() && !HttpStatus.NOT_FOUND.equals(metadataHttpStatus)) {
-            throw new RestException(metadataResponse);
-        }
 
         if (metadataHttpStatus.is2xxSuccessful()
             && metadataResponse.hasBody() && metadataResponse.getBody() instanceof Map) {
@@ -193,14 +166,8 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
         return resultMap;
     }
 
-    private String getByTypeLogMessage(String type, SmartCosmosUser user, String message) {
-        return String.format("Read request for Thing with type '%s' by user '%s' failed: %s",
-                             type,
-                             user,
-                             message);
-    }
-
     private String getByTypeAndUrnLogMessage(String type, String urn, SmartCosmosUser user, String message) {
+
         return String.format("Read request for Thing with type '%s' and urn '%s' by user '%s' failed: %s",
                              type,
                              urn,

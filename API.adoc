@@ -19,7 +19,7 @@ Authorities relevant to the Things Edge API are listed below.
 
 *Available methods*
 
-* <<create1, Create - `POST /{type}`>>
+* <<create1, Create - `POST /{type}?force={true|false}`>>
 * <<update1, Update - `PUT /{type}/{urn}`>>
 * <<read1, Read - `GET /{type}?fields={keyNames}&page={pageNumber}&size={pageSize}`>>
 * <<read2, Read - `GET /{type}/{urn}?fields={keyNames}`>>
@@ -50,6 +50,7 @@ scheme must of course be compatible with the underlying data store.
 | Parameter | Parameter Type | Format | Default | Description
 | `type` | url | String | no default | the type of the Thing (e.g., "Employee", "Building")
 | `urn` | url | String | no default | the URN of the Thing
+| `force` | query | String representation of Boolean | false | force overwriting of values of existing Metadata at create
 | `fields` | query | Comma-separated String list  |  query parameter, not set by default | Metadata to include in the response (defaults to all if not set)
 | `page` | query | String representation of Long  ^| 1 | page number of multi-element paged returns, starting at 1
 | `size` | query | String representation of Long  ^| 20 | number of elements per page in multi-element paged responses
@@ -75,7 +76,13 @@ scheme must of course be compatible with the underlying data store.
 :grid: all
 
 [[create1]]
-==== Create - `POST /{type}`
+==== Create - `POST /{type}?force={true|false}`
+
+NOTE: The `force` parameter is not required, and defaults to *false* when not set.
+It can one of have two values: *false* (default): create will fail with a *409 Conflict* status
+if any of the input keys already exist (default create), and will return a *201 Created* status
+if successful. *true*: create will insert all keys from the JSON body, overwriting  any existing
+keys with the new value ("upsert"), and return a *200 OK* status if successful.
 
 Create a new Thing and its associated Metadata in the Tenant of the authenticated User.
 

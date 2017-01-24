@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.web.client.HttpClientErrorException;
 
 import net.smartcosmos.security.user.SmartCosmosUser;
 
@@ -23,6 +24,6 @@ public interface CreateMetadataRestService {
      * @param user the user making the request
      * @return the ResponseEntity
      */
-    @Retryable
+    @Retryable(exclude = { HttpClientErrorException.class }, include = { Throwable.class })
     ResponseEntity<?> create(String ownerType, String ownerUrn, Boolean force, Map<String, Object> metadataMap, SmartCosmosUser user);
 }
