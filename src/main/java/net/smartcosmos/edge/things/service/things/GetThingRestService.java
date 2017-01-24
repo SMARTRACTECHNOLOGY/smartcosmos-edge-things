@@ -2,6 +2,7 @@ package net.smartcosmos.edge.things.service.things;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.web.client.HttpClientErrorException;
 
 import net.smartcosmos.security.user.SmartCosmosUser;
 
@@ -19,7 +20,7 @@ public interface GetThingRestService {
      * @param user the user making the request
      * @return the response entity
      */
-    @Retryable
+    @Retryable(exclude = { HttpClientErrorException.class }, include = { Throwable.class })
     ResponseEntity<?> findByTypeAndUrn(String type, String urn, SmartCosmosUser user);
 
     /**
@@ -34,6 +35,6 @@ public interface GetThingRestService {
      * @param user the user making the request
      * @return the response entity with the paged response
      */
-    @Retryable
+    @Retryable(exclude = { HttpClientErrorException.class }, include = { Throwable.class })
     ResponseEntity findByType(String type, Integer page, Integer size, String sortOrder, String sortBy, SmartCosmosUser user);
 }

@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.web.client.HttpClientErrorException;
 
 import net.smartcosmos.security.user.SmartCosmosUser;
 
@@ -22,7 +23,7 @@ public interface GetMetadataRestService {
      * @param user the user making the request
      * @return the response entity
      */
-    @Retryable
+    @Retryable(exclude = { HttpClientErrorException.class }, include = { Throwable.class })
     ResponseEntity<?> findByOwner(String ownerType, String ownerUrn, Set<String> keyNames, SmartCosmosUser user);
 
     /**
@@ -34,6 +35,6 @@ public interface GetMetadataRestService {
      * @param user the user making the request
      * @return the response entity
      */
-    @Retryable
+    @Retryable(exclude = { HttpClientErrorException.class }, include = { Throwable.class })
     ResponseEntity<?> findByOwner(String ownerType, String ownerUrn, SmartCosmosUser user);
 }
