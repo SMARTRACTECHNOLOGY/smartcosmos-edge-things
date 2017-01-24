@@ -20,6 +20,8 @@ public interface ThingEdgeEndpointConstants {
     String TYPE = "type";
     String URN = "urn";
 
+    String FIND_BY_URNS = "/findByUrns";
+
     String PARAM_FORCE = "force";
     String PARAM_FIELDS = "fields";
     String PARAM_PAGE = "page";
@@ -33,6 +35,7 @@ public interface ThingEdgeEndpointConstants {
 
     String ENDPOINT_BASE = "/";
     String ENDPOINT_TYPE = ENDPOINT_BASE + "{" + TYPE + "}";
+    String ENDPOINT_TYPE_URNS = ENDPOINT_BASE + "{" + TYPE + "}" + FIND_BY_URNS;
     String ENDPOINT_TYPE_URN = ENDPOINT_TYPE + "/{" + URN + "}";
 
     // endregion

@@ -1,9 +1,12 @@
 package net.smartcosmos.edge.things.resource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.junit.*;
@@ -27,6 +30,7 @@ import net.smartcosmos.edge.things.ThingEdgeService;
 import net.smartcosmos.edge.things.domain.RestPageInformationDto;
 import net.smartcosmos.edge.things.domain.things.RestPagedThingResponse;
 import net.smartcosmos.edge.things.domain.things.RestThingResponse;
+import net.smartcosmos.edge.things.domain.things.RestUnpagedThingResponse;
 import net.smartcosmos.edge.things.rest.RestTemplateFactory;
 import net.smartcosmos.edge.things.rest.request.MetadataRequestFactory;
 import net.smartcosmos.edge.things.rest.request.ThingRequestFactory;
@@ -44,13 +48,16 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.ENDPOINT_TYPE;
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.ENDPOINT_TYPE_URN;
+import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.ENDPOINT_TYPE_URNS;
 import static net.smartcosmos.edge.things.resource.ThingEdgeEndpointConstants.PARAM_FIELDS;
+import static net.smartcosmos.test.util.TestUtil.json;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -269,6 +276,62 @@ public class GetThingResourceTest {
             .andReturn();
 
         verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestPagedThingResponse.class));
+        verify(restTemplate, times(10)).exchange(any(RequestEntity.class), eq(Map.class));
+
+        verifyNoMoreInteractions(restTemplate);
+    }
+
+    @Test
+    public void thatLookUpByTypeAndUrnsSucceeds() throws Exception {
+
+        String type = "ownerType";
+
+        Set<String> urnStrings = new HashSet<>(Arrays.asList("urn1", "urn2"));
+        Map<String, Set<String>> urns = new HashMap<>();
+        urns.put("urns", urnStrings);
+        byte[] jsonDto = json(urns);
+
+        List<RestThingResponse> data = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            RestThingResponse thingResponseBody = RestThingResponse.builder()
+                .urn("urn" + i)
+                .type(type)
+                .tenantUrn("tenantUrn")
+                .active(BooleanUtils.toBoolean(Math.floorMod(i, 2)))
+                .build();
+            data.add(thingResponseBody);
+        }
+
+        RestUnpagedThingResponse thingResponsePage = RestUnpagedThingResponse.builder()
+            .data(data)
+            .build();
+        ResponseEntity<?> thingResponseEntity = new ResponseEntity<>(thingResponsePage, HttpStatus.OK);
+
+        Map<String, Object> metadataResponseBody = new HashMap<>();
+        metadataResponseBody.put("name", "someName");
+        metadataResponseBody.put("description", "someDescription");
+        ResponseEntity<Map<String, Object>> metadataResponseEntity = new ResponseEntity<>(metadataResponseBody, HttpStatus.OK);
+
+        willReturn(thingResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(RestUnpagedThingResponse.class));
+        willReturn(metadataResponseEntity).given(restTemplate)
+            .exchange(any(RequestEntity.class), eq(Map.class));
+
+        mockMvc.perform(
+            post(ENDPOINT_TYPE_URNS, type, urns)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(jsonDto))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(jsonPath("$.data").exists())
+            .andExpect(jsonPath("$.data[*]", hasSize(10)))
+            .andExpect(jsonPath("$.data[0].urn", is("urn1")))
+            .andExpect(jsonPath("$.data[0].active", is(true)))
+            .andExpect(jsonPath("$.data[1].active", is(false)))
+            .andExpect(jsonPath("$.data[0].type", is(type)))
+            .andReturn();
+
+        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(RestUnpagedThingResponse.class));
         verify(restTemplate, times(10)).exchange(any(RequestEntity.class), eq(Map.class));
 
         verifyNoMoreInteractions(restTemplate);

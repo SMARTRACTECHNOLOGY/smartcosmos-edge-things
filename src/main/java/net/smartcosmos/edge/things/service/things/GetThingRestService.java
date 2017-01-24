@@ -1,5 +1,8 @@
 package net.smartcosmos.edge.things.service.things;
 
+import java.util.Map;
+import java.util.Set;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Retryable;
 
@@ -21,6 +24,18 @@ public interface GetThingRestService {
      */
     @Retryable
     ResponseEntity<?> findByTypeAndUrn(String type, String urn, SmartCosmosUser user);
+
+    /**
+     * <p>Look up a Thing by Type and URN.</p>
+     * <p>If the request fails, it is retried 3 times.</p>
+     *
+     * @param type the type of the Things being sought
+     * @param urns the set of URNs of the Things being sought
+     * @param user the user making the request
+     * @return the response entity
+     */
+    @Retryable
+    ResponseEntity<?> findByTypeAndUrns(String type, Map<String, Set<String>> urns, SmartCosmosUser user);
 
     /**
      * <p>Look up Things by Type.</p>

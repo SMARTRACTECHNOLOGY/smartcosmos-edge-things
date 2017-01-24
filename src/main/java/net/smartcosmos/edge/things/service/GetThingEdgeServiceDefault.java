@@ -19,8 +19,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import net.smartcosmos.edge.things.domain.RestEdgePagedThingResponseDto;
+import net.smartcosmos.edge.things.domain.RestEdgeThingResponseDto;
 import net.smartcosmos.edge.things.domain.things.RestPagedThingResponse;
 import net.smartcosmos.edge.things.domain.things.RestThingResponse;
+import net.smartcosmos.edge.things.domain.things.RestUnpagedThingResponse;
 import net.smartcosmos.edge.things.exception.RestException;
 import net.smartcosmos.edge.things.service.event.EventSendingService;
 import net.smartcosmos.edge.things.service.metadata.GetMetadataRestService;
@@ -86,26 +88,20 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
     }
 
     @Override
-    public ResponseEntity<?> getByType(
-        String type, Set<String> metadataKeys, Integer page, Integer size, String sortOrder, String sortBy, SmartCosmosUser user) {
+    public ResponseEntity<?> getByTypeAndUrns(String type, Map<String, Set<String>> urns, SmartCosmosUser user) {
 
-        if (StringUtils.isNotBlank(sortBy) && ArrayUtils.contains(THING_FIELDS, sortBy)) {
-            // Look up Things and merge Metadata
-            return getThingsMergeMetadata(type, metadataKeys, page, size, sortOrder, sortBy, user);
-        } else {
-            // Look up Metadata owners and merge Thing fields
-            return getMetadataOwnerMergeThings(type, metadataKeys, page, size, sortOrder, sortBy, user);
+        ResponseEntity thingResponse = getThingService.findByTypeAndUrns(type, urns, user);
+        if (!thingResponse.getStatusCode()
+            .is2xxSuccessful()) {
+            log.warn(getByTypeAndUrnsLogMessage(type, urns, user, thingResponse.toString()));
+            return buildForwardingResponse(thingResponse);
         }
+        return getThingsMergeMetadataUnpaged(type, urns, thingResponse, user);
     }
 
-    private ResponseEntity<?> getThingsMergeMetadata(
-        String type,
-        Set<String> metadataKeys,
-        Integer page,
-        Integer size,
-        String sortOrder,
-        String sortBy,
-        SmartCosmosUser user) {
+    @Override
+    public ResponseEntity<?> getByType(
+        String type, Set<String> metadataKeys, Integer page, Integer size, String sortOrder, String sortBy, SmartCosmosUser user) {
 
         ResponseEntity thingResponse = getThingService.findByType(type, page, size, sortOrder, sortBy, user);
         if (!thingResponse.getStatusCode()
@@ -113,6 +109,25 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
             log.warn(getByTypeLogMessage(type, user, thingResponse.toString()));
             return buildForwardingResponse(thingResponse);
         }
+
+        if (StringUtils.isNotBlank(sortBy) && ArrayUtils.contains(THING_FIELDS, sortBy)) {
+            // Look up Things and merge Metadata
+            return getThingsMergeMetadata(type, thingResponse, metadataKeys, page, size, sortOrder, sortBy, user);
+        } else {
+            // Look up Metadata owners and merge Thing fields
+            return getMetadataOwnerMergeThings(type, thingResponse, metadataKeys, page, size, sortOrder, sortBy, user);
+        }
+    }
+
+    private ResponseEntity<?> getThingsMergeMetadata(
+        String type,
+        ResponseEntity thingResponse,
+        Set<String> metadataKeys,
+        Integer page,
+        Integer size,
+        String sortOrder,
+        String sortBy,
+        SmartCosmosUser user) {
 
         if (thingResponse.hasBody() && thingResponse.getBody() instanceof RestPagedThingResponse) {
 
@@ -139,8 +154,39 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
         return buildForwardingResponse(thingResponse);
     }
 
+    private ResponseEntity<?> getThingsMergeMetadataUnpaged(
+        String type,
+        Map<String, Set<String>> urns,
+        ResponseEntity thingResponse,
+        SmartCosmosUser user) {
+
+        if (thingResponse.hasBody() && thingResponse.getBody() instanceof RestUnpagedThingResponse) {
+
+            RestUnpagedThingResponse things = (RestUnpagedThingResponse) thingResponse.getBody();
+            try {
+                List<Map<String, Object>> data = collectFindByTypeData(things.getData(), null, user);
+
+                RestEdgeThingResponseDto<Map<String, Object>> responsePage = RestEdgeThingResponseDto.<Map<String, Object>>builder()
+                    .data(data)
+                    .build();
+
+                return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .body(responsePage);
+            } catch (RestException e) {
+                String msg = getByTypeAndUrnsLogMessage(type, urns, user, e.toString());
+                log.error(msg);
+                log.debug(msg, e);
+                return e.getResponseEntity();
+            }
+        }
+
+        return buildForwardingResponse(thingResponse);
+    }
+
     private ResponseEntity<?> getMetadataOwnerMergeThings(
         String type,
+        ResponseEntity thingResponse,
         Set<String> metadataKeys,
         Integer page,
         Integer size,
@@ -194,6 +240,7 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
     }
 
     private String getByTypeLogMessage(String type, SmartCosmosUser user, String message) {
+
         return String.format("Read request for Thing with type '%s' by user '%s' failed: %s",
                              type,
                              user,
@@ -201,9 +248,19 @@ public class GetThingEdgeServiceDefault implements GetThingEdgeService {
     }
 
     private String getByTypeAndUrnLogMessage(String type, String urn, SmartCosmosUser user, String message) {
+
         return String.format("Read request for Thing with type '%s' and urn '%s' by user '%s' failed: %s",
                              type,
                              urn,
+                             user,
+                             message);
+    }
+
+    private String getByTypeAndUrnsLogMessage(String type, Map<String, Set<String>> urns, SmartCosmosUser user, String message) {
+
+        return String.format("Read request (findByUrn) for Things with type '%s' and urns '%s' by user '%s' failed: %s",
+                             type,
+                             urns,
                              user,
                              message);
     }

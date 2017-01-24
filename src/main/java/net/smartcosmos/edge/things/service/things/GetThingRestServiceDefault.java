@@ -1,5 +1,8 @@
 package net.smartcosmos.edge.things.service.things;
 
+import java.util.Map;
+import java.util.Set;
+
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import net.smartcosmos.edge.things.domain.things.RestPagedThingResponse;
 import net.smartcosmos.edge.things.domain.things.RestThingResponse;
+import net.smartcosmos.edge.things.domain.things.RestUnpagedThingResponse;
 import net.smartcosmos.edge.things.rest.RestTemplateFactory;
 import net.smartcosmos.edge.things.rest.request.ThingRequestFactory;
 import net.smartcosmos.security.user.SmartCosmosUser;
@@ -37,6 +41,15 @@ public class GetThingRestServiceDefault implements GetThingRestService {
 
         return restTemplateFactory.getRestTemplate()
             .exchange(requestEntity, RestThingResponse.class);
+    }
+
+    @Override
+    public ResponseEntity<?> findByTypeAndUrns(String type, Map<String, Set<String>> urns, SmartCosmosUser user) {
+
+        RequestEntity<Void> requestEntity = requestFactory.findByTypeAndUrnsRequest(type, urns);
+
+        return restTemplateFactory.getRestTemplate()
+            .exchange(requestEntity, RestUnpagedThingResponse.class);
     }
 
     @Override
